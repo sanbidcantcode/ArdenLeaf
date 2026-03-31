@@ -1,0 +1,268 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — ArdenLeaf{% endblock %}
+
+{% block content %}
+<style>
+    /* ── Page header ── */
+    .dash-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 28px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .dash-header-text h1 {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: #111827;
+        margin: 0 0 2px;
+    }
+    .dash-header-text p {
+        color: #6b7280;
+        font-size: 0.9rem;
+        margin: 0;
+    }
+    .dash-search-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 9px 18px;
+        background: #2563eb;
+        color: #fff;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.88rem;
+        text-decoration: none;
+        transition: background 0.15s;
+    }
+    .dash-search-btn:hover { background: #1d4ed8; }
+
+    /* ── Section heading ── */
+    .dash-section-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #374151;
+        margin: 0 0 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .dash-section-title span.badge {
+        background: #eff6ff;
+        color: #2563eb;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 1px 9px;
+    }
+
+    /* ── Empty state ── */
+    .dash-empty {
+        background: #fff;
+        border: 1.5px dashed #d1d5db;
+        border-radius: 16px;
+        text-align: center;
+        padding: 50px 24px;
+    }
+    .dash-empty .empty-icon { font-size: 3rem; margin-bottom: 12px; }
+    .dash-empty h3 {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.1rem;
+        color: #6b7280;
+        margin: 0 0 8px;
+    }
+    .dash-empty p { color: #9ca3af; font-size: 0.88rem; margin: 0; }
+
+    /* ── Loan cards ── */
+    .loan-list { display: flex; flex-direction: column; gap: 14px; }
+
+    .loan-card {
+        display: flex;
+        align-items: stretch;
+        background: #fff;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 16px;
+        overflow: hidden;
+        transition: box-shadow 0.18s;
+    }
+    .loan-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.07); }
+    .loan-card.overdue {
+        border-color: #fca5a5;
+        background: #fff7f7;
+    }
+
+    /* Cover panel */
+    .loan-cover {
+        width: 90px;
+        flex-shrink: 0;
+        background: linear-gradient(160deg, #ddd6fe, #bfdbfe);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.2rem;
+        position: relative;
+        overflow: hidden;
+    }
+    .loan-cover img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .loan-card.overdue .loan-cover {
+        background: linear-gradient(160deg, #fecaca, #fed7aa);
+    }
+
+    /* Info panel */
+    .loan-info {
+        flex: 1;
+        padding: 14px 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+    .loan-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #111827;
+        margin: 0;
+    }
+    .loan-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        font-size: 0.78rem;
+        color: #6b7280;
+    }
+    .loan-meta strong { color: #374151; }
+
+    /* Overdue alert strip */
+    .loan-overdue-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: #fee2e2;
+        color: #b91c1c;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 3px 10px;
+        width: fit-content;
+    }
+    .loan-fine {
+        font-size: 0.82rem;
+        color: #b91c1c;
+        font-weight: 600;
+    }
+
+    /* Action panel */
+    .loan-actions {
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        flex-shrink: 0;
+    }
+    .btn-return {
+        background: #f1f5f9;
+        border: 1.5px solid #d1d5db;
+        color: #374151;
+        padding: 7px 16px;
+        border-radius: 8px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.15s, border-color 0.15s;
+        white-space: nowrap;
+    }
+    .btn-return:hover { background: #e2e8f0; border-color: #9ca3af; }
+    .loan-card.overdue .btn-return {
+        background: #fee2e2;
+        border-color: #fca5a5;
+        color: #b91c1c;
+    }
+    .loan-card.overdue .btn-return:hover { background: #fecaca; }
+
+    @media (max-width: 600px) {
+        .loan-card { flex-direction: column; }
+        .loan-cover { width: 100%; height: 120px; }
+        .loan-info { padding: 14px 20px 6px; }
+        .loan-actions { padding: 10px 20px 20px; width: 100%; box-sizing: border-box; }
+        .loan-actions form { width: 100%; }
+        .btn-return { width: 100%; text-align: center; }
+    }
+</style>
+
+<!-- Header -->
+<div class="dash-header">
+    <div class="dash-header-text">
+        <h1>Welcome back, {{ session.get('user_name', 'Reader') }} 👋</h1>
+        <p>Here's what you currently have checked out.</p>
+    </div>
+    <a href="{{ url_for('books.search') }}" class="dash-search-btn">🔍 Find a Book</a>
+</div>
+
+<!-- Active Loans Section -->
+<p class="dash-section-title">
+    Your Active Loans
+    <span class="badge">{{ loans | length }}</span>
+</p>
+
+{% if loans %}
+<div class="loan-list">
+    {% for loan in loans %}
+    <div class="loan-card {{ 'overdue' if loan.IsOverdue else '' }}">
+
+        <!-- Cover -->
+        <div class="loan-cover">
+            {% if loan.cover_image %}
+            <img src="{{ loan.cover_image }}" alt="{{ loan.Title }} cover">
+            {% else %}
+            📚
+            {% endif %}
+        </div>
+
+        <!-- Info -->
+        <div class="loan-info">
+            <p class="loan-title">{{ loan.Title }}</p>
+
+            <div class="loan-meta">
+                <span>Issued <strong>{{ loan.IssueDate.strftime('%d %b %Y') if loan.IssueDate else '—' }}</strong></span>
+                <span>Due <strong>{{ loan.DueDate.strftime('%d %b %Y') if loan.DueDate else '—' }}</strong></span>
+            </div>
+
+            {% if loan.IsOverdue %}
+            <span class="loan-overdue-badge">⚠ Overdue</span>
+            {% if loan.FineAmount and loan.FineAmount > 0 %}
+            <p class="loan-fine">Fine accrued: ₹{{ '%.2f' | format(loan.FineAmount) }}</p>
+            {% endif %}
+            {% endif %}
+        </div>
+
+        <!-- Return action -->
+        <div class="loan-actions">
+            <form action="{{ url_for('loans.return_book', loan_id=loan.LoanID) }}" method="POST">
+                <button type="submit" class="btn-return">
+                    Return Book
+                </button>
+            </form>
+        </div>
+
+    </div>
+    {% endfor %}
+</div>
+
+{% else %}
+<div class="dash-empty">
+    <div class="empty-icon">🌿</div>
+    <h3>Your shelf is empty</h3>
+    <p>Find something to read and borrow it from a library near you.</p>
+    <a href="{{ url_for('books.search') }}" class="dash-search-btn" style="margin-top:16px;">🔍 Browse Books</a>
+</div>
+{% endif %}
+
+{% endblock %}

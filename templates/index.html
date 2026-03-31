@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+    <h1>Discover Your Next Great Read</h1>
+    <p>Search across multiple libraries and bookstores. Borrow, buy, and manage your reading list all in one centralized
+        platform.</p>
+
+    <div style="max-width: 600px; margin: 0 auto;">
+        <form action="{{ url_for('books.search') }}" method="GET" style="display: flex; gap: 10px;">
+            <input type="text" name="q" class="form-control" placeholder="Search by title, author, or genre..."
+                style="flex: 1; padding: 1rem; border-radius: var(--radius); font-size: 1.1rem; box-shadow: var(--shadow);">
+            <button type="submit" class="btn btn-primary"
+                style="border-radius: var(--radius); padding: 0 2rem; font-size: 1.1rem;">Search</button>
+        </form>
+    </div>
+</section>
+
+<section style="margin-top: 4rem;">
+    <h2 style="text-align: center; margin-bottom: 2rem;">Why Choose ArdenLeaf?</h2>
+    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+        <div class="card" style="text-align: center;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">📚</div>
+            <h3>Unified Catalog</h3>
+            <p style="color: var(--text-muted); margin-top: 1rem;">Find books from city libraries and local bookstores
+                without jumping between websites.</p>
+        </div>
+        <div class="card" style="text-align: center;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🍃</div>
+            <h3>Smart Loans</h3>
+            <p style="color: var(--text-muted); margin-top: 1rem;">Track your borrowed books, due dates, and
+                automatically calculate fines on late returns.</p>
+        </div>
+        <div class="card" style="text-align: center;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">⭐</div>
+            <h3>Loyalty & Rewards</h3>
+            <p style="color: var(--text-muted); margin-top: 1rem;">Customers earn points for bookstore purchases, while
+                Members get premium library access.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

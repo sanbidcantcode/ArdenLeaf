@@ -1,0 +1,321 @@
+{% extends "base.html" %}
+{% block title %}My Bookmarks — ArdenLeaf{% endblock %}
+
+{% block content %}
+<style>
+    /* ── Header ── */
+    .bm-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 28px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .bm-header h1 {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: #111827;
+        margin: 0 0 2px;
+    }
+    .bm-header p { color: #6b7280; font-size: 0.9rem; margin: 0; }
+
+    .bm-count {
+        display: inline-block;
+        background: #eff6ff;
+        color: #2563eb;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        padding: 2px 12px;
+        margin-left: 8px;
+        vertical-align: middle;
+    }
+
+    /* ── Empty state ── */
+    .bm-empty {
+        background: #fff;
+        border: 1.5px dashed #d1d5db;
+        border-radius: 16px;
+        text-align: center;
+        padding: 60px 24px;
+    }
+    .bm-empty .empty-icon { font-size: 3rem; margin-bottom: 12px; }
+    .bm-empty h3 {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.1rem;
+        color: #6b7280;
+        margin: 0 0 8px;
+    }
+    .bm-empty p { color: #9ca3af; font-size: 0.88rem; }
+    .bm-empty a {
+        display: inline-block;
+        margin-top: 16px;
+        padding: 9px 20px;
+        background: #2563eb;
+        color: #fff;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.88rem;
+        text-decoration: none;
+    }
+    .bm-empty a:hover { background: #1d4ed8; }
+
+    /* ── Book list ── */
+    .bm-list { display: flex; flex-direction: column; gap: 14px; }
+
+    .bm-card {
+        display: flex;
+        align-items: stretch;
+        background: #fff;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 16px;
+        overflow: hidden;
+        transition: box-shadow 0.18s, transform 0.15s;
+    }
+    .bm-card:hover {
+        box-shadow: 0 6px 28px rgba(37,99,235,0.10);
+        transform: translateY(-2px);
+    }
+
+    /* Cover */
+    .bm-cover {
+        width: 100px;
+        flex-shrink: 0;
+        background: linear-gradient(160deg, #c7d2fe, #bbf7d0);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.4rem;
+        position: relative;
+        overflow: hidden;
+    }
+    .bm-cover img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* Info */
+    .bm-info {
+        flex: 1;
+        padding: 14px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        text-decoration: none;
+        color: inherit;
+    }
+    .bm-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.02rem;
+        font-weight: 700;
+        color: #111827;
+        margin: 0;
+    }
+    .bm-author {
+        font-size: 0.83rem;
+        color: #2563eb;
+        font-weight: 600;
+        margin: 0;
+    }
+    .bm-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 6px;
+    }
+    .bm-pill {
+        background: #f1f5f9;
+        border-radius: 999px;
+        padding: 2px 10px;
+        font-size: 0.72rem;
+        color: #475569;
+        font-weight: 500;
+    }
+    .bm-saved {
+        font-size: 0.72rem;
+        color: #9ca3af;
+        margin-top: 4px;
+    }
+
+    /* Actions */
+    .bm-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: center;
+        gap: 8px;
+        padding: 14px 16px;
+        flex-shrink: 0;
+        min-width: 110px;
+    }
+    .btn-view {
+        display: block;
+        padding: 7px 14px;
+        background: #2563eb;
+        color: #fff;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-decoration: none;
+        text-align: center;
+        transition: background 0.15s;
+    }
+    .btn-view:hover { background: #1d4ed8; }
+
+    .btn-remove {
+        padding: 6px 14px;
+        background: transparent;
+        border: 1.5px solid #fca5a5;
+        color: #dc2626;
+        border-radius: 8px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .btn-remove:hover { background: #fee2e2; }
+    
+    .remove-bookmark-form { width: 100%; }
+    .remove-bookmark-form button { width: 100%; }
+
+    @media (max-width: 600px) {
+        .bm-card { flex-direction: column; }
+        .bm-cover { width: 100%; height: 140px; }
+        .bm-actions { flex-direction: row; padding: 10px 20px 20px; gap: 10px; }
+        .btn-view { flex: 1; margin: 0; }
+        .remove-bookmark-form { flex: 1; margin: 0; display: flex; }
+        .remove-bookmark-form button { display: flex; align-items: center; justify-content: center; }
+    }
+</style>
+
+<!-- Header -->
+<div class="bm-header">
+    <div>
+        <h1>My Bookmarks <span class="bm-count">{{ bookmarks | length }}</span></h1>
+        <p>Books you have saved for later.</p>
+    </div>
+    <a href="{{ url_for('books.search') }}" style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:#2563eb;color:#fff;border-radius:10px;font-weight:600;font-size:0.88rem;text-decoration:none;">
+        🔍 Find More Books
+    </a>
+</div>
+
+{% if bookmarks %}
+<div class="bm-list">
+    {% for bm in bookmarks %}
+    <div class="bm-card">
+
+        <!-- Cover -->
+        <div class="bm-cover">
+            {% if bm.cover_image %}
+            <img src="{{ bm.cover_image }}" alt="{{ bm.Title }} cover">
+            {% else %}
+            📚
+            {% endif %}
+        </div>
+
+        <!-- Info (clickable to book detail) -->
+        <a href="{{ url_for('books.book_detail', isbn=bm.ISBN) }}" class="bm-info">
+            <p class="bm-title">{{ bm.Title }}</p>
+            <p class="bm-author">{{ bm.Authors or 'Unknown Author' }}</p>
+            <div class="bm-meta">
+                {% if bm.Genres %}
+                {% for g in bm.Genres.split(',') %}
+                <span class="bm-pill">{{ g.strip() }}</span>
+                {% endfor %}
+                {% endif %}
+                {% if bm.PublicationYear %}
+                <span class="bm-pill">{{ bm.PublicationYear }}</span>
+                {% endif %}
+                {% if bm.PublisherName %}
+                <span class="bm-pill">{{ bm.PublisherName }}</span>
+                {% endif %}
+            </div>
+            {% if bm.CreatedAt %}
+            <p class="bm-saved">Saved {{ bm.CreatedAt.strftime('%d %b %Y') }}</p>
+            {% endif %}
+        </a>
+
+        <!-- Actions -->
+        <div class="bm-actions">
+            <a href="{{ url_for('books.book_detail', isbn=bm.ISBN) }}" class="btn-view">View Book</a>
+            <form method="POST" action="{{ url_for('books.bookmark', isbn=bm.ISBN) }}" class="remove-bookmark-form">
+                <button type="submit" class="btn-remove">Remove</button>
+            </form>
+        </div>
+
+    </div>
+    {% endfor %}
+</div>
+
+{% else %}
+<div class="bm-empty">
+    <div class="empty-icon">🔖</div>
+    <h3>No bookmarks yet</h3>
+    <p>Tap the Bookmark button on any book page to save it here.</p>
+    <a href="{{ url_for('books.search') }}">Browse Books</a>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.remove-bookmark-form').forEach(function(form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var btn = form.querySelector('.btn-remove');
+            btn.disabled = true;
+            
+            fetch(form.action, {
+                method: 'POST',
+                headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                body: new FormData(form)
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if(data.success) {
+                    var card = form.closest('.bm-card');
+                    var bookTitle = card ? card.querySelector('.bm-title').textContent.trim() : 'Book';
+                    window.showToast(bookTitle + ' removed from bookmarks', '/bookmarks');
+                    
+                    if (card) {
+                        card.style.opacity = '0';
+                        card.style.transform = 'scale(0.95)';
+                        setTimeout(function() { 
+                            card.remove(); 
+                            
+                            // Live update the bookmark count
+                            var countEl = document.querySelector('.bm-count');
+                            if (countEl) {
+                                var newCount = document.querySelectorAll('.bm-card').length;
+                                countEl.textContent = newCount;
+                                
+                                // Show empty state if last item removed
+                                if (newCount === 0) {
+                                    window.location.reload();
+                                }
+                            }
+                        }, 300);
+                    }
+                } else {
+                    btn.disabled = false;
+                    showToast(data.message || 'Error occurred.', null, 'error');
+                }
+            })
+            .catch(function(err) {
+                btn.disabled = false;
+                console.error("Remove Bookmark Error:", err);
+                showToast('Connection error — please try again.', null, 'error');
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

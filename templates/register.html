@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Register - ArdenLeaf{% endblock %}
+
+{% block content %}
+<div class="card auth-form" style="max-width: 500px;">
+    <h2 style="text-align: center; margin-bottom: 2rem;">Create an Account</h2>
+
+    <form action="{{ url_for('auth.register') }}" method="POST">
+        <div class="form-group">
+            <label class="form-label" for="name">Full Name</label>
+            <input type="text" id="name" name="name" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="email">Email Address</label>
+            <input type="email" id="email" name="email" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="password">Password</label>
+            <input type="password" id="password" name="password" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="user_type">Account Type</label>
+            <select id="user_type" name="user_type" class="form-control" required>
+                <option value="Member">Library Member (Borrowing Focus)</option>
+                <option value="Customer">Bookstore Customer (Buying Focus)</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.8rem;">Sign Up</button>
+    </form>
+
+    <p style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">
+        Already have an account? <a href="{{ url_for('auth.login') }}">Login</a>
+    </p>
+</div>
+{% endblock %}

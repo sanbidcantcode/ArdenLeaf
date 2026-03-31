@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}My Loans - ArdenLeaf{% endblock %}
+
+{% block content %}
+<div class="card" style="margin-bottom: 2rem; border-left: 4px solid var(--primary);">
+    <h1 style="margin-bottom: 0.5rem;">My Active Loans</h1>
+    <p style="color: var(--text-muted);">Manage your borrowed books, check due dates, and view calculated fines.</p>
+</div>
+
+{% if loans %}
+<div
+    style="overflow-x: auto; background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.05);">
+    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+        <thead>
+            <tr style="background: var(--light); border-bottom: 2px solid #e2e8f0;">
+                <th style="padding: 1rem 1.5rem; font-family: var(--font-heading); font-weight: 600;">Book Title</th>
+                <th style="padding: 1rem 1.5rem; font-family: var(--font-heading); font-weight: 600;">Issue Date</th>
+                <th style="padding: 1rem 1.5rem; font-family: var(--font-heading); font-weight: 600;">Due Date</th>
+                <th style="padding: 1rem 1.5rem; font-family: var(--font-heading); font-weight: 600;">Fine</th>
+                <th
+                    style="padding: 1rem 1.5rem; font-family: var(--font-heading); font-weight: 600; text-align: right;">
+                    Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for loan in loans %}
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+                <td style="padding: 1rem 1.5rem;">
+                    <strong style="color: var(--dark);">{{ loan.Title }}</strong>
+                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">Copy ID: {{
+                        loan.CopyID }}</div>
+                    {% if loan.ReturnDate %}
+                    <span
+                        style="display: inline-block; background: #e2e8f0; font-size: 0.75rem; padding: 0.1rem 0.5rem; border-radius: 4px; margin-top: 0.5rem;">Returned:
+                        {{ loan.ReturnDate }}</span>
+                    {% endif %}
+                </td>
+                <td style="padding: 1rem 1.5rem;">{{ loan.IssueDate }}</td>
+                <td style="padding: 1rem 1.5rem;">
+                    {% if not loan.ReturnDate and loan.FineAmount and loan.FineAmount > 0 %}
+                    <span style="color: var(--danger); font-weight: 500;">📅 {{ loan.DueDate }} (Overdue)</span>
+                    {% else %}
+                    {{ loan.DueDate }}
+                    {% endif %}
+                </td>
+                <td style="padding: 1rem 1.5rem;">
+                    {% if loan.FineAmount and loan.FineAmount > 0 %}
+                    <strong style="color: var(--danger);">${{ "%.2f"|format(loan.FineAmount) }}</strong>
+                    {% else %}
+                    <span style="color: var(--secondary);">None</span>
+                    {% endif %}
+                </td>
+                <td style="padding: 1rem 1.5rem; text-align: right;">
+                    {% if not loan.ReturnDate %}
+                    <form action="{{ url_for('loans.return_book', loan_id=loan.LoanID) }}" method="POST">
+                        <button type="submit" class="btn btn-outline"
+                            style="padding: 0.4rem 1rem; font-size: 0.85rem;">Return Book</button>
+                    </form>
+                    {% else %}
+                    <span style="color: var(--text-muted); font-size: 0.9rem; font-weight: 500;">Returned</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="card" style="text-align: center; padding: 4rem 2rem;">
+    <div style="font-size: 3rem; margin-bottom: 1rem;">🍃</div>
+    <h3 style="color: var(--text-muted); margin-bottom: 1rem;">You have no loan history.</h3>
+    <a href="{{ url_for('books.search') }}" class="btn btn-primary">Find Books to Borrow</a>
+</div>
+{% endif %}
+{% endblock %}

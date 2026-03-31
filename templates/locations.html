@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+{% block title %}Our Locations — ArdenLeaf{% endblock %}
+
+{% block content %}
+<style>
+    .loc-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+    .loc-header-text h1 {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: #111827;
+        margin: 0 0 2px;
+    }
+    .loc-badge {
+        display: inline-block;
+        background: #eff6ff;
+        color: #2563eb;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        padding: 2px 10px;
+        margin-left: 8px;
+        vertical-align: middle;
+    }
+
+    /* ── Tabs ── */
+    .loc-tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 28px;
+        padding: 4px;
+        background: #f1f5f9;
+        border-radius: 12px;
+        width: fit-content;
+    }
+    .loc-tab {
+        padding: 8px 18px;
+        border-radius: 9px;
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: #64748b;
+        cursor: pointer;
+        transition: all 0.15s;
+        border: none;
+        background: transparent;
+    }
+    .loc-tab:hover { color: #1e293b; }
+    .loc-tab.active {
+        background: #fff;
+        color: #2563eb;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    /* ── Grid ── */
+    .loc-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+
+    .loc-card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .loc-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+    }
+
+    .loc-type-tag {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 2px 8px;
+        border-radius: 6px;
+        width: fit-content;
+    }
+    .type-library { background: #eff6ff; color: #2563eb; }
+    .type-bookstore { background: #f0fdf4; color: #16a34a; }
+
+    .loc-name {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #111827;
+        margin: 0;
+    }
+    .loc-area {
+        font-size: 0.88rem;
+        color: #6b7280;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .loc-details {
+        margin-top: 4px;
+        padding-top: 12px;
+        border-top: 1px solid #f1f5f9;
+        font-size: 0.8rem;
+        color: #475569;
+        line-height: 1.6;
+    }
+    .loc-details b { color: #111827; }
+</style>
+
+<div class="loc-header">
+    <div class="loc-header-text">
+        <h1>Participating Locations <span class="loc-badge">{{ locations|length }}</span></h1>
+        <p>Browse our network of partner libraries and independent bookstores.</p>
+    </div>
+</div>
+
+<div class="loc-tabs">
+    <button class="loc-tab active" data-filter="all">All</button>
+    <button class="loc-tab" data-filter="Library">Libraries</button>
+    <button class="loc-tab" data-filter="Bookstore">Bookstores</button>
+</div>
+
+<div class="loc-grid" id="locations-grid">
+    {% for loc in locations %}
+    <div class="loc-card" data-type="{{ loc.Type }}">
+        <span class="loc-type-tag {{ 'type-library' if loc.Type == 'Library' else 'type-bookstore' }}">
+            {{ '🏛️ Library' if loc.Type == 'Library' else '🏬 Bookstore' }}
+        </span>
+        <h2 class="loc-name">{{ loc.Name }}</h2>
+        <div class="loc-area">📍 {{ loc.Location }}</div>
+        
+        <div class="loc-details">
+            <b>System ID:</b> {{ loc.ID }}<br>
+            <b>Status:</b> Active Partner
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tabs = document.querySelectorAll('.loc-tab');
+    const cards = document.querySelectorAll('.loc-card');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            // Update tabs
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+
+            const filter = tab.getAttribute('data-filter');
+
+            // Filter cards
+            cards.forEach(card => {
+                if (filter === 'all' || card.getAttribute('data-type') === filter) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}Admin Panel — ArdenLeaf{% endblock %}
+
+{% block content %}
+<style>
+    .admin-layout {
+        display: grid;
+        grid-template-columns: 240px 1fr;
+        gap: 28px;
+        align-items: start;
+        margin-top: 24px;
+    }
+    @media(max-width: 900px) {
+        .admin-layout { grid-template-columns: 1fr; }
+        .admin-sidebar {
+            position: static;
+            display: flex;
+            flex-wrap: wrap;
+            padding: 8px;
+            gap: 4px;
+        }
+        .admin-nav-item {
+            flex: 1 1 auto;
+            text-align: center;
+            border-right: none;
+            border-radius: 8px;
+            padding: 10px 12px;
+        }
+        .admin-nav-item:hover, .admin-nav-item.active {
+            border-right: none;
+        }
+    }
+
+    .admin-sidebar {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        padding: 16px 0;
+        position: sticky;
+        top: 24px;
+    }
+    .admin-nav-item {
+        display: block;
+        padding: 10px 24px;
+        color: #374151;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.95rem;
+        transition: background 0.15s, color 0.15s;
+    }
+    .admin-nav-item:hover, .admin-nav-item.active {
+        background: #eff6ff;
+        color: #2563eb;
+        border-right: 3px solid #2563eb;
+    }
+
+    .admin-card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        padding: 24px 28px;
+    }
+    .admin-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #111827;
+        margin: 0 0 20px;
+    }
+
+    .admin-form .form-group { margin-bottom: 16px; }
+    .admin-form label { display: block; font-size: 0.85rem; font-weight: 600; color: #374151; margin-bottom: 6px; }
+    .admin-form input, .admin-form select {
+        width: 100%; padding: 10px 14px; border: 1px solid #d1d5db; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 0.9rem;
+    }
+    .admin-form input:focus, .admin-form select:focus {
+        outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+    }
+    .admin-btn {
+        padding: 10px 20px; background: #2563eb; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;
+    }
+    .admin-btn:hover { background: #1d4ed8; }
+
+</style>
+
+<div class="admin-layout">
+    <div class="admin-sidebar">
+        <a href="{{ url_for('admin.dashboard') }}" class="admin-nav-item {% if request.endpoint == 'admin.dashboard' %}active{% endif %}">Dashboard</a>
+        <a href="{{ url_for('admin.add_book') }}" class="admin-nav-item {% if request.endpoint == 'admin.add_book' %}active{% endif %}">Add Book</a>
+        <a href="{{ url_for('admin.add_copy') }}" class="admin-nav-item {% if request.endpoint == 'admin.add_copy' %}active{% endif %}">Add Copy</a>
+        <a href="{{ url_for('admin.add_location') }}" class="admin-nav-item {% if request.endpoint == 'admin.add_location' %}active{% endif %}">Add Location</a>
+        <a href="{{ url_for('admin.loans') }}" class="admin-nav-item {% if request.endpoint == 'admin.loans' %}active{% endif %}">Active Loans</a>
+    </div>
+
+    <div class="admin-content">
+        {% block admin_content %}{% endblock %}
+    </div>
+</div>
+{% endblock %}

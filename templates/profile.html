@@ -1,0 +1,459 @@
+{% extends "base.html" %}
+{% block title %}Account Details — ArdenLeaf{% endblock %}
+
+{% block content %}
+<style>
+    /* ── Layout ── */
+    .profile-header {
+        margin-bottom: 28px;
+    }
+    .profile-header h1 {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: #111827;
+        margin: 0 0 2px;
+    }
+    .profile-header p {
+        color: #6b7280;
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    .profile-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+        gap: 24px;
+        align-items: start;
+    }
+    @media (max-width: 800px) {
+        .profile-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* ── Cards ── */
+    .card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        padding: 24px 28px;
+    }
+    .card-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #111827;
+        margin: 0 0 20px;
+    }
+
+    /* ── Avatar Section ── */
+    .avatar-section {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+    .avatar-circle {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #6366f1, #2563eb);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+    .avatar-info h2 {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #111827;
+        margin: 0 0 4px;
+    }
+    .badge {
+        display: inline-block;
+        background: #eff6ff;
+        color: #2563eb;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 3px 10px;
+    }
+
+    /* ── Form Items ── */
+    .form-group {
+        margin-bottom: 16px;
+    }
+    .form-group label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 6px;
+    }
+    .form-control {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9rem;
+        color: #111827;
+        transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .form-control:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    .form-control[readonly] {
+        background-color: #f9fafb;
+        color: #6b7280;
+        cursor: not-allowed;
+    }
+
+    .form-actions {
+        margin-top: 24px;
+        display: flex;
+        justify-content: flex-end;
+    }
+    .btn-save {
+        padding: 10px 20px;
+        background: #2563eb;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: background 0.15s;
+    }
+    .btn-save:hover {
+        background: #1d4ed8;
+    }
+    .btn-save:disabled {
+        background: #9ca3af;
+        cursor: not-allowed;
+    }
+
+    .btn-cancel {
+        padding: 10px 16px;
+        background: transparent;
+        border: none;
+        color: #6b7280;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: color 0.15s;
+    }
+    .btn-cancel:hover {
+        color: #111827;
+    }
+
+    .join-date {
+        font-size: 0.72rem;
+        color: #9ca3af;
+        font-weight: 500;
+        margin-top: 6px;
+    }
+
+    /* ── Quick Stats Grid ── */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+    .stat-item {
+        background: #f8fafc;
+        border: 1px solid #f1f5f9;
+        border-radius: 10px;
+        padding: 16px;
+        text-align: center;
+        cursor: pointer;
+        transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+    }
+    .stat-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        border-color: #cbd5e1;
+    }
+    .stat-value {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: #111827;
+        margin: 0 0 4px;
+    }
+    .stat-value.danger {
+        color: #dc2626;
+    }
+    .stat-label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #6b7280;
+    }
+
+    /* ── Modals ── */
+    .modal-overlay {
+        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(17, 24, 39, 0.6);
+        display: none; align-items: center; justify-content: center;
+        z-index: 1000; opacity: 0; transition: opacity 0.2s;
+    }
+    .modal-overlay.show { display: flex; opacity: 1; }
+    
+    .modal-content {
+        background: #fff;
+        border-radius: 16px;
+        padding: 28px;
+        width: 100%;
+        max-width: 900px;
+        max-height: 85vh;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        transform: scale(0.95); transition: transform 0.2s;
+    }
+    .modal-overlay.show .modal-content { transform: scale(1); }
+    
+    .modal-close {
+        position: absolute; top: 20px; right: 20px;
+        background: none; border: none; font-size: 1.5rem;
+        color: #9ca3af; cursor: pointer; line-height: 1;
+        z-index: 20;
+    }
+    .modal-close:hover { color: #111827; }
+    
+    .modal-title {
+        font-family: 'Outfit', sans-serif; font-size: 1.5rem;
+        font-weight: 700; color: #111827; margin: 0 0 16px 0;
+        flex-shrink: 0;
+    }
+    
+    .table-container {
+        overflow-y: auto;
+        border-radius: 8px;
+        min-height: 100px;
+    }
+    
+    .data-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.88rem; }
+    .data-table th, .data-table td { 
+        padding: 12px 16px; 
+        text-align: left; 
+        white-space: nowrap;
+    }
+    .data-table td { border-bottom: 1px solid #e5e7eb; }
+    .data-table th { 
+        position: sticky; 
+        top: 0; 
+        background: #f8fafc; 
+        font-weight: 600; 
+        color: #475569; 
+        z-index: 10;
+        border-bottom: 2px solid #e5e7eb;
+    }
+    .data-table a { color: #2563eb; font-weight: 600; text-decoration: none; }
+    .data-table a:hover { text-decoration: underline; }
+    
+    .badge-clear { background: #d1fae5; color: #065f46; padding: 3px 10px; border-radius: 999px; font-weight: 600; font-size: 0.75rem; }
+    .badge-due { background: #fef3c7; color: #b45309; padding: 3px 10px; border-radius: 999px; font-weight: 600; font-size: 0.75rem; }
+    .badge-past { background: #fee2e2; color: #991b1b; padding: 3px 10px; border-radius: 999px; font-weight: 600; font-size: 0.75rem; }
+</style>
+
+<div class="profile-header">
+    <h1>Account Details</h1>
+    <p>Manage your personal information and view reading statistics.</p>
+</div>
+
+<div class="profile-grid">
+    <!-- Left Card: Form -->
+    <div class="card">
+        <div class="avatar-section">
+            <div class="avatar-circle">
+                {% set initials = user.Name.split() %}
+                {{ initials[0][0]|upper if initials else '?' }}{{ initials[-1][0]|upper if initials|length > 1 else '' }}
+            </div>
+            <div class="avatar-info">
+                <h2>{{ user.Name }}</h2>
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+                    <span class="join-date">Joined {{ user.MembershipDate.strftime('%d %b %Y') if user.MembershipDate else 'N/A' }}</span>
+                    <span class="badge" style="width: fit-content;">{{ user.UserType }}</span>
+                </div>
+            </div>
+        </div>
+
+        <form id="profile-form" action="{{ url_for('profile.profile') }}" method="POST">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" class="form-control" value="{{ user.Name }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" class="form-control" value="{{ user.Email }}" readonly title="Email cannot be changed as it is used for login.">
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" class="form-control" 
+                       value="{{ user.Phones[0] if user.Phones else '' }}" 
+                       placeholder="98765 43210" maxlength="10" pattern="[0-9]{10}"
+                       oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+            </div>
+            
+            <div class="form-actions" style="gap: 12px; align-items: center;">
+                <button type="button" class="btn-cancel" id="cancel-btn">Cancel</button>
+                <button type="submit" class="btn-save" id="save-btn">Save Changes</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Right Card: Quick Stats -->
+    <div class="card">
+        <h3 class="card-title">Quick Stats</h3>
+        <div class="stats-grid">
+            <div class="stat-item" onclick="window.location.href='/dashboard'">
+                <div class="stat-value">{{ stats.active_loans }}</div>
+                <div class="stat-label">Active Loans</div>
+            </div>
+            <div class="stat-item" onclick="openHistoryModal()">
+                <div class="stat-value">{{ stats.total_borrowed }}</div>
+                <div class="stat-label">Total Borrowed</div>
+            </div>
+            <div class="stat-item" onclick="window.location.href='/bookmarks'">
+                <div class="stat-value">{{ stats.bookmarks }}</div>
+                <div class="stat-label">Bookmarks</div>
+            </div>
+            <div class="stat-item" onclick="openFinesModal()">
+                <div class="stat-value {% if stats.fines > 0 %}danger{% endif %}">
+                    ₹{{ "%.0f"|format(stats.fines) }}
+                </div>
+                <div class="stat-label">Fines Due</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- History Modal -->
+<div class="modal-overlay" id="history-modal" onclick="if(event.target===this) closeModals()">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModals()">&times;</button>
+        <h2 class="modal-title">Borrow History</h2>
+        <div id="history-table-container" class="table-container"></div>
+    </div>
+</div>
+
+<!-- Fines Modal -->
+<div class="modal-overlay" id="fines-modal" onclick="if(event.target===this) closeModals()">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModals()">&times;</button>
+        <h2 class="modal-title">Fines History</h2>
+        <div id="fines-table-container" class="table-container"></div>
+    </div>
+</div>
+
+<script id="history-data" type="application/json">{{ history_json | safe }}</script>
+<script id="fines-data" type="application/json">{{ fines_json | safe }}</script>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var form = document.getElementById('profile-form');
+    var btn = document.getElementById('save-btn');
+    var cancelBtn = document.getElementById('cancel-btn');
+    var originalText = btn.textContent;
+    
+    // Store original values for cancel functionality
+    var originals = {};
+    form.querySelectorAll('input:not([readonly])').forEach(function(input) {
+        originals[input.id] = input.value;
+    });
+
+    cancelBtn.addEventListener('click', function() {
+        form.querySelectorAll('input:not([readonly])').forEach(function(input) {
+            input.value = originals[input.id];
+        });
+    });
+    
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        btn.disabled = true;
+        btn.textContent = 'Saving...';
+        
+        var formData = new FormData(form);
+        
+        fetch(form.action, {
+            method: 'POST',
+            headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+            body: formData
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            btn.disabled = false;
+            btn.textContent = originalText;
+            
+            if(data.success) {
+                showToast(data.message, null, data.type || 'success');
+                // Dynamically update the header and avatar name if it changed
+                var newName = document.getElementById('name').value;
+                document.querySelector('.avatar-info h2').textContent = newName;
+                document.querySelector('.profile-name').textContent = newName; // Update navbar name
+            } else {
+                showToast(data.message || 'Error saving profile.', null, 'error');
+            }
+        })
+        .catch(function(err) {
+            btn.disabled = false;
+            btn.textContent = originalText;
+            console.error("Profile Error:", err);
+            showToast('Connection error — please try again.', null, 'error');
+        });
+    });
+});
+
+function closeModals() {
+    document.querySelectorAll('.modal-overlay').forEach(el => el.classList.remove('show'));
+}
+
+function openHistoryModal() {
+    var data = JSON.parse(document.getElementById('history-data').textContent || '[]');
+    var html = '';
+    if (data.length === 0) {
+        html = '<p style="color:#6b7280;text-align:center;padding:20px;">No history yet.</p>';
+    } else {
+        html = '<table class="data-table"><thead><tr><th>Book Title</th><th>Source</th><th>Type</th><th>Date</th><th>Returned On</th></tr></thead><tbody>';
+        data.forEach(function(row) {
+            html += '<tr><td><a href="/book/' + row.isbn + '">' + row.title + '</a></td><td>' + row.source + '</td><td>' + row.type + '</td><td>' + row.date + '</td><td>' + row.returned + '</td></tr>';
+        });
+        html += '</tbody></table>';
+    }
+    document.getElementById('history-table-container').innerHTML = html;
+    document.getElementById('history-modal').classList.add('show');
+}
+
+function openFinesModal() {
+    var data = JSON.parse(document.getElementById('fines-data').textContent || '[]');
+    var html = '';
+    if (data.length === 0) {
+        html = '<p style="color:#6b7280;text-align:center;padding:20px;">No fines on record.</p>';
+    } else {
+        html = '<table class="data-table"><thead><tr><th>Book Title</th><th>Fine (₹)</th><th>Start Date</th><th>Due Date</th><th>Status</th></tr></thead><tbody>';
+        data.forEach(function(row) {
+            var badgeClass = row.status === 'Cleared' ? 'badge-clear' : row.status === 'Due' ? 'badge-due' : 'badge-past';
+            html += '<tr><td><a href="/book/' + row.isbn + '">' + row.title + '</a></td><td>' + row.amount + '</td><td>' + row.start_date + '</td><td>' + row.due_date + '</td><td><span class="' + badgeClass + '">' + row.status + '</span></td></tr>';
+        });
+        html += '</tbody></table>';
+    }
+    document.getElementById('fines-table-container').innerHTML = html;
+    document.getElementById('fines-modal').classList.add('show');
+}
+</script>
+{% endblock %}

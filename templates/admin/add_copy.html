@@ -1,0 +1,77 @@
+{% extends "admin/base_admin.html" %}
+
+{% block admin_content %}
+<div class="admin-card">
+    <h2 class="admin-title">Add Book Copy</h2>
+    <form class="admin-form" method="POST" action="{{ url_for('admin.add_copy') }}">
+        <div class="form-group">
+            <label>Book ISBN</label>
+            <input type="text" name="isbn" required placeholder="Must match an existing book">
+        </div>
+        <div class="form-group">
+            <label>Location Type</label>
+            <select name="loc_type" id="loc-type-select" onchange="toggleLocType()" required>
+                <option value="Library">Library</option>
+                <option value="Bookstore">Bookstore</option>
+            </select>
+        </div>
+        
+        <div class="form-group" id="lib-group">
+            <label>Select Library</label>
+            <select name="loc_id" id="lib-select">
+                {% for lib in libraries %}
+                <option value="{{ lib.LibraryID }}">{{ lib.Name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group" id="store-group" style="display:none;">
+            <label>Select Bookstore</label>
+            <select name="loc_id" id="store-select" disabled>
+                {% for s in bookstores %}
+                <option value="{{ s.StoreID }}">{{ s.Name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Condition</label>
+            <select name="condition">
+                <option value="New">New</option>
+                <option value="Good">Good</option>
+                <option value="Fair">Fair</option>
+            </select>
+        </div>
+        
+        <div class="form-group" id="price-group" style="display:none;">
+            <label>Price (₹) - Only for Bookstores</label>
+            <input type="number" step="0.01" name="price" id="price-input">
+        </div>
+        
+        <div style="margin-top:24px;">
+            <button type="submit" class="admin-btn">Add Copy</button>
+        </div>
+    </form>
+</div>
+
+<script>
+function toggleLocType() {
+    var type = document.getElementById('loc-type-select').value;
+    if (type === 'Library') {
+        document.getElementById('lib-group').style.display = 'block';
+        document.getElementById('store-group').style.display = 'none';
+        document.getElementById('lib-select').disabled = false;
+        document.getElementById('store-select').disabled = true;
+        
+        document.getElementById('price-group').style.display = 'none';
+    } else {
+        document.getElementById('lib-group').style.display = 'none';
+        document.getElementById('store-group').style.display = 'block';
+        document.getElementById('lib-select').disabled = true;
+        document.getElementById('store-select').disabled = false;
+        
+        document.getElementById('price-group').style.display = 'block';
+    }
+}
+</script>
+{% endblock %}

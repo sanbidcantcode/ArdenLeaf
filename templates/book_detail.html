@@ -1,0 +1,362 @@
+{% extends "base.html" %}
+{% block title %}{{ book.Title }} — ArdenLeaf{% endblock %}
+
+{% block content %}
+<style>
+    .bd-wrap { max-width: 1100px; width: 100%; box-sizing: border-box; margin: 0 auto; padding: 24px 20px 60px; }
+
+    /* ── Breadcrumb ── */
+    .bd-back { display: inline-flex; align-items: center; gap: 6px; font-size: 0.84rem; color: #6b7280; text-decoration: none; margin-bottom: 20px; }
+    .bd-back:hover { color: #2563eb; }
+
+    /* ── Hero: cover + meta ── */
+    .bd-hero { display: grid; grid-template-columns: 240px 1fr; gap: 36px; margin-bottom: 36px; width: 100%; box-sizing: border-box; }
+    @media (max-width: 700px) { .bd-hero { grid-template-columns: 1fr; } }
+
+    /* Cover */
+    .bd-cover-box {
+        position: relative;
+        width: 240px;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.13);
+        flex-shrink: 0;
+    }
+    .bd-cover-box img { width: 100%; display: block; }
+    .bd-cover-placeholder {
+        width: 240px;
+        min-height: 340px;
+        background: linear-gradient(135deg, #e0e7ff, #f0fdf4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 24px;
+        border-radius: 14px;
+        color: #6366f1;
+        font-size: 0.9rem;
+        font-style: italic;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+    }
+
+    /* Meta */
+    .bd-meta { display: flex; flex-direction: column; justify-content: flex-start; gap: 0; width: 100%; }
+    .bd-topbar { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; width: 100%; }
+    .bd-title { font-family: 'Outfit', sans-serif; font-size: 2rem; font-weight: 800; color: #111827; line-height: 1.2; margin: 0 0 4px; }
+    .bd-authors { font-size: 1rem; color: #2563eb; font-weight: 600; margin-bottom: 14px; }
+
+    .bd-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .bd-pill {
+        background: #f1f5f9;
+        border-radius: 999px;
+        padding: 3px 12px;
+        font-size: 0.75rem;
+        color: #475569;
+        font-weight: 500;
+    }
+    .bd-pill strong { color: #111827; }
+
+    /* Rating */
+    .bd-rating { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+    .bd-stars { color: #f59e0b; font-size: 1.1rem; letter-spacing: 1px; }
+    .bd-rating-num { font-weight: 700; font-size: 1.05rem; color: #111827; }
+    .bd-rating-count { font-size: 0.8rem; color: #6b7280; }
+
+    /* Action buttons */
+    .bd-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: auto; padding-top: 10px; }
+    .btn-bookmark {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 8px 16px; border-radius: 8px;
+        border: 1.5px solid #d1d5db; background: #fff;
+        font-size: 0.84rem; font-weight: 600; color: #374151; cursor: pointer;
+        transition: border-color 0.15s, background 0.15s;
+    }
+    .btn-bookmark:hover { border-color: #2563eb; color: #2563eb; background: #eff6ff; }
+    .btn-bookmarked { background: #eff6ff; border-color: #2563eb; color: #2563eb; }
+    .btn-bookmarked:hover { background: #dbeafe; }
+    .btn-preview {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 8px 16px; border-radius: 8px;
+        background: #2563eb; color: #fff;
+        font-size: 0.84rem; font-weight: 600; text-decoration: none; border: none; cursor: pointer;
+        transition: background 0.15s;
+    }
+    .btn-preview:hover { background: #1d4ed8; }
+
+    /* ── Description ── */
+    .bd-section { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 24px 28px; margin-bottom: 24px; }
+    .bd-section-title { font-family: 'Outfit', sans-serif; font-size: 1.1rem; font-weight: 700; color: #111827; margin: 0 0 10px; }
+    .bd-description { font-size: 0.9rem; line-height: 1.7; color: #374151; margin: 0; }
+    .bd-description-empty { font-style: italic; color: #9ca3af; font-size: 0.9rem; }
+
+    /* ── Categories ── */
+    .bd-categories { display: flex; flex-wrap: wrap; gap: 6px; }
+    .bd-category-tag { background: #eff6ff; color: #2563eb; padding: 3px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: 500; }
+
+    /* ── Availability ── */
+    .avail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+    .avail-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 16px 18px;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        transition: box-shadow 0.15s;
+    }
+    .avail-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.07); }
+    .avail-name { font-weight: 700; font-size: 0.9rem; color: #111827; }
+    .avail-type { font-size: 0.75rem; color: #6b7280; font-weight: 500; }
+    .avail-row { display: flex; justify-content: space-between; align-items: center; }
+    .status-badge {
+        font-size: 0.75rem; font-weight: 600; padding: 2px 10px; border-radius: 999px;
+    }
+    .status-available { background: #d1fae5; color: #065f46; }
+    .status-borrowed  { background: #fef3c7; color: #b45309; }
+    .status-sold      { background: #fee2e2; color: #991b1b; }
+    .avail-price { font-size: 0.9rem; font-weight: 700; color: #111827; }
+    .avail-discount { font-size: 0.75rem; color: #16a34a; font-weight: 600; }
+    .btn-borrow, .btn-buy {
+        margin-top: 4px; width: 100%; padding: 7px; border-radius: 8px;
+        font-size: 0.84rem; font-weight: 600; cursor: pointer; border: none;
+        transition: background 0.15s;
+    }
+    .btn-borrow { background: #2563eb; color: #fff; }
+    .btn-borrow:hover { background: #1d4ed8; }
+    .btn-buy { background: #16a34a; color: #fff; }
+    .btn-buy:hover { background: #15803d; }
+    .btn-unavail { background: #f1f5f9; color: #9ca3af; cursor: not-allowed; width: 100%; padding: 7px; border-radius: 8px; font-size: 0.84rem; font-weight: 600; border: none; }
+</style>
+
+<div class="bd-wrap">
+    <a href="{{ request.referrer or url_for('books.search') }}" class="bd-back">← Back to search</a>
+
+    <!-- ── Hero ── -->
+    <div class="bd-hero">
+        <!-- Cover -->
+        <div>
+            {% if google_data.cover_image %}
+            <div class="bd-cover-box">
+                <img src="{{ google_data.cover_image }}" alt="Cover of {{ book.Title }}">
+            </div>
+            {% else %}
+            <div class="bd-cover-placeholder">🧳 Cover is off on an adventure</div>
+            {% endif %}
+        </div>
+
+        <!-- Meta -->
+        <div class="bd-meta">
+            <div class="bd-topbar">
+                <span></span>
+                <form id="bookmark-form" method="POST" action="{{ url_for('books.bookmark', isbn=book.ISBN) }}">
+                    <button id="bookmark-btn" type="submit" class="btn-bookmark {{ 'btn-bookmarked' if bookmarked else '' }}">
+                        {{ '🔖 Bookmarked' if bookmarked else '🔖 Bookmark' }}
+                    </button>
+                </form>
+            </div>
+
+            <h1 class="bd-title">{{ book.Title }}</h1>
+            <div class="bd-authors">{{ book.Authors or 'Unknown Author' }}</div>
+
+            <div class="bd-pills">
+                {% if book.PublicationYear %}
+                <span class="bd-pill"><strong>Published</strong> {{ book.PublicationYear }}</span>
+                {% endif %}
+                {% if book.PublisherName %}
+                <span class="bd-pill"><strong>Publisher</strong> {{ book.PublisherName }}</span>
+                {% endif %}
+                {% if google_data.language %}
+                <span class="bd-pill"><strong>Language</strong> {{ google_data.language | upper }}</span>
+                {% endif %}
+                {% if google_data.page_count %}
+                <span class="bd-pill"><strong>Pages</strong> {{ google_data.page_count }}</span>
+                {% endif %}
+            </div>
+
+            {% if google_data.average_rating %}
+            <div class="bd-rating">
+                <span class="bd-stars">
+                    {% set r = google_data.average_rating | float %}
+                    {% for i in range(5) %}
+                        {% if i < r | int %}★{% else %}☆{% endif %}
+                    {% endfor %}
+                </span>
+                <span class="bd-rating-num">{{ "%.1f"|format(google_data.average_rating) }}</span>
+                {% if google_data.ratings_count %}
+                <span class="bd-rating-count">({{ google_data.ratings_count }} ratings)</span>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            {% if google_data.categories %}
+            <div class="bd-categories" style="margin-bottom: 14px;">
+                {% for cat in google_data.categories %}
+                <span class="bd-category-tag">{{ cat }}</span>
+                {% endfor %}
+            </div>
+            {% elif book.Genres %}
+            <div class="bd-categories" style="margin-bottom: 14px;">
+                {% for g in book.Genres.split(',') %}
+                <span class="bd-category-tag">{{ g.strip() }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="bd-actions">
+                {% if google_data.preview_link %}
+                <a href="{{ google_data.preview_link }}" target="_blank" class="btn-preview">📖 Preview Book</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Description ── -->
+    <div class="bd-section">
+        <h2 class="bd-section-title">About this book</h2>
+        {% if google_data.description %}
+        <p class="bd-description">{{ google_data.description }}</p>
+        {% else %}
+        <p class="bd-description-empty">This book is keeping its secrets for now. Check back soon.</p>
+        {% endif %}
+    </div>
+
+    <!-- ── Availability ── -->
+    <div class="bd-section">
+        <h2 class="bd-section-title">Availability</h2>
+        {% if availability %}
+        <div class="avail-grid">
+            {% for copy in availability %}
+            <div class="avail-card">
+                <div class="avail-row">
+                    <div>
+                        {% if copy.LibraryName %}
+                        <div class="avail-name">🏛️ {{ copy.LibraryName }}</div>
+                        <div class="avail-type">Library</div>
+                        {% else %}
+                        <div class="avail-name">🏬 {{ copy.StoreName }}</div>
+                        <div class="avail-type">Bookstore</div>
+                        {% endif %}
+                    </div>
+                    <span class="status-badge
+                        {% if copy.Status == 'Available' %}status-available
+                        {% elif copy.Status == 'Borrowed' %}status-borrowed
+                        {% else %}status-sold{% endif %}">
+                        {{ copy.Status }}
+                    </span>
+                </div>
+
+                {% if copy.StoreName and copy.Price %}
+                <div class="avail-row">
+                    <span class="avail-price">₹{{ "%.0f"|format(copy.Price) }}</span>
+                    {% if copy.DiscountPercent %}
+                    <span class="avail-discount">{{ copy.DiscountPercent }}% off</span>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                {% if copy.LibraryName and copy.Status == 'Available' %}
+                    {% if session.get('user_id') and session.get('user_type') == 'Member' %}
+                    <form action="{{ url_for('loans.borrow_book') }}" method="POST" class="borrow-form">
+                        <input type="hidden" name="copy_id" value="{{ copy.CopyID }}">
+                        <button type="submit" class="btn-borrow">Borrow</button>
+                    </form>
+                    {% elif session.get('user_id') %}
+                    <button class="btn-unavail" disabled>Members only</button>
+                    {% else %}
+                    <a href="{{ url_for('auth.auth_page') }}" class="btn-borrow" style="text-align:center; text-decoration:none; display:block;">Login to Borrow</a>
+                    {% endif %}
+                {% elif copy.StoreName and copy.Status == 'Available' %}
+                    <button class="btn-buy">
+                        Buy{% if copy.Price %} — ₹{{ "%.0f"|format(copy.Price * (1 - copy.DiscountPercent / 100) if copy.DiscountPercent else copy.Price) }}{% endif %}
+                    </button>
+                {% else %}
+                    <button class="btn-unavail" disabled>Unavailable</button>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 40px 20px; border: 1.5px dashed #d1d5db; border-radius: 12px; background: #f8fafc;">
+            <div style="font-size: 2.2rem; margin-bottom: 8px;">🛒</div>
+            <p style="margin: 0; color: #6b7280; font-size: 0.95rem;">No copies of this book are currently available in our system.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var form = document.getElementById('bookmark-form');
+    var btn  = document.getElementById('bookmark-btn');
+    if (!form || !btn) return;
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        // Disable button during request to prevent double-submit
+        btn.disabled = true;
+
+        fetch(form.action, {
+            method: 'POST',
+            headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+            body: new FormData(form),
+        })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+            if (data.success) {
+                var isNow = data.bookmarked;
+                btn.textContent = isNow ? '🔖 Bookmarked' : '🔖 Bookmark';
+                btn.className   = 'btn-bookmark' + (isNow ? ' btn-bookmarked' : '');
+                var url = isNow ? '/bookmarks' : null;
+                showToast(data.message, url, data.type || 'success');
+            } else {
+                showToast(data.message || 'Something went wrong.', null, 'error');
+            }
+        })
+        .catch(function (error) {
+            console.error("Bookmark Error:", error);
+            showToast('Connection error — please try again.', null, 'error');
+        })
+        .finally(function () {
+            btn.disabled = false;
+        });
+    });
+
+    // ── Borrow fetch intercept ──
+    document.querySelectorAll('.borrow-form').forEach(function(bForm) {
+        bForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var bBtn = bForm.querySelector('button[type="submit"]');
+            bBtn.disabled = true;
+
+            fetch(bForm.action, {
+                method: 'POST',
+                headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                body: new FormData(bForm),
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if(data.success) {
+                    bBtn.textContent = 'Borrowed';
+                    bBtn.className = 'btn-unavail';
+                    bBtn.disabled = true;
+                    window.showToast('Borrowed! Due in 14 days', '/dashboard');
+                } else {
+                    bBtn.disabled = false;
+                    showToast(data.message || 'Error occurred.', null, 'error');
+                }
+            })
+            .catch(function(err) {
+                console.error("Borrow Error:", err);
+                bBtn.disabled = false;
+                showToast('Connection error — please try again.', null, 'error');
+            });
+        });
+    });
+});
+
+</script>
+{% endblock %}
