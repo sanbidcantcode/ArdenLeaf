@@ -1,42 +1,471 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>ArdenLeaf | Discover India's Literary Treasures</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&amp;family=Lora:ital,wght@0,400;0,600;1,400&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&amp;family=Epilogue:wght@400;700&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Material Symbols -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-fixed-dim": "#a6d2a6",
+                        "outline-variant": "#c2c8be",
+                        "secondary-fixed": "#d5e8d2",
+                        "secondary-fixed-dim": "#b9cbb6",
+                        "on-secondary-container": "#586957",
+                        "on-tertiary-container": "#c78699",
+                        "inverse-primary": "#a6d2a6",
+                        "error-container": "#ffdad6",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#c1eec0",
+                        "on-primary-container": "#79a37a",
+                        "inverse-surface": "#343111",
+                        "surface-bright": "#FEF7E2",
+                        "error": "#ba1a1a",
+                        "on-surface-variant": "#424941",
+                        "surface-container-high": "#f0e9bb",
+                        "surface-container": "#F8F1C5",
+                        "on-primary-fixed-variant": "#284f2d",
+                        "on-primary-fixed": "#002108",
+                        "tertiary-container": "#502131",
+                        "background": "#FEF7E2",
+                        "surface": "#FEF7E2",
+                        "tertiary": "#360c1c",
+                        "on-error": "#ffffff",
+                        "surface-variant": "#ebe4b5",
+                        "tertiary-fixed": "#ffd9e2",
+                        "surface-container-low": "#F8F1C5",
+                        "on-tertiary": "#ffffff",
+                        "on-background": "#1f1c01",
+                        "on-secondary-fixed": "#101f11",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#3b4b3b",
+                        "secondary": "#526351",
+                        "surface-tint": "#406743",
+                        "surface-dim": "#e2dbad",
+                        "tertiary-fixed-dim": "#fab3c6",
+                        "on-tertiary-fixed": "#360c1c",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-on-surface": "#f9f2c3",
+                        "primary-container": "#113819",
+                        "secondary-container": "#d5e8d2",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#6a3747",
+                        "surface-container-highest": "#ebe4b5",
+                        "primary": "#002208",
+                        "outline": "#727970",
+                        "on-surface": "#1f1c01"
+                    },
+                    fontFamily: {
+                        "headline": ["Outfit", "sans-serif"],
+                        "body": ["Lora", "serif"],
+                        "label": ["Newsreader", "serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px", "search": "2rem" },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
 
-{% block content %}
-<section class="hero">
-    <h1>Discover Your Next Great Read</h1>
-    <p>Search across multiple libraries and bookstores. Borrow, buy, and manage your reading list all in one centralized
-        platform.</p>
+        .editorial-shadow {
+            box-shadow: 0 20px 50px -12px rgba(17, 56, 25, 0.08);
+        }
 
-    <div style="max-width: 600px; margin: 0 auto;">
-        <form action="{{ url_for('books.search') }}" method="GET" style="display: flex; gap: 10px;">
-            <input type="text" name="q" class="form-control" placeholder="Search by title, author, or genre..."
-                style="flex: 1; padding: 1rem; border-radius: var(--radius); font-size: 1.1rem; box-shadow: var(--shadow);">
-            <button type="submit" class="btn btn-primary"
-                style="border-radius: var(--radius); padding: 0 2rem; font-size: 1.1rem;">Search</button>
-        </form>
-    </div>
-</section>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
 
-<section style="margin-top: 4rem;">
-    <h2 style="text-align: center; margin-bottom: 2rem;">Why Choose ArdenLeaf?</h2>
-    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
-        <div class="card" style="text-align: center;">
-            <div style="font-size: 3rem; margin-bottom: 1rem;">📚</div>
-            <h3>Unified Catalog</h3>
-            <p style="color: var(--text-muted); margin-top: 1rem;">Find books from city libraries and local bookstores
-                without jumping between websites.</p>
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Global scaling simulation: 85% zoom feel */
+        body {
+            font-size: 0.85rem;
+        }
+
+        .logo-color {
+            color: #113819;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-fixed-dim">
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-[#f5eebf] border-b border-[#113819]/10">
+        <div class="flex justify-between items-center px-8 py-3 max-w-7xl mx-auto">
+            <a href="{{ url_for('index') }}" class="text-3xl font-headline font-black text-[#113819] flex items-center gap-2">
+                <span class="material-symbols-outlined text-[32px] text-[#113819]"
+                    style="font-variation-settings: 'FILL' 1;">eco</span>
+                ArdenLeaf
+            </a>
+            <div class="hidden md:flex gap-10 items-center">
+                <a class="text-[#113819] font-headline font-semibold text-base tracking-tight border-b-2 border-transparent hover:border-[#113819] py-1"
+                    href="{{ url_for('books.search') }}">Search Books</a>
+                <a class="text-[#113819]/80 font-headline font-semibold text-base tracking-tight hover:text-[#113819] transition-colors duration-300"
+                    href="{{ url_for('books.libraries_list') }}">Locations</a>
+            </div>
+            <div class="flex items-center gap-6">
+                {% if session.get('user_id') %}
+                <span class="text-[#113819] font-headline font-semibold text-sm">{{ session.get('user_name', 'Account') }}</span>
+                <a href="{{ url_for('auth.logout') }}" class="text-[#113819]/80 hover:text-[#113819] font-headline font-semibold text-sm transition-colors">Logout</a>
+                {% else %}
+                <a href="{{ url_for('auth.auth_page') }}"
+                    class="px-6 py-2 bg-[#113819] text-[#f5eebf] font-headline font-bold rounded-lg transition-transform active:scale-95 duration-150 text-sm">
+                    Login
+                </a>
+                {% endif %}
+            </div>
         </div>
-        <div class="card" style="text-align: center;">
-            <div style="font-size: 3rem; margin-bottom: 1rem;">🍃</div>
-            <h3>Smart Loans</h3>
-            <p style="color: var(--text-muted); margin-top: 1rem;">Track your borrowed books, due dates, and
-                automatically calculate fines on late returns.</p>
+    </nav>
+    <!-- Hero Section (Light Cream IMAGE_2) -->
+    <header class="relative overflow-hidden pt-12 pb-16 bg-surface">
+        <div class="max-w-7xl mx-auto px-8 grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+            <div class="lg:col-span-7 z-10">
+                <h1
+                    class="text-6xl lg:text-7xl font-headline font-semibold text-primary-container leading-[1.1] tracking-tighter mb-6">
+                    Discover Your <br />Next <span class="italic font-body font-light text-on-primary-container">Great
+                        Read</span>
+                </h1>
+                <p class="text-lg text-on-surface-variant font-body max-w-lg leading-relaxed mb-8 opacity-90">
+                    Connecting India's vast network of heritage libraries and local independent bookstores to your
+                    personal reading list. Your journey into the written word starts here.
+                </p>
+                <form action="{{ url_for('books.search') }}" method="GET" class="relative max-w-xl group">
+                    <div class="absolute inset-y-0 left-5 flex items-center pointer-events-none">
+                        <span class="material-symbols-outlined text-outline">search</span>
+                    </div>
+                    <input name="q"
+                        class="w-full pl-14 pr-36 py-4 bg-surface-container-lowest border border-outline/20 rounded-search focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all text-base font-body placeholder:text-stone-400 shadow-sm"
+                        placeholder="Title, author, or ISBN..." type="text" />
+                    <button type="submit"
+                        class="absolute right-2 top-1/2 -translate-y-1/2 bg-primary-container text-on-primary px-8 py-2.5 rounded-search font-headline font-bold hover:shadow-lg transition-all active:scale-95 text-sm">
+                        Search
+                    </button>
+                </form>
+            </div>
+            <div class="lg:col-span-5 relative">
+                <div
+                    class="relative w-full aspect-[4/5] rounded-xl overflow-hidden editorial-shadow transform rotate-2">
+                    <img alt="Heritage Library" class="w-full h-full object-cover"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCF2yncRP-jYX8S741WvOEZw5CqJEgi9mhMoHSKSg806XTPHXcdtJjrrQ0o65vToXhhEVRXhQggVcVy9BjsUhSZx4dwAvPTApwIu7HhkC1S6lOv6I2m7WYfIT_bNGQpceAdY_pJEGi5T1xHQinBSXQ4tvWwAf4GBn58_v242BEdbZPfkRpmxie5yYRl5mnRjCaV-QiOX16jVvyRbxO88D_n9kEOcbVbKsjjyLkxPQ2xJ62Vk2VXEzXi3Kv6JmfoUWyZur6btw_ll6aj" />
+                    <div class="absolute inset-0 bg-gradient-to-t from-primary-container/40 to-transparent"></div>
+                </div>
+                <!-- Floating Decorative Element -->
+                <div
+                    class="absolute -bottom-4 -left-10 p-6 bg-surface-container-lowest rounded-xl editorial-shadow max-w-[220px] transform -rotate-3 border border-outline-variant/20 hidden md:block">
+                    <p class="font-label italic text-base leading-snug text-primary">"A room without books is like a
+                        body without a soul."</p>
+                    <p class="mt-3 text-[10px] font-headline font-bold tracking-widest text-outline uppercase">— Marcus
+                        Cicero</p>
+                </div>
+            </div>
         </div>
-        <div class="card" style="text-align: center;">
-            <div style="font-size: 3rem; margin-bottom: 1rem;">⭐</div>
-            <h3>Loyalty & Rewards</h3>
-            <p style="color: var(--text-muted); margin-top: 1rem;">Customers earn points for bookstore purchases, while
-                Members get premium library access.</p>
+    </header>
+    <!-- Stats Row (Warmer Parchment IMAGE_3) -->
+    <section class="bg-surface-container-low py-12">
+        <div class="max-w-7xl mx-auto px-8 grid grid-cols-1 md:grid-cols-3 gap-16">
+            <div class="flex flex-col items-center md:items-start">
+                <span class="text-4xl font-headline font-black text-primary-container mb-1">4.2M+</span>
+                <span
+                    class="text-[11px] font-headline font-bold uppercase tracking-[0.2em] text-on-primary-container/70">Books
+                    Cataloged</span>
+            </div>
+            <div
+                class="flex flex-col items-center md:items-start border-y md:border-y-0 md:border-x border-outline-variant/20 py-6 md:py-0 md:px-16">
+                <span class="text-4xl font-headline font-black text-primary-container mb-1">1,200</span>
+                <span
+                    class="text-[11px] font-headline font-bold uppercase tracking-[0.2em] text-on-primary-container/70">Partner
+                    Libraries</span>
+            </div>
+            <div class="flex flex-col items-center md:items-start">
+                <span class="text-4xl font-headline font-black text-primary-container mb-1">28</span>
+                <span
+                    class="text-[11px] font-headline font-bold uppercase tracking-[0.2em] text-on-primary-container/70">Indian
+                    Cities</span>
+            </div>
         </div>
-    </div>
-</section>
-{% endblock %}
+    </section>
+    <!-- Genre Pills (Light Cream IMAGE_2) -->
+    <section class="py-16 overflow-hidden bg-surface">
+        <div class="max-w-7xl mx-auto px-8">
+            <h2 class="text-3xl font-headline font-bold text-primary-container mb-8">Browse by Genre</h2>
+            <div class="flex gap-3 overflow-x-auto no-scrollbar pb-6 -mx-8 px-8" id="genre-container">
+                <a href="{{ url_for('books.search', q='Historical Fiction') }}"
+                    class="whitespace-nowrap px-6 py-2.5 bg-primary-container text-surface-container-low rounded-full font-headline font-bold text-xs hover:opacity-90 transition-all duration-300">Historical
+                    Fiction</a>
+                <a href="{{ url_for('books.search', q='Sanskrit Classics') }}"
+                    class="whitespace-nowrap px-6 py-2.5 bg-primary-container text-surface-container-low rounded-full font-headline font-bold text-xs hover:opacity-90 transition-all duration-300">Sanskrit
+                    Classics</a>
+                <a href="{{ url_for('books.search', q='Modern Philosophy') }}"
+                    class="whitespace-nowrap px-6 py-2.5 bg-primary-container text-surface-container-low rounded-full font-headline font-bold text-xs hover:opacity-90 transition-all duration-300">Modern
+                    Philosophy</a>
+                <a href="{{ url_for('books.search', q='Regional Lit') }}"
+                    class="whitespace-nowrap px-6 py-2.5 bg-primary-container text-surface-container-low rounded-full font-headline font-bold text-xs hover:opacity-90 transition-all duration-300">Regional
+                    Lit</a>
+                <a href="{{ url_for('books.search', q='Poetry') }}"
+                    class="whitespace-nowrap px-6 py-2.5 bg-primary-container text-surface-container-low rounded-full font-headline font-bold text-xs hover:opacity-90 transition-all duration-300">Poetry</a>
+                <a href="{{ url_for('books.search', q='Mystery & Noir') }}"
+                    class="whitespace-nowrap px-6 py-2.5 bg-primary-container text-surface-container-low rounded-full font-headline font-bold text-xs hover:opacity-90 transition-all duration-300">Mystery
+                    &amp; Noir</a>
+                <a href="{{ url_for('books.search', q='Sci-Fi') }}"
+                    class="whitespace-nowrap px-6 py-2.5 bg-primary-container text-surface-container-low rounded-full font-headline font-bold text-xs hover:opacity-90 transition-all duration-300">Sci-Fi</a>
+                <a href="{{ url_for('books.search', q='Biography') }}"
+                    class="whitespace-nowrap px-6 py-2.5 bg-primary-container text-surface-container-low rounded-full font-headline font-bold text-xs hover:opacity-90 transition-all duration-300">Biography</a>
+                <a href="{{ url_for('books.search', q='Travel') }}"
+                    class="whitespace-nowrap px-6 py-2.5 bg-primary-container text-surface-container-low rounded-full font-headline font-bold text-xs hover:opacity-90 transition-all duration-300">Travel</a>
+                <a href="{{ url_for('books.search', q='Art') }}"
+                    class="whitespace-nowrap px-6 py-2.5 bg-primary-container text-surface-container-low rounded-full font-headline font-bold text-xs hover:opacity-90 transition-all duration-300">Art</a>
+                <a href="{{ url_for('books.search', q='Classical Music') }}"
+                    class="whitespace-nowrap px-6 py-2.5 bg-primary-container text-surface-container-low rounded-full font-headline font-bold text-xs hover:opacity-90 transition-all duration-300">Classical
+                    Music</a>
+                <a href="{{ url_for('books.search', q='Mythology') }}"
+                    class="whitespace-nowrap px-6 py-2.5 bg-primary-container text-surface-container-low rounded-full font-headline font-bold text-xs hover:opacity-90 transition-all duration-300">Mythology</a>
+            </div>
+            <div class="flex gap-4 mt-2 justify-start">
+                <button
+                    id="genre-scroll-left"
+                    class="w-10 h-10 rounded-full border border-outline/20 flex items-center justify-center text-primary-container hover:bg-primary-container hover:text-on-primary transition-colors">
+                    <span class="material-symbols-outlined text-xl">chevron_left</span>
+                </button>
+                <button
+                    id="genre-scroll-right"
+                    class="w-10 h-10 rounded-full border border-outline/20 flex items-center justify-center text-primary-container hover:bg-primary-container hover:text-on-primary transition-colors">
+                    <span class="material-symbols-outlined text-xl">chevron_right</span>
+                </button>
+            </div>
+        </div>
+    </section>
+    <!-- How It Works (Warmer Parchment IMAGE_3) -->
+    <section class="py-20 bg-surface-container-low">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="mb-12">
+                <h2 class="text-4xl font-headline font-black text-primary-container leading-tight mb-4">A Sanctuary for
+                    Every Reader</h2>
+                <p class="text-base text-on-surface-variant leading-relaxed max-w-xl">We simplify the path between you
+                    and your next favorite book. Whether it's a rare manuscript or a modern bestseller.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 justify-center">
+                <!-- Service Cards Side-by-Side Horizontal Row -->
+                <a class="group flex items-center gap-6 p-8 bg-surface-container-lowest rounded-2xl border border-outline-variant/10 editorial-shadow hover:bg-primary-container transition-all duration-500 cursor-pointer"
+                    href="{{ url_for('books.search') }}">
+                    <div
+                        class="w-16 h-16 shrink-0 bg-surface-container-low rounded-xl flex items-center justify-center group-hover:bg-[#ffffff] transition-all duration-500">
+                        <span
+                            class="material-symbols-outlined text-3xl text-primary-container group-hover:text-[#113819]">search</span>
+                    </div>
+                    <div>
+                        <h3
+                            class="text-2xl md:text-3xl font-headline font-bold text-primary-container mb-2 group-hover:text-on-primary transition-colors">
+                            Search</h3>
+                        <p
+                            class="text-base md:text-lg text-on-surface-variant leading-relaxed group-hover:text-on-primary/80 transition-colors">
+                            Browse millions of titles across our integrated network of libraries.</p>
+                    </div>
+                </a>
+                <a class="group flex items-center gap-6 p-8 bg-surface-container-lowest rounded-2xl border border-outline-variant/10 editorial-shadow hover:bg-primary-container transition-all duration-500 cursor-pointer"
+                    href="{{ url_for('books.search') }}">
+                    <div
+                        class="w-16 h-16 shrink-0 bg-surface-container-low rounded-xl flex items-center justify-center group-hover:bg-[#ffffff] transition-all duration-500">
+                        <span
+                            class="material-symbols-outlined text-3xl text-primary-container group-hover:text-[#113819]">menu_book</span>
+                    </div>
+                    <div>
+                        <h3
+                            class="text-2xl md:text-3xl font-headline font-bold text-primary-container mb-2 group-hover:text-on-primary transition-colors">
+                            Borrow</h3>
+                        <p
+                            class="text-base md:text-lg text-on-surface-variant leading-relaxed group-hover:text-on-primary/80 transition-colors">
+                            Reserve books for pick-up or request doorstep delivery locally.</p>
+                    </div>
+                </a>
+                <a class="group flex items-center gap-6 p-8 bg-surface-container-lowest rounded-2xl border border-outline-variant/10 editorial-shadow hover:bg-primary-container transition-all duration-500 cursor-pointer"
+                    href="{{ url_for('books.search') }}">
+                    <div
+                        class="w-16 h-16 shrink-0 bg-surface-container-low rounded-xl flex items-center justify-center group-hover:bg-[#ffffff] transition-all duration-500">
+                        <span
+                            class="material-symbols-outlined text-3xl text-primary-container group-hover:text-[#113819]">auto_stories</span>
+                    </div>
+                    <div>
+                        <h3
+                            class="text-2xl md:text-3xl font-headline font-bold text-primary-container mb-2 group-hover:text-on-primary transition-colors">
+                            Read</h3>
+                        <p
+                            class="text-base md:text-lg text-on-surface-variant leading-relaxed group-hover:text-on-primary/80 transition-colors">
+                            Immerse yourself in stories and join local community book clubs.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+    <!-- Curated Section (Light Cream IMAGE_2) -->
+    <section class="py-24 bg-surface">
+        <div class="max-w-7xl mx-auto px-8">
+            <h2 class="text-3xl font-headline font-bold text-primary-container mb-12">Editor's Selection</h2>
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-10">
+                <!-- Large Card -->
+                <div
+                    class="md:col-span-8 bg-surface-container-lowest rounded-2xl overflow-hidden editorial-shadow flex flex-col md:flex-row group border border-outline-variant/10">
+                    <div class="md:w-1/2 overflow-hidden">
+                        <img alt="Featured Book"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMdCtZloWrfM0z7GA5CXYCE7y61n0tQXogqSDeqe_b-MUnAPgWA8BMn7nw6x8afKxRFirB1nUwY9bJHk0YOt5XNRYDSKWL-KE4aCkI9MrbpkHVZ0kZOSJ-JMJabkKZ_S1uTe7IjKyBAdjvXTsIg8R5j49f_lu8E--2X5BL5uscPHQUAh_9ki09auF3LlYwfEo0sqf-rFcAvJAVNxHJHgYe8pF_1ee6RfuPIx5G2IUM8yT-XmbHQnEQZvN7EpVQvZrxw_gRkZsnDD1y" />
+                    </div>
+                    <div class="md:w-1/2 p-10 flex flex-col justify-center">
+                        <span
+                            class="text-[10px] font-headline font-bold tracking-[0.2em] text-on-primary-container uppercase mb-5">Staff
+                            Pick</span>
+                        <h3 class="text-3xl font-headline font-bold text-primary-container mb-4">The Midnight Library
+                        </h3>
+                        <p class="text-on-surface-variant font-body italic mb-8 leading-relaxed text-base">"Between life
+                            and death there is a library, and within that library, the shelves go on forever."</p>
+                        <a class="text-primary-container font-headline font-bold flex items-center gap-2 group/link text-sm"
+                            href="#">
+                            Reserve Now
+                            <span
+                                class="material-symbols-outlined group-hover/link:translate-x-2 transition-transform text-lg">arrow_forward</span>
+                        </a>
+                    </div>
+                </div>
+                <!-- Testimonial Card (Styling from IMAGE_15/17) -->
+                <div
+                    class="md:col-span-4 bg-[#F9F5D2] p-10 rounded-[2rem] flex flex-col justify-between border border-[#EBE4B5]/50 editorial-shadow">
+                    <div>
+                        <div class="flex gap-1 mb-6">
+                            <span class="material-symbols-outlined text-[#113819] text-xl"
+                                style="font-variation-settings: 'FILL' 1;">star</span>
+                            <span class="material-symbols-outlined text-[#113819] text-xl"
+                                style="font-variation-settings: 'FILL' 1;">star</span>
+                            <span class="material-symbols-outlined text-[#113819] text-xl"
+                                style="font-variation-settings: 'FILL' 1;">star</span>
+                            <span class="material-symbols-outlined text-[#113819] text-xl"
+                                style="font-variation-settings: 'FILL' 1;">star</span>
+                            <span class="material-symbols-outlined text-[#113819] text-xl"
+                                style="font-variation-settings: 'FILL' 1;">star</span>
+                        </div>
+                        <p class="text-lg font-body text-[#113819] leading-relaxed mb-8">"Finally, a way to find rare
+                            regional literature in Bengaluru. The discovery engine is unmatched."</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-12 h-12 rounded-full bg-[#113819] flex items-center justify-center text-[#F9F5D2] font-headline font-bold text-lg">
+                            A</div>
+                        <div>
+                            <p class="text-base font-headline font-bold text-[#113819]">Ananya Sharma</p>
+                            <p class="text-xs text-[#113819]/60">Verified Reader</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Small Card 2 -->
+                <div
+                    class="md:col-span-4 bg-primary-container p-10 rounded-2xl text-on-primary flex flex-col justify-center relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h3 class="text-2xl font-headline font-bold mb-4">Join the Club</h3>
+                        <p class="font-body text-sm opacity-80 mb-8 leading-relaxed">Get early access to literary
+                            festivals and private book launches across India.</p>
+                        <button
+                            class="w-full py-3 bg-surface text-primary-container font-headline font-bold rounded-lg hover:bg-secondary-fixed transition-colors text-xs">
+                            Sign Up Free
+                        </button>
+                    </div>
+                    <span
+                        class="material-symbols-outlined absolute -bottom-8 -right-8 text-[140px] opacity-10 pointer-events-none">local_library</span>
+                </div>
+                <!-- Location Section (Styling from IMAGE_16/18) -->
+                <div
+                    class="md:col-span-8 bg-[#E6E2B3] rounded-[2rem] overflow-hidden p-12 flex items-center gap-12 border border-black/5 editorial-shadow">
+                    <div class="hidden lg:block w-24 shrink-0 text-center">
+                        <span class="material-symbols-outlined text-7xl text-[#113819]/20"
+                            style="font-variation-settings: 'FILL' 1;">location_on</span>
+                    </div>
+                    <div>
+                        <h3 class="text-3xl font-headline font-black text-[#113819] mb-4">Find a Library Near You</h3>
+                        <p class="text-[#113819]/80 text-base font-body mb-8 max-w-xl">Discover over 1,200 partnered
+                            spaces from the historical Asiatic Library to modern community hubs.</p>
+                        <div class="flex gap-4">
+                            <a href="{{ url_for('books.search', q='Mumbai') }}"
+                                class="px-5 py-2 bg-white rounded-lg text-sm font-headline font-bold text-[#113819] shadow-sm hover:bg-surface-container-lowest transition-colors">Mumbai</a>
+                            <a href="{{ url_for('books.search', q='Delhi') }}"
+                                class="px-5 py-2 bg-white rounded-lg text-sm font-headline font-bold text-[#113819] shadow-sm hover:bg-surface-container-lowest transition-colors">Delhi</a>
+                            <a href="{{ url_for('books.search', q='Kolkata') }}"
+                                class="px-5 py-2 bg-white rounded-lg text-sm font-headline font-bold text-[#113819] shadow-sm hover:bg-surface-container-lowest transition-colors">Kolkata</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Footer (Warmer Parchment IMAGE_3) -->
+    <footer class="bg-surface-container-low pt-16 pb-10">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="flex flex-col md:flex-row justify-between items-start mb-16 gap-12">
+                <div class="max-w-xs">
+                    <div class="text-3xl font-headline font-black logo-color flex items-center gap-2 mb-6">
+                        <span class="material-symbols-outlined text-[32px] logo-color"
+                            style="font-variation-settings: 'FILL' 1;">eco</span>
+                        ArdenLeaf
+                    </div>
+                    <p class="font-body text-stone-600 text-base leading-relaxed italic opacity-80">"Cultivating the
+                        digital garden for India's readers and writers. Preserving history, promoting curiosity."</p>
+                </div>
+                <div class="grid grid-cols-2 gap-24">
+                    <div class="flex flex-col gap-4">
+                        <h4
+                            class="font-headline font-bold text-primary-container uppercase tracking-widest text-[10px]">
+                            Discover</h4>
+                        <a class="text-stone-500 text-base hover:text-primary-container transition-all" href="{{ url_for('books.search') }}">Search Books</a>
+                        <a class="text-stone-500 text-base hover:text-primary-container transition-all"
+                            href="{{ url_for('books.libraries_list') }}">Locations</a>
+                        <a class="text-stone-500 text-base hover:text-primary-container transition-all" href="{{ url_for('books.bookmarks_page') }}">Bookmarks</a>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <h4
+                            class="font-headline font-bold text-primary-container uppercase tracking-widest text-[10px]">
+                            Connect</h4>
+                        <a class="text-stone-500 text-base hover:text-primary-container transition-all" href="#">About Us</a>
+                        <a class="text-stone-500 text-base hover:text-primary-container transition-all" href="#">Contact</a>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-8 border-t border-stone-300/30 flex flex-col md:flex-row justify-between items-center gap-6">
+                <p class="font-label text-sm italic text-stone-500">
+                    © 2024 ArdenLeaf. Made with <span class="text-primary-container">🍃</span> for India's readers.
+                </p>
+                <div class="flex gap-8">
+                    <span
+                        class="material-symbols-outlined text-stone-400 cursor-pointer hover:text-primary-container text-xl">language</span>
+                    <span
+                        class="material-symbols-outlined text-stone-400 cursor-pointer hover:text-primary-container text-xl">mail</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('genre-scroll-left').addEventListener('click', () => {
+            document.getElementById('genre-container').scrollBy({ left: -300, behavior: 'smooth' });
+        });
+        document.getElementById('genre-scroll-right').addEventListener('click', () => {
+            document.getElementById('genre-container').scrollBy({ left: 300, behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
