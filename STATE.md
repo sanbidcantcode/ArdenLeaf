@@ -4,7 +4,7 @@
 
 - **Active Task**: None.
 - **Status**: Stable.
-- **Last Action**: Refined the authentication page UI spacing to remove wasted whitespace and create a sleek, compact design.
+- **Last Action**: Polished `book_detail.html`: prioritize `google_data` for genres and ensured all variables (cover, description, ratings, etc.) are correctly bound and displayed.
 - **Next Step**: Awaiting further user requests.
 
 ## Completed Milestones

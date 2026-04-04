@@ -1,362 +1,876 @@
-{% extends "base.html" %}
-{% block title %}{{ book.Title }} — ArdenLeaf{% endblock %}
+<!DOCTYPE html>
+<html class="light" lang="en">
 
-{% block content %}
-<style>
-    .bd-wrap { max-width: 1100px; width: 100%; box-sizing: border-box; margin: 0 auto; padding: 24px 20px 60px; }
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>{{ book.Title }} | ArdenLeaf</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&amp;family=Lora:ital,wght@0,400;0,700;1,400&amp;family=Epilogue:wght@700;800&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,700;1,6..72,400&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Material Symbols -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-surface": "#1f1c01",
+                        "on-tertiary-fixed-variant": "#6a3747",
+                        "on-primary-fixed": "#002108",
+                        "on-primary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#79a37a",
+                        "error": "#ba1a1a",
+                        "secondary-fixed": "#d5e8d2",
+                        "primary-container": "#113819",
+                        "on-secondary": "#ffffff",
+                        "primary": "#002208",
+                        "outline": "#727970",
+                        "surface-tint": "#406743",
+                        "surface-container": "#f6efc0",
+                        "surface-dim": "#e2dbad",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed-dim": "#b9cbb6",
+                        "secondary-container": "#d5e8d2",
+                        "on-tertiary-fixed": "#360c1c",
+                        "on-secondary-fixed-variant": "#3b4b3b",
+                        "primary-fixed": "#c1eec0",
+                        "tertiary": "#360c1c",
+                        "primary-fixed-dim": "#a6d2a6",
+                        "on-tertiary-container": "#c78699",
+                        "on-background": "#1f1c01",
+                        "on-primary-fixed-variant": "#284f2d",
+                        "on-error": "#ffffff",
+                        "on-surface-variant": "#424941",
+                        "tertiary-fixed-dim": "#fab3c6",
+                        "surface": "#fff9e4",
+                        "inverse-primary": "#a6d2a6",
+                        "background": "#fff9e4",
+                        "outline-variant": "#c2c8be",
+                        "inverse-on-surface": "#f9f2c3",
+                        "tertiary-container": "#502131",
+                        "surface-container-high": "#f0e9bb",
+                        "inverse-surface": "#343111",
+                        "surface-container-low": "#fcf5c5",
+                        "on-secondary-container": "#586957",
+                        "surface-container-highest": "#ebe4b5",
+                        "secondary": "#526351",
+                        "surface-bright": "#fff9e4",
+                        "surface-variant": "#ebe4b5",
+                        "on-secondary-fixed": "#101f11",
+                        "tertiary-fixed": "#ffd9e2",
+                        "error-container": "#ffdad6"
+                    },
+                    fontFamily: {
+                        "headline": ["Outfit", "Epilogue", "sans-serif"],
+                        "body": ["Lora", "Newsreader", "serif"],
+                        "label": ["Outfit", "Newsreader", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
 
-    /* ── Breadcrumb ── */
-    .bd-back { display: inline-flex; align-items: center; gap: 6px; font-size: 0.84rem; color: #6b7280; text-decoration: none; margin-bottom: 20px; }
-    .bd-back:hover { color: #2563eb; }
+        .paper-elevation {
+            box-shadow: 0 4px 20px -2px rgba(54, 12, 28, 0.05);
+        }
 
-    /* ── Hero: cover + meta ── */
-    .bd-hero { display: grid; grid-template-columns: 240px 1fr; gap: 36px; margin-bottom: 36px; width: 100%; box-sizing: border-box; }
-    @media (max-width: 700px) { .bd-hero { grid-template-columns: 1fr; } }
+        .book-shadow {
+            box-shadow: 20px 20px 60px rgba(17, 56, 25, 0.15);
+        }
 
-    /* Cover */
-    .bd-cover-box {
-        position: relative;
-        width: 240px;
-        border-radius: 14px;
-        overflow: hidden;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.13);
-        flex-shrink: 0;
-    }
-    .bd-cover-box img { width: 100%; display: block; }
-    .bd-cover-placeholder {
-        width: 240px;
-        min-height: 340px;
-        background: linear-gradient(135deg, #e0e7ff, #f0fdf4);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        padding: 24px;
-        border-radius: 14px;
-        color: #6366f1;
-        font-size: 0.9rem;
-        font-style: italic;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.10);
-    }
+        /* Toast Logic Integration */
+        #toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: flex-end;
+            gap: 10px;
+            pointer-events: none;
+        }
 
-    /* Meta */
-    .bd-meta { display: flex; flex-direction: column; justify-content: flex-start; gap: 0; width: 100%; }
-    .bd-topbar { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; width: 100%; }
-    .bd-title { font-family: 'Outfit', sans-serif; font-size: 2rem; font-weight: 800; color: #111827; line-height: 1.2; margin: 0 0 4px; }
-    .bd-authors { font-size: 1rem; color: #2563eb; font-weight: 600; margin-bottom: 14px; }
+        .toast-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 280px;
+            max-width: 380px;
+            background: #fff;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            padding: 12px 14px 14px;
+            pointer-events: auto;
+            transform: translateX(calc(100% + 40px));
+            opacity: 0;
+            transition: transform 0.38s cubic-bezier(0.34, 1.4, 0.64, 1), opacity 0.3s;
+        }
 
-    .bd-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
-    .bd-pill {
-        background: #f1f5f9;
-        border-radius: 999px;
-        padding: 3px 12px;
-        font-size: 0.75rem;
-        color: #475569;
-        font-weight: 500;
-    }
-    .bd-pill strong { color: #111827; }
+        .toast-item.toast-show {
+            transform: translateX(0);
+            opacity: 1;
+        }
 
-    /* Rating */
-    .bd-rating { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
-    .bd-stars { color: #f59e0b; font-size: 1.1rem; letter-spacing: 1px; }
-    .bd-rating-num { font-weight: 700; font-size: 1.05rem; color: #111827; }
-    .bd-rating-count { font-size: 0.8rem; color: #6b7280; }
+        .toast-icon {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: #fff;
+            flex-shrink: 0;
+        }
 
-    /* Action buttons */
-    .bd-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: auto; padding-top: 10px; }
-    .btn-bookmark {
-        display: inline-flex; align-items: center; gap: 6px;
-        padding: 8px 16px; border-radius: 8px;
-        border: 1.5px solid #d1d5db; background: #fff;
-        font-size: 0.84rem; font-weight: 600; color: #374151; cursor: pointer;
-        transition: border-color 0.15s, background 0.15s;
-    }
-    .btn-bookmark:hover { border-color: #2563eb; color: #2563eb; background: #eff6ff; }
-    .btn-bookmarked { background: #eff6ff; border-color: #2563eb; color: #2563eb; }
-    .btn-bookmarked:hover { background: #dbeafe; }
-    .btn-preview {
-        display: inline-flex; align-items: center; gap: 6px;
-        padding: 8px 16px; border-radius: 8px;
-        background: #2563eb; color: #fff;
-        font-size: 0.84rem; font-weight: 600; text-decoration: none; border: none; cursor: pointer;
-        transition: background 0.15s;
-    }
-    .btn-preview:hover { background: #1d4ed8; }
+        .toast-message {
+            flex: 1;
+            font-size: 0.84rem;
+            color: #374151;
+            font-weight: 500;
+            line-height: 1.4;
+        }
 
-    /* ── Description ── */
-    .bd-section { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 24px 28px; margin-bottom: 24px; }
-    .bd-section-title { font-family: 'Outfit', sans-serif; font-size: 1.1rem; font-weight: 700; color: #111827; margin: 0 0 10px; }
-    .bd-description { font-size: 0.9rem; line-height: 1.7; color: #374151; margin: 0; }
-    .bd-description-empty { font-style: italic; color: #9ca3af; font-size: 0.9rem; }
+        .toast-close {
+            background: transparent;
+            border: none;
+            font-size: 1.2rem;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0 0 0 4px;
+            line-height: 1;
+        }
 
-    /* ── Categories ── */
-    .bd-categories { display: flex; flex-wrap: wrap; gap: 6px; }
-    .bd-category-tag { background: #eff6ff; color: #2563eb; padding: 3px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: 500; }
+        /* Profile Dropdown (Copied from base.html) */
+        .profile-menu-wrap {
+            position: relative;
+        }
 
-    /* ── Availability ── */
-    .avail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
-    .avail-card {
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
-        padding: 16px 18px;
-        background: #fff;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        transition: box-shadow 0.15s;
-    }
-    .avail-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.07); }
-    .avail-name { font-weight: 700; font-size: 0.9rem; color: #111827; }
-    .avail-type { font-size: 0.75rem; color: #6b7280; font-weight: 500; }
-    .avail-row { display: flex; justify-content: space-between; align-items: center; }
-    .status-badge {
-        font-size: 0.75rem; font-weight: 600; padding: 2px 10px; border-radius: 999px;
-    }
-    .status-available { background: #d1fae5; color: #065f46; }
-    .status-borrowed  { background: #fef3c7; color: #b45309; }
-    .status-sold      { background: #fee2e2; color: #991b1b; }
-    .avail-price { font-size: 0.9rem; font-weight: 700; color: #111827; }
-    .avail-discount { font-size: 0.75rem; color: #16a34a; font-weight: 600; }
-    .btn-borrow, .btn-buy {
-        margin-top: 4px; width: 100%; padding: 7px; border-radius: 8px;
-        font-size: 0.84rem; font-weight: 600; cursor: pointer; border: none;
-        transition: background 0.15s;
-    }
-    .btn-borrow { background: #2563eb; color: #fff; }
-    .btn-borrow:hover { background: #1d4ed8; }
-    .btn-buy { background: #16a34a; color: #fff; }
-    .btn-buy:hover { background: #15803d; }
-    .btn-unavail { background: #f1f5f9; color: #9ca3af; cursor: not-allowed; width: 100%; padding: 7px; border-radius: 8px; font-size: 0.84rem; font-weight: 600; border: none; }
-</style>
+        .profile-trigger {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 5px 10px 5px 5px;
+            border-radius: 999px;
+            border: 1.5px solid transparent;
+            transition: background 0.15s, border-color 0.15s;
+            user-select: none;
+        }
 
-<div class="bd-wrap">
-    <a href="{{ request.referrer or url_for('books.search') }}" class="bd-back">← Back to search</a>
+        .profile-trigger:hover {
+            background: #f1f5f9;
+            border-color: #e2e8f0;
+        }
 
-    <!-- ── Hero ── -->
-    <div class="bd-hero">
-        <!-- Cover -->
-        <div>
-            {% if google_data.cover_image %}
-            <div class="bd-cover-box">
-                <img src="{{ google_data.cover_image }}" alt="Cover of {{ book.Title }}">
+        .profile-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #113819, #406743);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .profile-avatar svg {
+            width: 18px;
+            height: 18px;
+            fill: #fff;
+        }
+
+        .profile-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #113819;
+            max-width: 120px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .profile-chevron {
+            width: 14px;
+            height: 14px;
+            color: #113819;
+            transition: transform 0.2s;
+        }
+
+        .profile-menu-wrap.open .profile-chevron {
+            transform: rotate(180deg);
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            min-width: 220px;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+            padding: 6px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-6px) scale(0.98);
+            pointer-events: none;
+            transition: opacity 0.18s ease, transform 0.18s ease;
+        }
+
+        .profile-menu-wrap.open .profile-dropdown {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        .dropdown-user-info {
+            padding: 10px 12px 8px;
+            border-bottom: 1px solid #f1f5f9;
+            margin-bottom: 4px;
+        }
+
+        .dropdown-user-info .dui-name {
+            font-weight: 700;
+            font-size: 0.875rem;
+            color: #111827;
+        }
+
+        .dropdown-user-info .dui-type {
+            font-size: 0.72rem;
+            color: #9ca3af;
+            margin-top: 1px;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 12px;
+            border-radius: 9px;
+            font-size: 0.85rem;
+            color: #374151;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.12s;
+        }
+
+        .dropdown-item:hover {
+            background: #f8fafc;
+            color: #111827;
+        }
+
+        .dropdown-item svg {
+            width: 16px;
+            height: 16px;
+            opacity: 0.55;
+            flex-shrink: 0;
+        }
+
+        .dropdown-separator {
+            height: 1px;
+            background: #f1f5f9;
+            margin: 4px 0;
+        }
+
+        .dropdown-item.logout {
+            color: #dc2626;
+        }
+
+        .dropdown-item.logout:hover {
+            background: #fff5f5;
+            color: #b91c1c;
+        }
+
+        .dropdown-item.logout svg {
+            opacity: 0.7;
+        }
+
+        .bookmark-active {
+            background-color: #113819 !important;
+            color: #f5eebf !important;
+            border-color: #113819 !important;
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-surface font-body selection:bg-primary-fixed-dim">
+    <!-- Navbar -->
+    <nav class="bg-[#f5eebf] border-b border-[#113819]/10 sticky top-0 z-50">
+        <div class="flex justify-between items-center px-8 py-3 max-w-7xl mx-auto">
+            <a href="{{ url_for('index') }}"
+                class="text-3xl font-headline font-black text-[#113819] flex items-center gap-2 no-underline">
+                <span class="material-symbols-outlined text-[32px] text-[#113819]"
+                    style="font-variation-settings: 'FILL' 1;">eco</span>
+                ArdenLeaf
+            </a>
+            <div class="hidden md:flex gap-10 items-center">
+                <a class="text-[#113819] font-headline font-semibold text-base tracking-tight hover:opacity-75 transition-opacity no-underline"
+                    href="{{ url_for('books.search') }}">Search Books</a>
+                <a class="text-[#113819] font-headline font-semibold text-base tracking-tight hover:opacity-75 transition-opacity no-underline"
+                    href="{{ url_for('books.libraries_list') }}">Locations</a>
             </div>
-            {% else %}
-            <div class="bd-cover-placeholder">🧳 Cover is off on an adventure</div>
-            {% endif %}
+            <div class="flex items-center gap-6">
+                {% if session.get('user_id') %}
+                <!-- ── Profile dropdown ── -->
+                <div class="profile-menu-wrap" id="profileMenuWrap">
+                    <div class="profile-trigger" id="profileTrigger" role="button" aria-haspopup="true"
+                        aria-expanded="false">
+                        <div class="profile-avatar">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
+                            </svg>
+                        </div>
+                        <span class="profile-name">{{ session.get('user_name', 'Account') }}</span>
+                        <svg class="profile-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg>
+                    </div>
+
+                    <div class="profile-dropdown" id="profileDropdown" role="menu">
+                        <div class="dropdown-user-info">
+                            <div class="dui-name">{{ session.get('user_name', '') }}</div>
+                            <div class="dui-type">{{ session.get('user_type', 'User') }}</div>
+                        </div>
+
+                        {% if session.get('user_type') == 'Member' %}
+                        <a href="{{ url_for('loans.dashboard') }}" class="dropdown-item" role="menuitem">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="7" height="7" />
+                                <rect x="14" y="3" width="7" height="7" />
+                                <rect x="14" y="14" width="7" height="7" />
+                                <rect x="3" y="14" width="7" height="7" />
+                            </svg>
+                            Dashboard
+                        </a>
+                        {% endif %}
+
+                        {% if session.get('user_type') == 'Admin' %}
+                        <a href="{{ url_for('admin.dashboard') }}" class="dropdown-item" role="menuitem">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="7" height="7" />
+                                <rect x="14" y="3" width="7" height="7" />
+                                <rect x="14" y="14" width="7" height="7" />
+                                <rect x="3" y="14" width="7" height="7" />
+                            </svg>
+                            Admin Tools
+                        </a>
+                        {% endif %}
+
+                        <a href="/profile" class="dropdown-item" role="menuitem">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
+                            </svg>
+                            Account Details
+                        </a>
+
+                        <a href="/profile/addresses" class="dropdown-item" role="menuitem">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                <circle cx="12" cy="10" r="3" />
+                            </svg>
+                            Addresses
+                        </a>
+
+                        <a href="{{ url_for('books.bookmarks_page') }}" class="dropdown-item" role="menuitem">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                            </svg>
+                            Bookmarks
+                        </a>
+
+                        <a href="/saved-locations" class="dropdown-item" role="menuitem">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="3 11 22 2 13 21 11 13 3 11" />
+                            </svg>
+                            Saved Locations
+                        </a>
+
+                        <a href="#" class="dropdown-item" role="menuitem">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                <circle cx="9" cy="7" r="4" />
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                            </svg>
+                            Switch Accounts
+                        </a>
+
+                        <div class="dropdown-separator"></div>
+
+                        <a href="{{ url_for('auth.logout') }}" class="dropdown-item logout" role="menuitem">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                <polyline points="16 17 21 12 16 7" />
+                                <line x1="21" y1="12" x2="9" y2="12" />
+                            </svg>
+                            Logout
+                        </a>
+                    </div>
+                </div>
+                {% else %}
+                <a href="{{ url_for('auth.auth_page') }}"
+                    class="px-6 py-2 bg-[#113819] text-[#f5eebf] font-headline font-bold rounded-lg transition-transform active:scale-95 duration-150 text-sm no-underline">
+                    Login
+                </a>
+                {% endif %}
+            </div>
         </div>
+    </nav>
 
-        <!-- Meta -->
-        <div class="bd-meta">
-            <div class="bd-topbar">
-                <span></span>
-                <form id="bookmark-form" method="POST" action="{{ url_for('books.bookmark', isbn=book.ISBN) }}">
-                    <button id="bookmark-btn" type="submit" class="btn-bookmark {{ 'btn-bookmarked' if bookmarked else '' }}">
-                        {{ '🔖 Bookmarked' if bookmarked else '🔖 Bookmark' }}
-                    </button>
-                </form>
-            </div>
+    <main class="max-w-screen-xl mx-auto px-6 pt-8 pb-24">
+        <!-- Breadcrumb -->
+        <nav class="mb-12">
+            <a class="flex items-center gap-2 text-outline hover:text-primary transition-colors group no-underline"
+                href="{{ request.referrer or url_for('books.search') }}">
+                <span
+                    class="material-symbols-outlined text-sm group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                <span class="font-label text-sm uppercase tracking-widest font-bold">Back to search</span>
+            </a>
+        </nav>
 
-            <h1 class="bd-title">{{ book.Title }}</h1>
-            <div class="bd-authors">{{ book.Authors or 'Unknown Author' }}</div>
-
-            <div class="bd-pills">
-                {% if book.PublicationYear %}
-                <span class="bd-pill"><strong>Published</strong> {{ book.PublicationYear }}</span>
-                {% endif %}
-                {% if book.PublisherName %}
-                <span class="bd-pill"><strong>Publisher</strong> {{ book.PublisherName }}</span>
-                {% endif %}
-                {% if google_data.language %}
-                <span class="bd-pill"><strong>Language</strong> {{ google_data.language | upper }}</span>
-                {% endif %}
-                {% if google_data.page_count %}
-                <span class="bd-pill"><strong>Pages</strong> {{ google_data.page_count }}</span>
-                {% endif %}
-            </div>
-
-            {% if google_data.average_rating %}
-            <div class="bd-rating">
-                <span class="bd-stars">
-                    {% set r = google_data.average_rating | float %}
-                    {% for i in range(5) %}
-                        {% if i < r | int %}★{% else %}☆{% endif %}
-                    {% endfor %}
-                </span>
-                <span class="bd-rating-num">{{ "%.1f"|format(google_data.average_rating) }}</span>
-                {% if google_data.ratings_count %}
-                <span class="bd-rating-count">({{ google_data.ratings_count }} ratings)</span>
+        <!-- Hero Section -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start mb-20">
+            <!-- Book Cover Column -->
+            <div class="lg:col-span-5 flex justify-center lg:justify-start">
+                {% if google_data.cover_image %}
+                <div class="relative group">
+                    <div class="absolute inset-0 bg-primary-container opacity-5 blur-2xl rounded-full scale-110"></div>
+                    <img alt="Cover of {{ book.Title }}"
+                        class="w-full max-w-sm rounded-[14px] book-shadow z-10 relative"
+                        src="{{ google_data.cover_image }}" />
+                </div>
+                {% else %}
+                <div
+                    class="w-full max-w-sm aspect-[2/3] bg-surface-container flex items-center justify-center rounded-[14px] book-shadow text-outline">
+                    <span class="material-symbols-outlined text-6xl">book</span>
+                </div>
                 {% endif %}
             </div>
-            {% endif %}
 
-            {% if google_data.categories %}
-            <div class="bd-categories" style="margin-bottom: 14px;">
-                {% for cat in google_data.categories %}
-                <span class="bd-category-tag">{{ cat }}</span>
-                {% endfor %}
-            </div>
-            {% elif book.Genres %}
-            <div class="bd-categories" style="margin-bottom: 14px;">
-                {% for g in book.Genres.split(',') %}
-                <span class="bd-category-tag">{{ g.strip() }}</span>
-                {% endfor %}
-            </div>
-            {% endif %}
-
-            <div class="bd-actions">
-                {% if google_data.preview_link %}
-                <a href="{{ google_data.preview_link }}" target="_blank" class="btn-preview">📖 Preview Book</a>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-
-    <!-- ── Description ── -->
-    <div class="bd-section">
-        <h2 class="bd-section-title">About this book</h2>
-        {% if google_data.description %}
-        <p class="bd-description">{{ google_data.description }}</p>
-        {% else %}
-        <p class="bd-description-empty">This book is keeping its secrets for now. Check back soon.</p>
-        {% endif %}
-    </div>
-
-    <!-- ── Availability ── -->
-    <div class="bd-section">
-        <h2 class="bd-section-title">Availability</h2>
-        {% if availability %}
-        <div class="avail-grid">
-            {% for copy in availability %}
-            <div class="avail-card">
-                <div class="avail-row">
-                    <div>
-                        {% if copy.LibraryName %}
-                        <div class="avail-name">🏛️ {{ copy.LibraryName }}</div>
-                        <div class="avail-type">Library</div>
-                        {% else %}
-                        <div class="avail-name">🏬 {{ copy.StoreName }}</div>
-                        <div class="avail-type">Bookstore</div>
+            <!-- Content Column -->
+            <div class="lg:col-span-7 space-y-8">
+                <div class="space-y-4">
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        {% if google_data.categories %}
+                        {% for cat in google_data.categories %}
+                        <a href="{{ url_for('books.search') }}?q={{ cat | urlencode }}"
+                            class="bg-secondary-container text-on-secondary-container px-4 py-1 rounded-full text-xs font-bold font-headline uppercase tracking-tighter no-underline hover:brightness-95 transition-all">{{
+                            cat }}</a>
+                        {% endfor %}
+                        {% elif book.Genres %}
+                        {% for g in book.Genres.split(',') %}
+                        <a href="{{ url_for('books.search') }}?q={{ g.strip() | urlencode }}"
+                            class="bg-secondary-container text-on-secondary-container px-4 py-1 rounded-full text-xs font-bold font-headline uppercase tracking-tighter no-underline hover:brightness-95 transition-all">{{
+                            g.strip() }}</a>
+                        {% endfor %}
                         {% endif %}
                     </div>
-                    <span class="status-badge
-                        {% if copy.Status == 'Available' %}status-available
-                        {% elif copy.Status == 'Borrowed' %}status-borrowed
-                        {% else %}status-sold{% endif %}">
-                        {{ copy.Status }}
-                    </span>
+                    <h1 class="text-5xl md:text-6xl font-headline font-black tracking-tight leading-[1.0] text-primary">
+                        {{ book.Title }}</h1>
+                    <p class="text-2xl font-body italic text-primary-container">by {{ book.Authors or 'Unknown Author'
+                        }}</p>
                 </div>
 
-                {% if copy.StoreName and copy.Price %}
-                <div class="avail-row">
-                    <span class="avail-price">₹{{ "%.0f"|format(copy.Price) }}</span>
-                    {% if copy.DiscountPercent %}
-                    <span class="avail-discount">{{ copy.DiscountPercent }}% off</span>
+                <!-- Metadata Row -->
+                <div class="flex flex-wrap items-center gap-6 py-4 border-y border-outline-variant/20">
+                    {% if google_data.average_rating %}
+                    <div class="flex items-center gap-1 text-on-surface">
+                        <span class="material-symbols-outlined text-primary-container"
+                            style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="font-headline font-bold text-xl">{{ google_data.average_rating }}</span>
+                        {% if google_data.ratings_count %}<span class="text-outline text-sm">({{
+                            google_data.ratings_count }} reviews)</span>{% endif %}
+                    </div>
+                    <div class="h-4 w-[1px] bg-outline-variant"></div>
+                    {% endif %}
+
+                    {% if book.PublicationYear %}
+                    <div class="flex flex-col">
+                        <span class="text-[10px] uppercase tracking-widest text-outline font-bold">Published</span>
+                        <span class="font-headline font-bold">{{ book.PublicationYear }}</span>
+                    </div>
+                    {% endif %}
+
+                    {% if book.PublisherName %}
+                    <div class="flex flex-col">
+                        <span class="text-[10px] uppercase tracking-widest text-outline font-bold">Publisher</span>
+                        <span class="font-headline font-bold text-sm max-w-[150px] truncate"
+                            title="{{ book.PublisherName }}">{{ book.PublisherName }}</span>
+                    </div>
+                    {% endif %}
+
+                    {% if google_data.language %}
+                    <div class="flex flex-col">
+                        <span class="text-[10px] uppercase tracking-widest text-outline font-bold">Language</span>
+                        <span class="font-headline font-bold">{{ google_data.language | upper }}</span>
+                    </div>
+                    {% endif %}
+
+                    {% if google_data.page_count %}
+                    <div class="flex flex-col">
+                        <span class="text-[10px] uppercase tracking-widest text-outline font-bold">Pages</span>
+                        <span class="font-headline font-bold">{{ google_data.page_count }}</span>
+                    </div>
                     {% endif %}
                 </div>
-                {% endif %}
 
-                {% if copy.LibraryName and copy.Status == 'Available' %}
-                    {% if session.get('user_id') and session.get('user_type') == 'Member' %}
-                    <form action="{{ url_for('loans.borrow_book') }}" method="POST" class="borrow-form">
-                        <input type="hidden" name="copy_id" value="{{ copy.CopyID }}">
-                        <button type="submit" class="btn-borrow">Borrow</button>
+                <div class="flex flex-wrap gap-4 pt-4">
+                    {% if google_data.preview_link %}
+                    <a href="{{ google_data.preview_link }}" target="_blank"
+                        class="bg-primary-container text-white px-8 py-4 rounded-lg font-headline font-bold flex items-center gap-3 hover:scale-[0.98] transition-all paper-elevation no-underline">
+                        <span class="material-symbols-outlined">auto_stories</span>
+                        Preview Book
+                    </a>
+                    {% endif %}
+
+                    <form id="bookmark-form" method="POST" action="{{ url_for('books.bookmark', isbn=book.ISBN) }}">
+                        <button id="bookmark-btn" type="submit"
+                            class="border-2 border-outline-variant text-primary px-8 py-4 rounded-lg font-headline font-bold flex items-center gap-3 hover:bg-surface-container-low transition-all {{ 'bookmark-active' if bookmarked else '' }}">
+                            <span class="material-symbols-outlined"
+                                style="{{ 'font-variation-settings: \'FILL\' 1;' if bookmarked else '' }}">bookmark</span>
+                            {{ 'Bookmarked' if bookmarked else 'Bookmark' }}
+                        </button>
                     </form>
-                    {% elif session.get('user_id') %}
-                    <button class="btn-unavail" disabled>Members only</button>
-                    {% else %}
-                    <a href="{{ url_for('auth.auth_page') }}" class="btn-borrow" style="text-align:center; text-decoration:none; display:block;">Login to Borrow</a>
-                    {% endif %}
-                {% elif copy.StoreName and copy.Status == 'Available' %}
-                    <button class="btn-buy">
-                        Buy{% if copy.Price %} — ₹{{ "%.0f"|format(copy.Price * (1 - copy.DiscountPercent / 100) if copy.DiscountPercent else copy.Price) }}{% endif %}
-                    </button>
-                {% else %}
-                    <button class="btn-unavail" disabled>Unavailable</button>
-                {% endif %}
+                </div>
             </div>
-            {% endfor %}
+        </section>
+
+        <!-- Main Content Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <!-- Left: Description -->
+            <div class="lg:col-span-8 space-y-8">
+                <article
+                    class="bg-surface-container-lowest p-10 rounded-[14px] paper-elevation border border-outline-variant/15">
+                    <h2 class="text-3xl font-headline font-black text-primary mb-6">About this book</h2>
+                    <div class="font-body text-xl leading-relaxed text-on-surface-variant space-y-6">
+                        {% if google_data.description %}
+                        <p>{{ google_data.description }}</p>
+                        {% else %}
+                        <p class="italic text-outline">This book is keeping its secrets for now. Check back soon.</p>
+                        {% endif %}
+                    </div>
+                </article>
+            </div>
+
+            <!-- Right: Availability -->
+            <aside class="lg:col-span-4 space-y-6">
+                <div
+                    class="bg-surface-container-lowest p-8 rounded-[14px] paper-elevation border border-outline-variant/15">
+                    <h2 class="text-2xl font-headline font-black text-primary mb-6">Availability</h2>
+                    <div class="space-y-4">
+                        {% if availability %}
+                        {% for copy in availability %}
+                        <div
+                            class="p-4 rounded-xl border border-outline-variant/20 hover:bg-surface-container-low transition-colors group">
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="flex items-center gap-3">
+                                    {% if copy.LibraryName %}
+                                    <span
+                                        class="material-symbols-outlined text-primary-container">account_balance</span>
+                                    <div>
+                                        <h5 class="font-headline font-bold text-primary leading-none">{{
+                                            copy.LibraryName }}</h5>
+                                        <span
+                                            class="text-xs text-outline font-label uppercase tracking-widest">Library</span>
+                                    </div>
+                                    {% else %}
+                                    <span class="material-symbols-outlined text-primary-container">storefront</span>
+                                    <div>
+                                        <h5 class="font-headline font-bold text-primary leading-none">{{ copy.StoreName
+                                            }}</h5>
+                                        <span
+                                            class="text-xs text-outline font-label uppercase tracking-widest">Bookstore</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <span class="text-[10px] px-2 py-1 rounded font-bold uppercase 
+                                        {% if copy.Status == 'Available' %}bg-primary-fixed text-on-primary-fixed
+                                        {% elif copy.Status == 'Borrowed' %}bg-error-container text-on-error-container
+                                        {% else %}bg-outline-variant text-on-surface{% endif %}">
+                                    {{ copy.Status }}
+                                </span>
+                            </div>
+
+                            {% if copy.Price %}
+                            <div class="mb-3">
+                                <span class="text-primary font-headline font-bold">₹{{ "%.0f"|format(copy.Price)
+                                    }}</span>
+                                {% if copy.DiscountPercent %}
+                                <span class="text-xs text-primary-container font-headline font-bold ml-1">{{
+                                    copy.DiscountPercent }}% OFF</span>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+
+                            {% if copy.LibraryName and copy.Status == 'Available' %}
+                            {% if session.get('user_id') and session.get('user_type') == 'Member' %}
+                            <form action="{{ url_for('loans.borrow_book') }}" method="POST" class="borrow-form">
+                                <input type="hidden" name="copy_id" value="{{ copy.CopyID }}">
+                                <button type="submit"
+                                    class="w-full py-2 bg-primary-container text-white rounded-lg font-headline font-bold text-sm hover:scale-[0.98] transition-transform">Borrow
+                                    Now</button>
+                            </form>
+                            {% elif session.get('user_id') %}
+                            <button
+                                class="w-full py-2 border border-outline-variant text-outline rounded-lg font-headline font-bold text-sm cursor-not-allowed"
+                                disabled>Members only</button>
+                            {% else %}
+                            <a href="{{ url_for('auth.auth_page') }}"
+                                class="w-full py-2 block text-center bg-primary-container text-white rounded-lg font-headline font-bold text-sm hover:scale-[0.98] transition-transform no-underline">Login
+                                to Borrow</a>
+                            {% endif %}
+                            {% elif copy.StoreName and copy.Status == 'Available' %}
+                            <button
+                                class="w-full py-2 border border-primary-container text-primary-container rounded-lg font-headline font-bold text-sm hover:bg-primary-container hover:text-white transition-all">Buy
+                                Copy</button>
+                            {% else %}
+                            <button
+                                class="w-full py-2 border border-outline-variant text-outline rounded-lg font-headline font-bold text-sm cursor-not-allowed"
+                                disabled>Unavailable</button>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        <div class="p-6 text-center border-2 border-dashed border-outline-variant/30 rounded-xl">
+                            <p class="text-outline text-sm">No local availability found.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <!-- Additional Info Card -->
+                <div class="bg-primary-container p-8 rounded-[14px] text-white space-y-4">
+                    <span class="material-symbols-outlined text-secondary-fixed">auto_awesome</span>
+                    <h3 class="text-xl font-headline font-bold leading-tight">Digital Edition Included</h3>
+                    <p class="text-sm text-primary-fixed opacity-80 font-body">Members get immediate access to the
+                        e-book and audiobook versions via the ArdenLeaf app.</p>
+                    <a class="inline-block text-secondary-fixed font-headline font-bold text-sm underline decoration-secondary-fixed/30 underline-offset-4"
+                        href="#">Learn about membership</a>
+                </div>
+            </aside>
         </div>
-        {% else %}
-        <div style="text-align: center; padding: 40px 20px; border: 1.5px dashed #d1d5db; border-radius: 12px; background: #f8fafc;">
-            <div style="font-size: 2.2rem; margin-bottom: 8px;">🛒</div>
-            <p style="margin: 0; color: #6b7280; font-size: 0.95rem;">No copies of this book are currently available in our system.</p>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#fcf5c5] border-t border-outline-variant/20 pt-16 pb-10">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="flex flex-col md:flex-row justify-between items-start mb-16 gap-12">
+                <div class="max-w-xs">
+                    <div class="text-3xl font-headline font-black text-[#113819] flex items-center gap-2 mb-6">
+                        <span class="material-symbols-outlined text-[32px] text-[#113819]"
+                            style="font-variation-settings: 'FILL' 1;">eco</span>
+                        ArdenLeaf
+                    </div>
+                    <p class="font-body text-stone-600 text-base leading-relaxed italic opacity-80">"Cultivating the
+                        digital garden for India's readers and writers. Preserving history, promoting curiosity."</p>
+                </div>
+                <div class="grid grid-cols-2 gap-24">
+                    <div class="flex flex-col gap-4">
+                        <h4
+                            class="font-headline font-bold text-primary-container uppercase tracking-widest text-[10px]">
+                            Discover</h4>
+                        <a class="text-stone-500 text-base hover:text-primary-container transition-all"
+                            href="{{ url_for('books.search') }}">Search Books</a>
+                        <a class="text-stone-500 text-base hover:text-primary-container transition-all"
+                            href="{{ url_for('books.locations') }}">Locations</a>
+                        <a class="text-stone-500 text-base hover:text-primary-container transition-all"
+                            href="{{ url_for('books.bookmarks_page') }}">Bookmarks</a>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <h4
+                            class="font-headline font-bold text-primary-container uppercase tracking-widest text-[10px]">
+                            Connect</h4>
+                        <a class="text-stone-500 text-base hover:text-primary-container transition-all" href="#">About
+                            Us</a>
+                        <a class="text-stone-500 text-base hover:text-primary-container transition-all"
+                            href="#">Contact</a>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-8 border-t border-stone-300/30 flex flex-col md:flex-row justify-between items-center gap-6">
+                <p class="font-label text-sm italic text-stone-500">© 2024 ArdenLeaf. Made with <span
+                        class="text-primary-container">🍃</span> for India's readers.</p>
+                <div class="flex gap-8">
+                    <span
+                        class="material-symbols-outlined text-stone-400 cursor-pointer hover:text-primary-container text-xl">language</span>
+                    <span
+                        class="material-symbols-outlined text-stone-400 cursor-pointer hover:text-primary-container text-xl">mail</span>
+                </div>
+            </div>
         </div>
-        {% endif %}
-    </div>
-</div>
-{% endblock %}
+    </footer>
 
-{% block scripts %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var form = document.getElementById('bookmark-form');
-    var btn  = document.getElementById('bookmark-btn');
-    if (!form || !btn) return;
+    <!-- Toast container -->
+    <div id="toast-container" role="region" aria-live="polite"></div>
 
-    form.addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        // Disable button during request to prevent double-submit
-        btn.disabled = true;
-
-        fetch(form.action, {
-            method: 'POST',
-            headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
-            body: new FormData(form),
-        })
-        .then(function (res) { return res.json(); })
-        .then(function (data) {
-            if (data.success) {
-                var isNow = data.bookmarked;
-                btn.textContent = isNow ? '🔖 Bookmarked' : '🔖 Bookmark';
-                btn.className   = 'btn-bookmark' + (isNow ? ' btn-bookmarked' : '');
-                var url = isNow ? '/bookmarks' : null;
-                showToast(data.message, url, data.type || 'success');
-            } else {
-                showToast(data.message || 'Something went wrong.', null, 'error');
-            }
-        })
-        .catch(function (error) {
-            console.error("Bookmark Error:", error);
-            showToast('Connection error — please try again.', null, 'error');
-        })
-        .finally(function () {
-            btn.disabled = false;
-        });
-    });
-
-    // ── Borrow fetch intercept ──
-    document.querySelectorAll('.borrow-form').forEach(function(bForm) {
-        bForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            var bBtn = bForm.querySelector('button[type="submit"]');
-            bBtn.disabled = true;
-
-            fetch(bForm.action, {
-                method: 'POST',
-                headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
-                body: new FormData(bForm),
-            })
-            .then(function(res) { return res.json(); })
-            .then(function(data) {
-                if(data.success) {
-                    bBtn.textContent = 'Borrowed';
-                    bBtn.className = 'btn-unavail';
-                    bBtn.disabled = true;
-                    window.showToast('Borrowed! Due in 14 days', '/dashboard');
-                } else {
-                    bBtn.disabled = false;
-                    showToast(data.message || 'Error occurred.', null, 'error');
+    <!-- Scripts -->
+    <script>
+            (function () {
+                'use strict';
+                const TOAST_COLORS = {
+                    success: { bg: '#f0fdf4', border: '#86efac', icon: '#16a34a', symbol: '✓' },
+                    error: { bg: '#fff5f5', border: '#fca5a5', icon: '#dc2626', symbol: '✕' },
+                    info: { bg: '#eff6ff', border: '#93c5fd', icon: '#2563eb', symbol: 'i' },
+                    warning: { bg: '#fffbeb', border: '#fcd34d', icon: '#d97706', symbol: '!' },
+                };
+                class ToastManager {
+                    constructor() { this.container = document.getElementById('toast-container'); this.queue = []; this.MAX = 5; }
+                    show(message, url, type) {
+                        type = TOAST_COLORS[type] ? type : 'info';
+                        if (this.queue.length >= this.MAX) this._dismiss(this.queue[0]);
+                        const el = this._build(message, url, type);
+                        this.container.insertBefore(el, this.container.firstChild);
+                        this.queue.push(el);
+                        requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('toast-show')));
+                        el._timer = setTimeout(() => this._dismiss(el), 4000);
+                        return el;
+                    }
+                    _build(message, url, type) {
+                        const c = TOAST_COLORS[type];
+                        const el = document.createElement('div');
+                        el.className = 'toast-item' + (url ? ' cursor-pointer' : '');
+                        el.style.background = c.bg; el.style.borderColor = c.border;
+                        el.innerHTML = '<div class="toast-icon" style="background:' + c.icon + '">' + c.symbol + '</div>' +
+                            '<span class="toast-message">' + message + '</span>' +
+                            '<button class="toast-close">&times;</button>';
+                        el.querySelector('.toast-close').addEventListener('click', (e) => { e.stopPropagation(); this._dismiss(el); });
+                        if (url) el.addEventListener('click', () => { window.location.href = url; });
+                        return el;
+                    }
+                    _dismiss(el) {
+                        if (!el || !el.isConnected) return;
+                        clearTimeout(el._timer);
+                        const idx = this.queue.indexOf(el); if (idx !== -1) this.queue.splice(idx, 1);
+                        el.classList.remove('toast-show');
+                        setTimeout(() => { if (el.isConnected) el.remove(); }, 400);
+                    }
                 }
-            })
-            .catch(function(err) {
-                console.error("Borrow Error:", err);
-                bBtn.disabled = false;
-                showToast('Connection error — please try again.', null, 'error');
+                window.showToast = function (m, u, t) { return new ToastManager().show(m, u, t); };
+            })();
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var fForm = document.getElementById('bookmark-form');
+            var fBtn = document.getElementById('bookmark-btn');
+            if (fForm && fBtn) {
+                fForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    fBtn.disabled = true;
+                    fetch(fForm.action, {
+                        method: 'POST',
+                        headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                        body: new FormData(fForm),
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                var isNow = data.bookmarked;
+                                fBtn.innerHTML = '<span class="material-symbols-outlined" style="' + (isNow ? 'font-variation-settings: \'FILL\' 1;' : '') + '">bookmark</span> ' + (isNow ? 'Bookmarked' : 'Bookmark');
+                                fBtn.classList.toggle('bookmark-active', isNow);
+                                showToast(data.message, isNow ? '/bookmarks' : null, data.type || 'success');
+                            } else {
+                                showToast(data.message || 'Something went wrong.', null, 'error');
+                            }
+                        })
+                        .catch(err => { showToast('Connection error.', null, 'error'); })
+                        .finally(() => { fBtn.disabled = false; });
+                });
+            }
+
+            document.querySelectorAll('.borrow-form').forEach(function (bForm) {
+                bForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    var bBtn = bForm.querySelector('button[type="submit"]');
+                    bBtn.disabled = true;
+                    fetch(bForm.action, {
+                        method: 'POST',
+                        headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                        body: new FormData(bForm),
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                bBtn.textContent = 'Borrowed';
+                                bBtn.className = 'w-full py-2 border border-outline-variant text-outline rounded-lg font-headline font-bold text-sm cursor-not-allowed';
+                                bBtn.disabled = true;
+                                window.showToast('Borrowed! Due in 14 days', '/dashboard');
+                            } else {
+                                bBtn.disabled = false;
+                                showToast(data.message || 'Error occurred.', null, 'error');
+                            }
+                        })
+                        .catch(err => { bBtn.disabled = false; showToast('Connection error.', null, 'error'); });
+                });
             });
         });
-    });
-});
 
-</script>
-{% endblock %}
+        // Profile menu dropdown (Copied from base.html)
+        (function () {
+            const wrap = document.getElementById('profileMenuWrap');
+            const trigger = document.getElementById('profileTrigger');
+            if (wrap && trigger) {
+                const toggle = () => {
+                    const isOpen = wrap.classList.toggle('open');
+                    trigger.setAttribute('aria-expanded', String(isOpen));
+                };
+                trigger.addEventListener('click', (e) => { e.stopPropagation(); toggle(); });
+                document.addEventListener('click', (e) => {
+                    if (!wrap.contains(e.target)) {
+                        wrap.classList.remove('open');
+                        trigger.setAttribute('aria-expanded', 'false');
+                    }
+                });
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        wrap.classList.remove('open');
+                        trigger.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            }
+        })();
+    </script>
+
+    <!-- Handle Flask Flashes -->
+    <script id="flash-data" type="application/json">
+        {{ get_flashed_messages(with_categories=true) | tojson }}
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var flashes = JSON.parse(document.getElementById('flash-data').textContent || '[]');
+            flashes.forEach(function (f) {
+                showToast(f[1], null, f[0] === 'message' ? 'info' : f[0]);
+            });
+        });
+    </script>
+</body>
+
+</html>
