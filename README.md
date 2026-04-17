@@ -1,37 +1,60 @@
-# ArdenLeaf
+# ArdenLeaf — Book Discovery & Library Management Platform
 
-> A unified book discovery and lending platform that connects libraries and bookstores into one seamless experience.
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=flat&logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-3.0.2-000000?style=flat&logo=flask&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=flat&logo=mysql&logoColor=white)
+![Werkzeug](https://img.shields.io/badge/Security-Werkzeug%20scrypt-brightgreen?style=flat)
 
-ArdenLeaf lets users search for books, check live availability across partner libraries and bookstores, borrow physical copies, track loans and fines, and save their favourite books and locations — all from a single portal. Library and store owners each get their own dedicated dashboard, and administrators can manage the whole network from the admin panel.
+A full-stack web application that connects multiple libraries and bookstores into a single unified platform. Users can discover books, check live inventory, borrow copies, track their loans and fines, and save their favourite locations — all from one place. Built with a multi-role authentication system and a normalized relational database designed from scratch.
+
+---
+
+## What It Does
+
+ArdenLeaf solves the problem of fragmented library and bookstore discovery. Instead of visiting each branch individually, users search a single platform and instantly see which location has a copy available, whether it can be borrowed or purchased, and what the price or overdue fine is.
+
+The platform supports five distinct user roles — each with their own interface and access controls — backed by a fully normalized MySQL schema that demonstrates core database design principles end-to-end.
 
 ---
 
 ## Features
 
-### For Members (Library Users)
-- Search books by title, author, or genre across the entire network
-- View book details enriched with cover art, descriptions, and ratings from the Google Books API
-- Borrow available library copies directly from the platform (14-day loan period)
-- View active loans, full history, and calculated overdue fines on a personal dashboard
-- Bookmark books for later and manage them from a dedicated bookmarks page with genre filtering
-- Save partner library/bookstore locations to a personal shortlist
+### Members (Library Users)
+- Search the entire book catalogue by title, author, or genre
+- See real-time availability across all partner libraries
+- Borrow physical copies with a 14-day loan period, tracked per copy
+- View active loans, full borrowing history, and live overdue fine calculations
+- Bookmark books and filter them by genre on a dedicated page
+- Save favourite library and bookstore locations to a personal shortlist
 
-### For Customers (Bookstore Users)
-- Browse books available for purchase at partner bookstores with live pricing
-- Save favourite store locations
-- Bookmark books of interest
+### Customers (Bookstore Users)
+- Browse available book inventory at partner stores with live pricing and discounts
+- Save locations and bookmark books of interest
 
-### For Library & Store Owners
-- Dedicated `/owner` portal showing inventory health stats for their specific branch
-- LibraryAdmins: view active loans, overdue status, and available/borrowed copy counts
-- StoreAdmins: view available and sold copy counts with pricing summaries
-- Add new books to the global catalogue and register physical copies at their branch
+### Library & Store Owners
+- Personal `/owner` dashboard scoped exclusively to their assigned branch
+- Library owners: track available/borrowed copy counts, view active and overdue loans
+- Store owners: track available/sold inventory with pricing summaries
+- Add new books to the global catalogue and register physical copies at their location
 
-### For Admins
-- Global `/admin` panel with system-wide stats (total books, active loans, members, locations)
-- Add new libraries and bookstores to the network
-- Register new book records and physical copies at any location
-- View and monitor all active loans across all branches
+### System Administrator
+- Global `/admin` dashboard with network-wide statistics
+- Register new libraries and bookstores into the network
+- Add and assign book copies across any location
+- Monitor all active loans across every branch
+
+---
+
+## Technical Highlights
+
+- **Multi-role session-based auth** — five user types with route-level guards; LibraryAdmin/StoreAdmin sessions are automatically enriched with their assigned branch on login
+- **Secure password handling** — all passwords hashed with Werkzeug's `scrypt`-based `generate_password_hash`; verified on login with `check_password_hash`
+- **Normalized relational schema** — 15 tables including supertype/subtype user model, junction tables, multivalued attributes, and a SQL view for derived fine calculations
+- **Google Books API integration** — enriches every book with cover art, descriptions, ratings, and page count; falls back to title+author search when ISBN yields no results
+- **Persistent disk cache** — thread-safe JSON cache (`utils/.book_cache.json`, up to 500 entries) for API responses that survives server restarts
+- **Cache prewarming** — background thread on startup fetches API data for all books in the database so users see covers immediately
+- **Blueprint architecture** — six Flask blueprints keep auth, book discovery, loans, profiles, owner portal, and admin panel cleanly separated
+- **AJAX-friendly endpoints** — bookmark and location-save routes detect `Accept: application/json` and respond accordingly for live UI updates without full page reloads
 
 ---
 
@@ -39,13 +62,30 @@ ArdenLeaf lets users search for books, check live availability across partner li
 
 | Layer | Technology |
 |---|---|
-| Backend | Python 3 + Flask 3.0.2 |
-| Database | MySQL 8 |
-| ORM / Queries | Raw SQL via `mysql-connector-python` 8.3.0 |
-| Templates | Jinja2 (included with Flask) |
-| Frontend | HTML5 + Vanilla CSS (no frameworks) |
-| External API | Google Books API (cover art, descriptions, ratings) |
-| Environment Config | `python-dotenv` 1.0.1 |
+| Backend | Python 3.12, Flask 3.0.2 |
+| Database | MySQL 8.0 |
+| Query Layer | Raw SQL via `mysql-connector-python` 8.3.0 |
+| Auth / Security | Werkzeug 3.0.1 (scrypt hashing) |
+| Templating | Jinja2 |
+| Frontend | HTML5, Vanilla CSS |
+| External API | Google Books API |
+| Config | `python-dotenv` 1.0.1 |
+
+---
+
+## Database Design
+
+The schema (`database/schema.sql`) was designed from scratch to demonstrate relational database concepts:
+
+| Concept | Implementation |
+|---|---|
+| Supertype / Subtype | `User` table with `Member` and `Customer` specialization tables |
+| Multivalued Attributes | `User_Phone` and `Book_Genre` as separate tables |
+| Many-to-Many | `Book_Author` junction table between `Book` and `Author` |
+| Weak / Dependent Entity | `BookCopy` depends on both `Book` and either `Library` or `Bookstore` |
+| Derived Attribute | `LoanFines` SQL view — calculates overdue fee ($2.00/day) dynamically |
+| Application-enforced Constraint | `BookCopy` must belong to exactly one of Library or Bookstore (XOR), enforced at the application layer |
+| Role-to-Location Mapping | `LocationAdmin` table links owner accounts to exactly one branch |
 
 ---
 
@@ -53,160 +93,137 @@ ArdenLeaf lets users search for books, check live availability across partner li
 
 ```
 ArdenLeaf/
-├── app.py                  # App factory, blueprint registration, cache prewarming
-├── config.py               # Configuration loaded from .env
+├── app.py                   # App factory, blueprint registration, cache prewarming
+├── config.py                # Environment-based configuration
 ├── requirements.txt
 │
 ├── database/
-│   ├── db.py               # MySQL connection helper
-│   ├── schema.sql          # Full schema: all tables, views, constraints
-│   └── seed_expanded.sql   # Sample data for development
+│   ├── db.py                # MySQL connection helper
+│   ├── schema.sql           # Complete schema: tables, views, constraints
+│   └── seed_expanded.sql    # Sample data: 9 users, 20 books, 5 libraries, 4 bookstores
 │
 ├── models/
-│   ├── book.py             # Book search, detail, availability, location inventory
-│   ├── bookmark.py         # Add, remove, and list user bookmarks
-│   ├── library.py          # Library and Bookstore listing + inventory
-│   ├── loan.py             # Issue and return loans, fetch active/full history
-│   ├── saved_location.py   # Save/unsave libraries and bookstores per user
-│   └── user.py             # User creation, lookup, and profile updates
+│   ├── book.py              # Search, detail, availability, location inventory
+│   ├── bookmark.py          # Bookmark toggle and user bookmark listing
+│   ├── library.py           # Library and Bookstore listing + inventory
+│   ├── loan.py              # Issue/return loans, active and full history
+│   ├── saved_location.py    # Save/unsave locations per user
+│   └── user.py              # Registration, lookup, profile updates
 │
 ├── routes/
-│   ├── auth_routes.py      # Login, register, location step, logout
-│   ├── book_routes.py      # Search, book detail, bookmarks, locations
-│   ├── loan_routes.py      # Member dashboard, borrow, return
-│   ├── profile_routes.py   # Profile view/edit and quick stats
-│   ├── owner_routes.py     # Owner portal (inventory + loan history per branch)
-│   └── admin_routes.py     # Admin panel (global management)
+│   ├── auth_routes.py       # Login, register, post-registration location step, logout
+│   ├── book_routes.py       # Search, book detail, bookmarks, location pages
+│   ├── loan_routes.py       # Member dashboard, borrow, return
+│   ├── profile_routes.py    # Profile view/edit, quick stats
+│   ├── owner_routes.py      # Branch-scoped owner portal
+│   └── admin_routes.py      # Global admin panel
 │
 ├── utils/
-│   ├── google_books.py     # Google Books API integration with ISBN + title/author fallback
-│   └── book_cache.py       # Thread-safe disk cache for API responses (.book_cache.json)
+│   ├── google_books.py      # Google Books API with ISBN + title/author fallback
+│   └── book_cache.py        # Thread-safe persistent disk cache
 │
-└── templates/
-    ├── index.html
-    ├── auth.html
-    ├── dashboard.html
-    ├── search.html
-    ├── book_detail.html
-    ├── bookmarks.html
-    ├── locations.html
-    ├── location_detail.html
-    ├── profile.html
-    ├── admin/
-    └── owner/
+└── templates/               # Jinja2 templates (includes /admin and /owner subdirs)
 ```
 
 ---
 
-## Database Schema Overview
-
-The schema (`database/schema.sql`) models a book lending / discovery network:
-
-- **User** — Base table with five roles: `Member`, `Customer`, `Admin`, `LibraryAdmin`, `StoreAdmin`
-- **Member / Customer** — Specialization tables (inherits from User)
-- **LocationAdmin** — Maps LibraryAdmin/StoreAdmin users to exactly one Library or Bookstore
-- **Book / Author / Publisher / Book_Genre / Book_Author** — Full book catalogue with many-to-many author and genre relationships
-- **Library / Bookstore** — Two types of physical partner locations
-- **BookCopy** — A physical instance of a book at a specific location (status: `Available`, `Borrowed`, `Sold`)
-- **Loan** — Records of active and past borrowing by Members, linked to a BookCopy
-- **Bookmark** — User-to-book saves with a unique constraint preventing duplicates
-- **LoanFines (VIEW)** — Derived attribute: calculates overdue fines at $2.00/day automatically
-
----
-
-## Setup & Installation
+## Getting Started
 
 ### Prerequisites
 - Python 3.10+
-- MySQL 8.0 running locally
+- MySQL 8.0
 
-### 1. Clone and install dependencies
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/sanbidcantcode/ArdenLeaf.git
 cd ArdenLeaf
+```
+
+### 2. Set up the Python environment
+
+```bash
 python -m venv venv
-# Windows:
+
+# Windows
 venv\Scripts\activate
-# macOS/Linux:
+
+# macOS / Linux
 source venv/bin/activate
+
 pip install -r requirements.txt
 ```
 
-### 2. Configure environment
-
-Copy the example and fill in your MySQL credentials:
+### 3. Configure environment variables
 
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env`:
+Open `.env` and fill in your MySQL credentials:
 
 ```
+SECRET_KEY=your_secret_key_here
 MYSQL_HOST=localhost
 MYSQL_USER=root
 MYSQL_PASSWORD=your_password
-MYSQL_DATABASE=ardenleaf
-SECRET_KEY=your_secret_key_here
+MYSQL_DB=ardenleaf
+MYSQL_PORT=3306
 ```
 
-### 3. Initialize the database
+### 4. Initialize and seed the database
 
-Open your MySQL client and run:
+In your MySQL client:
 
 ```sql
 source database/schema.sql
 source database/seed_expanded.sql
 ```
 
-### 4. Run the application
+### 5. Run the application
 
 ```bash
 python app.py
 ```
 
-Navigate to **http://127.0.0.1:5000**
+Open **http://127.0.0.1:5000** in your browser.
 
 ---
 
-## Test Accounts (from seed data)
+## Test Accounts
+
+All passwords are stored as `scrypt` hashes in the database. The seed provides accounts for every role:
 
 | Role | Email | Password |
 |---|---|---|
 | Member | alice@example.com | hashed_pw_1 |
-| Admin | admin@ardenleaf.com | admin_pass |
-| LibraryAdmin | lib_admin@example.com | hashed_pw_la |
-| StoreAdmin | store_admin@example.com | hashed_pw_sa |
-
-> **Note:** Passwords are stored in plain text for this academic project. Do not use this in production.
-
----
-
-## Key Flows
-
-**Borrowing a book:** Search → View book detail → click Borrow on an available library copy → loan is created with a 14-day due date → status tracked in your dashboard.
-
-**Returning a book:** Dashboard → click Return → loan is closed with today's date → copy becomes available again → any fine calculated by the `LoanFines` view disappears.
-
-**Bookmarking:** Click the bookmark icon on any book (works from search, detail, and location pages) → toggle saved/unsaved with live UI feedback.
-
-**Owner login:** LibraryAdmin or StoreAdmin logs in → system resolves their assigned branch from `LocationAdmin` → session stores branch name and type → redirected to `/owner/` dashboard scoped to their location only.
+| Member | bob@example.com | hashed_pw_2 |
+| Customer | charlie@example.com | hashed_pw_3 |
+| Customer | diana@example.com | hashed_pw_4 |
+| Admin | admin@ardenleaf.com | admin123 |
+| LibraryAdmin — Connaught Place | lib1@ardenleaf.com | libpass1 |
+| LibraryAdmin — Bandra | lib2@ardenleaf.com | libpass2 |
+| StoreAdmin — Footnotes, Bangalore | store1@ardenleaf.com | storepass1 |
+| StoreAdmin — The Margin, Delhi | store2@ardenleaf.com | storepass2 |
 
 ---
 
-## Google Books API
+## Key User Flows
 
-On server startup, a background thread preloads cover art and metadata for every book in the database. All API responses are cached to `utils/.book_cache.json` (up to 500 entries) and persist across restarts. If an ISBN search returns no results, the system retries automatically using the book's title and author. When no data is available at all, the UI gracefully falls back to a placeholder cover.
+**Borrowing a book**
+Search or browse a location → open book detail → click Borrow on an available library copy → a `Loan` record is created with a 14-day due date and the `BookCopy` status is set to `Borrowed`.
+
+**Returning a book**
+Open the Member dashboard → click Return → `ReturnDate` is written to the `Loan` record → `BookCopy` status resets to `Available` → the `LoanFines` view stops accruing.
+
+**Owner dashboard**
+LibraryAdmin or StoreAdmin logs in → auth layer queries `LocationAdmin` to resolve their branch → session is populated with branch name, ID, and type → the `/owner` dashboard renders inventory and loan data filtered to that branch only.
+
+**Bookmarking**
+Click the bookmark icon on any book page → the route checks `Bookmark.is_bookmarked()` and either inserts or deletes the row → the UI updates live via JSON response without a page reload.
 
 ---
 
-## Academic Context
+## License
 
-ArdenLeaf was built as a Database Systems course project. The schema intentionally demonstrates:
-
-- Entity supertype/subtype (User → Member / Customer)
-- Multivalued attributes (User_Phone, Book_Genre)
-- Weak / dependent entities (BookCopy)
-- Derived attributes via SQL views (LoanFines)
-- Enforced application-level XOR constraints (BookCopy belongs to Library OR Bookstore, not both)
+MIT

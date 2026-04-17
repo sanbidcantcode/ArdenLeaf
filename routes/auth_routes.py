@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from werkzeug.security import generate_password_hash, check_password_hash
 from models.user import User
 from database.db import get_db_connection
 
@@ -19,7 +20,7 @@ def auth_page():
             password = request.form.get('password', '')
 
             user = User.get_by_email(email)
-            if user and user['PasswordHash'] == password:
+            if user and check_password_hash(user['PasswordHash'], password):
                 session['user_id']   = user['UserID']
                 session['user_name'] = user['Name']
                 session['user_type'] = user['UserType']
@@ -89,8 +90,8 @@ def auth_page():
                 flash('An account with that email already exists.', 'error')
                 return render_template('auth.html', show_signup=True)
 
-            # Create user (plain password stored for demo — swap for hash in prod)
-            user_id = User.create(name, email, password, user_type, phone=phone)
+            # Hash password before storing
+            user_id = User.create(name, email, generate_password_hash(password), user_type, phone=phone)
             if not user_id:
                 flash('Registration failed. Please try again.', 'error')
                 return render_template('auth.html', show_signup=True)

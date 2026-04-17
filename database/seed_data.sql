@@ -20,10 +20,10 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 -- Users
 INSERT INTO User (Name, Email, PasswordHash, UserType) VALUES
-('Alice Smith', 'alice@example.com', 'hashed_pw_1', 'Member'),
-('Bob Johnson', 'bob@example.com', 'hashed_pw_2', 'Member'),
-('Charlie Brown', 'charlie@example.com', 'hashed_pw_3', 'Customer'),
-('Diana Prince', 'diana@example.com', 'hashed_pw_4', 'Customer');
+('Alice Smith',   'alice@example.com',   'scrypt:32768:8:1$K4GpO1WgtGzyL9Zd$958520cae2825b7a141314e47237e540488fffaed28369e44a8c1ec6eaa710b5d71d8ce91a310224ed3162de5d8482102901f495cb41323df8cde654abf69e65', 'Member'),
+('Bob Johnson',   'bob@example.com',     'scrypt:32768:8:1$BSpYehIKl5SIvP4v$90d6454a24d0606ad0cd7648155ca53dfa60b64363613abe19cc38d4c9d86ad63b35801e920fca4cda4e2d7126870b08de7992a0c7d1eb0b5d5e4084e26d2d53', 'Member'),
+('Charlie Brown', 'charlie@example.com', 'scrypt:32768:8:1$N01LACki46kFQ4Eh$95bb2d7e3e590cf852438811ee128953b14067d7d8730957a3d554f21f31583b5f2afa12c426b3adf807a312f24930a694a5ddca726da571b3e060a0ddaa7105', 'Customer'),
+('Diana Prince',  'diana@example.com',   'scrypt:32768:8:1$LCOIHIJhRmHyY0qv$32c6fb093c8751b1761ffb63b27159124a55ca70a2c068760c1b17c7562e3aea29f82c7eb7dd019338a32f445f47d12f3ad5e896ce59cdbbecbe85113c06cbd9', 'Customer');
 
 -- Determine explicit UserIDs (Assuming 1 to 4 because of truncate/auto-inc reset usually doesn't happen with DELETE, so let's insert explicitly)
 -- Wait, TRUNCATE resets AUTO_INCREMENT. So UserIDs are 1(Alice), 2(Bob), 3(Charlie), 4(Diana)
