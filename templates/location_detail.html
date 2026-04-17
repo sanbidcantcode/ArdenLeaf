@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Libraries — ArdenLeaf</title>
+    <title>{{ location.Name }} — ArdenLeaf</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,7 +12,6 @@
         h1, h2, h3, h4, .font-headline { font-family: 'Outfit', sans-serif !important; }
         body, p, .font-body { font-family: 'Lora', serif !important; }
 
-        /* ── Navbar ── */
         .nav-link-standard {
             position: relative; font-family: 'Outfit', sans-serif;
             font-weight: 600; color: #113819; font-size: 0.9rem;
@@ -24,26 +23,19 @@
             transform: translateX(-50%); transition: width 0.3s ease;
         }
         .nav-link-standard:hover::after { width: 100%; }
-        .nav-bookmark-icon {
-            display: flex; align-items: center; justify-content: center;
-            color: rgba(17,56,25,0.6); text-decoration: none; transition: all 0.2s ease;
-        }
-        .nav-bookmark-icon:hover { color: #113819; }
-        .nav-bookmark-icon .material-symbols-outlined { font-size: 1.4rem; font-variation-settings: 'FILL' 0, 'wght' 400; }
-        .nav-bookmark-icon:hover .material-symbols-outlined { font-variation-settings: 'FILL' 1, 'wght' 400; }
 
-        /* ── Profile Dropdown ── */
+        /* ── Profile dropdown ── */
         .profile-menu-wrap { position: relative; }
         .profile-trigger {
             display: flex; align-items: center; gap: 8px;
             cursor: pointer; padding: 5px 10px 5px 5px;
             border-radius: 999px; border: 1.5px solid transparent;
-            transition: background 0.15s, border-color 0.15s; user-select: none;
+            transition: background 0.15s; user-select: none;
         }
         .profile-trigger:hover { background: rgba(17, 56, 25, 0.05); }
         .profile-avatar {
             width: 34px; height: 34px; border-radius: 50%; background: #113819;
-            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
         }
         .profile-avatar svg { width: 18px; height: 18px; fill: #f5eebf; }
         .profile-name { font-size: 0.875rem; font-weight: 600; color: #1f2937; max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -52,10 +44,10 @@
         .profile-dropdown {
             position: absolute; top: calc(100% + 10px); right: 0;
             min-width: 220px; background: #fff; border: 1px solid #e5e7eb;
-            border-radius: 14px; box-shadow: 0 12px 40px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+            border-radius: 14px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
             padding: 6px; z-index: 1000;
             opacity: 0; transform: translateY(-6px) scale(0.98);
-            pointer-events: none; transition: opacity 0.18s ease, transform 0.18s ease;
+            pointer-events: none; transition: all 0.18s ease;
         }
         .profile-menu-wrap.open .profile-dropdown { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
         .dropdown-user-info { padding: 10px 12px 8px; border-bottom: 1px solid #f1f5f9; margin-bottom: 4px; }
@@ -72,48 +64,11 @@
         .dropdown-separator { height: 1px; background: #f1f5f9; margin: 4px 0; }
         .dropdown-item.logout { color: #dc2626; }
         .dropdown-item.logout:hover { background: #fff5f5; color: #b91c1c; }
-        .dropdown-item.logout svg { opacity: 0.7; }
-
-        /* ── Filter tabs ── */
-        .filter-tab {
-            padding: 10px 28px; border-radius: 999px;
-            font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.85rem;
-            cursor: pointer; border: none; transition: all 0.2s ease;
-            letter-spacing: 0.02em;
-        }
-        .filter-tab.active {
-            background: #113819; color: #f5eebf; box-shadow: 0 4px 16px rgba(17,56,25,0.25);
-        }
-        .filter-tab:not(.active) {
-            background: rgba(17,56,25,0.06); color: #113819;
-        }
-        .filter-tab:not(.active):hover { background: rgba(17,56,25,0.12); }
-
-        /* ── Location card ── */
-        .loc-card {
-            display: flex; flex-direction: column; justify-content: space-between;
-            background: #fff; border: 1px solid #e8dfa0; border-radius: 20px;
-            padding: 24px; text-decoration: none; color: inherit;
-            transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
-        }
-        .loc-card:hover {
-            box-shadow: 0 10px 40px rgba(17,56,25,0.10);
-            transform: translateY(-3px);
-            border-color: rgba(17,56,25,0.25);
-        }
-        .loc-icon-wrap {
-            width: 44px; height: 44px; border-radius: 12px;
-            background: #f5eebf; border: 1px solid rgba(17,56,25,0.12);
-            display: flex; align-items: center; justify-content: center;
-            margin-bottom: 16px;
-        }
-        .loc-icon-wrap .material-symbols-outlined { font-size: 22px; color: #113819; }
 
         /* ── Toast ── */
         #toast-container {
             position: fixed; bottom: 24px; right: 24px; z-index: 9999;
-            display: flex; flex-direction: column-reverse; align-items: flex-end; gap: 10px;
-            pointer-events: none;
+            display: flex; flex-direction: column-reverse; align-items: flex-end; gap: 10px; pointer-events: none;
         }
         .toast-item {
             display: flex; align-items: center; gap: 10px;
@@ -121,19 +76,43 @@
             box-shadow: 0 8px 32px rgba(0,0,0,0.12); padding: 12px 14px;
             pointer-events: auto; border: 1.5px solid;
             transform: translateX(calc(100% + 40px)); opacity: 0;
-            transition: transform 0.38s cubic-bezier(0.34,1.4,0.64,1), opacity 0.3s;
+            transition: transform 0.38s cubic-bezier(0.34, 1.4, 0.64, 1), opacity 0.3s;
         }
         .toast-item.toast-show { transform: translateX(0); opacity: 1; }
         .toast-item.toast-hide { transform: translateX(calc(100% + 40px)); opacity: 0; }
         .toast-icon { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 800; color: #fff; flex-shrink: 0; }
         .toast-message { flex: 1; font-size: 0.84rem; color: #374151; font-weight: 500; line-height: 1.4; }
         .toast-close { background: transparent; border: none; font-size: 1.2rem; color: #9ca3af; cursor: pointer; padding: 0 0 0 4px; }
+
+        /* ── Book card ── */
+        .book-card {
+            display: flex; gap: 16px;
+            background: #fff; border: 1px solid #e8dfa0;
+            border-radius: 16px; padding: 16px;
+            transition: box-shadow 0.2s ease, transform 0.2s ease;
+            text-decoration: none; color: inherit;
+        }
+        .book-card:hover { box-shadow: 0 8px 32px rgba(17,56,25,0.10); transform: translateY(-2px); }
+
+        /* ── Save button ── */
+        .save-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 8px 16px; border-radius: 999px;
+            font-family: 'Outfit', sans-serif; font-weight: 700;
+            font-size: 0.78rem; cursor: pointer; border: 1.5px solid #113819;
+            background: transparent; color: #113819;
+            transition: all 0.2s ease;
+        }
+        .save-btn:hover { background: #113819; color: #f5eebf; }
+        .save-btn.saved { background: #113819; color: #f5eebf; }
+        .save-btn.saved:hover { background: #dc2626; border-color: #dc2626; color: #fff; }
+        .save-btn .material-symbols-outlined { font-size: 1rem; }
     </style>
 </head>
-<body class="bg-[#fff9e4] font-body text-[#1c1c1c]">
+<body class="bg-[#fff9e4] text-[#1c1c1c]">
 
     <!-- Navbar -->
-    <header style="background:#f5eebf; position:sticky; top:0; z-index:50; border-bottom:1px solid rgba(17,56,25,0.1); font-family:'Outfit',sans-serif;">
+    <header style="background:#f5eebf; position:sticky; top:0; z-index:50; border-bottom:1px solid rgba(17,56,25,0.1); font-family: 'Outfit', sans-serif;">
         <div style="max-width:1280px; margin:0 auto; padding:12px 32px; display:flex; justify-content:space-between; align-items:center;">
             <a href="{{ url_for('index') }}" style="display:flex;align-items:center;gap:8px;text-decoration:none;">
                 <span class="material-symbols-outlined" style="font-size:28px;color:#113819;font-variation-settings:'FILL' 1;">eco</span>
@@ -146,13 +125,13 @@
             </nav>
 
             <div style="display:flex; align-items:center; gap:24px;">
-                <a href="{{ url_for('books.bookmarks_page') }}" class="nav-bookmark-icon" title="Bookmarks">
+                <a href="{{ url_for('books.bookmarks_page') }}" style="color:rgba(17,56,25,0.6);text-decoration:none;" title="Bookmarks">
                     <span class="material-symbols-outlined">bookmark</span>
                 </a>
 
                 {% if session.get('user_id') %}
                 <div class="profile-menu-wrap" id="profileMenuWrap">
-                    <div class="profile-trigger" id="profileTrigger" role="button" aria-haspopup="true" aria-expanded="false">
+                    <div class="profile-trigger" id="profileTrigger">
                         <div class="profile-avatar">
                             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
@@ -163,7 +142,6 @@
                             <polyline points="6 9 12 15 18 9"/>
                         </svg>
                     </div>
-
                     <div class="profile-dropdown" id="profileDropdown" role="menu">
                         <div class="dropdown-user-info">
                             <div class="dui-name">{{ session.get('user_name', 'Account') }}</div>
@@ -172,45 +150,45 @@
 
                         {% if session.get('user_type') in ('LibraryAdmin', 'StoreAdmin') %}
                         <a href="{{ url_for('owner.dashboard') }}" class="dropdown-item" role="menuitem">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px; height:16px; opacity:0.55; flex-shrink:0;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                             Owner Portal
                         </a>
                         {% endif %}
 
                         {% if session.get('user_type') == 'Admin' %}
                         <a href="{{ url_for('admin.dashboard') }}" class="dropdown-item" role="menuitem">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px; height:16px; opacity:0.55; flex-shrink:0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
                             Admin Panel
                         </a>
                         {% endif %}
 
                         {% if session.get('user_type') == 'Member' %}
                         <a href="{{ url_for('loans.dashboard') }}" class="dropdown-item" role="menuitem">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px; height:16px; opacity:0.55; flex-shrink:0;"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                             Dashboard
                         </a>
                         {% endif %}
 
                         <a href="/profile" class="dropdown-item" role="menuitem">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px; height:16px; opacity:0.55; flex-shrink:0;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                             Account Details
                         </a>
 
                         <a href="/libraries" class="dropdown-item" role="menuitem">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px; height:16px; opacity:0.55; flex-shrink:0;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                             Saved Locations
                         </a>
 
                         <div class="dropdown-separator"></div>
 
                         <a href="{{ url_for('auth.logout') }}" class="dropdown-item logout" role="menuitem">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px; height:16px; opacity:0.7; flex-shrink:0;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                             Logout
                         </a>
                     </div>
                 </div>
                 {% else %}
-                <a href="{{ url_for('auth.auth_page') }}" style="background:#113819; color:#f5eebf; padding:10px 24px; border-radius:8px; text-decoration:none; font-family:'Outfit',sans-serif; font-weight:700; font-size:0.9rem; transition:transform 0.15s;" onmouseover="this.style.transform='scale(0.98)'" onmouseout="this.style.transform='scale(1)'">Login</a>
+                <a href="{{ url_for('auth.auth_page') }}" style="background:#113819; color:#f5eebf; padding:10px 24px; border-radius:8px; text-decoration:none; font-family:'Outfit',sans-serif; font-weight:700; font-size:0.9rem;">Login</a>
                 {% endif %}
             </div>
         </div>
@@ -219,93 +197,137 @@
     <!-- Toast container -->
     <div id="toast-container" role="region" aria-live="polite" aria-label="Notifications"></div>
 
-    <main class="max-w-6xl mx-auto px-6 py-12 pb-32">
+    <main class="max-w-5xl mx-auto px-8 py-12">
+        <!-- Back Link -->
+        <a href="{{ url_for('books.locations') }}" class="inline-flex items-center gap-2 text-[#113819]/60 hover:text-[#113819] font-headline font-bold text-sm no-underline mb-12 transition-colors">
+            <span class="material-symbols-outlined text-lg">arrow_back</span>
+            Back to Locations
+        </a>
 
-        <!-- Page header -->
-        <div class="mb-12 px-2">
-            <div class="flex items-end gap-4 mb-4">
-                <h1 class="font-headline text-5xl font-extrabold text-[#113819] tracking-tighter">Your Libraries</h1>
-                <span class="mb-1 px-4 py-0.5 bg-[#113819] text-[#f5eebf] rounded-full font-headline font-black text-lg">{{ saved|length }}</span>
+        <!-- Location Header -->
+        <div class="mb-12">
+            <div class="flex items-center gap-4 mb-6 flex-wrap">
+                {% if location.Type == 'Library' %}
+                <span class="px-4 py-1 rounded-full bg-[#113819] text-[#fff9e4] font-headline text-[10px] font-bold uppercase tracking-widest">Library</span>
+                {% else %}
+                <span class="px-4 py-1 rounded-full bg-[#d5e8d2] text-[#586957] font-headline text-[10px] font-bold uppercase tracking-widest">Bookstore</span>
+                {% endif %}
+
+                <span class="px-4 py-1 rounded-full bg-white border border-[#113819]/10 text-[#113819]/40 font-headline text-[10px] font-bold uppercase tracking-widest">System ID: {{ location.ID }}</span>
+
+                <!-- Active Partner badge -->
+                <div class="flex items-center gap-2 px-4 py-2 bg-white border border-[#113819]/10 rounded-xl">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-600 animate-pulse"></span>
+                    <span class="font-headline text-xs font-bold uppercase tracking-widest text-green-700">Active Partner</span>
+                </div>
+
+                <!-- Save Location button -->
+                {% if session.get('user_id') %}
+                <button id="saveLocBtn" class="save-btn {{ 'saved' if is_saved else '' }}"
+                    onclick="toggleSaveLocation({{ location.ID }}, '{{ location.Type }}')">
+                    <span class="material-symbols-outlined" id="saveLocIcon"
+                        style="font-variation-settings: 'FILL' {{ '1' if is_saved else '0' }};">bookmark</span>
+                    <span id="saveLocText">{{ 'Saved' if is_saved else 'Save Location' }}</span>
+                </button>
+                {% endif %}
             </div>
-            <p class="font-body text-xl italic text-[#424941] max-w-lg">Favourite spots you've saved — your personal map of literary places.</p>
+
+            <h1 class="font-headline text-5xl font-extrabold text-[#113819] mb-4 tracking-tight">{{ location.Name }}</h1>
+
+            <div class="flex items-center gap-3 text-[#113819]/60 mb-8">
+                <span class="material-symbols-outlined text-[20px]">location_on</span>
+                <p class="font-body italic text-lg">{{ location.Location }}</p>
+            </div>
         </div>
 
-        {% if saved %}
-        <!-- Filter tabs -->
-        <div class="flex flex-wrap gap-3 mb-10">
-            <button id="tab-all" class="filter-tab active">All Saved</button>
-            <button id="tab-library" class="filter-tab">Libraries</button>
-            <button id="tab-bookstore" class="filter-tab">Bookstores</button>
-        </div>
-
-        <!-- Grid -->
-        <div id="saved-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {% for loc in saved %}
-            <a href="{{ url_for('books.location_detail', location_id=loc.LocationID) }}"
-               class="loc-card" data-type="{{ loc.LocationType }}">
-
+        <!-- Books Section -->
+        <section>
+            <div class="flex items-center justify-between mb-8 border-b border-[#113819]/10 pb-4">
                 <div>
-                    <!-- Icon + type badge -->
-                    <div class="flex items-start justify-between mb-1">
-                        <div class="loc-icon-wrap">
-                            <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">
-                                {{ 'account_balance' if loc.LocationType == 'Library' else 'storefront' }}
-                            </span>
-                        </div>
-                        {% if loc.LocationType == 'Library' %}
-                        <span class="px-3 py-1 rounded-full bg-[#113819] text-[#fff9e4] font-headline text-[9px] font-bold uppercase tracking-widest">Library</span>
+                    <h2 class="font-headline text-2xl font-bold text-[#113819]">
+                        {% if location.Type == 'Library' %}Books in Collection{% else %}Books for Sale{% endif %}
+                    </h2>
+                    <p class="font-body italic text-[#113819]/40 text-sm mt-1">
+                        {{ books|length }} book{{ '' if books|length == 1 else 's' }} at this location
+                    </p>
+                </div>
+                {% if books %}
+                <div class="flex items-center gap-4 text-sm font-headline font-bold">
+                    <span class="flex items-center gap-1.5 text-green-700">
+                        <span class="w-2 h-2 rounded-full bg-green-600"></span>
+                        {{ books | selectattr('is_available', 'equalto', 1) | list | length }} Available
+                    </span>
+                    <span class="flex items-center gap-1.5 text-[#113819]/40">
+                        <span class="w-2 h-2 rounded-full bg-red-400/50"></span>
+                        {{ books | selectattr('is_available', 'equalto', 0) | list | length }} Unavailable
+                    </span>
+                </div>
+                {% endif %}
+            </div>
+
+            {% if books %}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                {% for book in books %}
+                <a href="{{ url_for('books.book_detail', isbn=book.ISBN) }}" class="book-card">
+                    <!-- Cover -->
+                    <div class="w-20 h-28 flex-shrink-0 rounded-lg overflow-hidden border border-black/5 shadow-sm bg-[#f5eebf] flex items-center justify-center">
+                        {% if book.cover_image %}
+                        <img src="{{ book.cover_image }}" alt="{{ book.Title }}" class="w-full h-full object-cover">
                         {% else %}
-                        <span class="px-3 py-1 rounded-full bg-[#d5e8d2] text-[#586957] font-headline text-[9px] font-bold uppercase tracking-widest">Bookstore</span>
+                        <span class="material-symbols-outlined text-3xl text-[#113819]/30">book</span>
                         {% endif %}
                     </div>
 
-                    <h3 class="font-headline text-xl font-bold text-[#113819] leading-tight mb-2">{{ loc.Name }}</h3>
-                    <div class="flex items-start gap-2 text-[#424941]/70 text-sm font-body italic">
-                        <span class="material-symbols-outlined text-[16px] shrink-0 not-italic mt-0.5 opacity-50">location_on</span>
-                        <span class="leading-snug">{{ loc.Location }}</span>
+                    <!-- Info -->
+                    <div class="flex flex-col justify-between py-1 flex-grow min-w-0">
+                        <div>
+                            <h3 class="font-headline text-base font-bold text-[#113819] leading-tight line-clamp-2 mb-1">{{ book.Title }}</h3>
+                            <p class="font-headline text-xs text-[#113819]/50 font-semibold tracking-tight truncate">{{ book.Authors or 'Unknown Author' }}</p>
+                            {% if book.Genres %}
+                            <p class="font-headline text-[10px] text-[#113819]/30 font-bold uppercase tracking-widest mt-1 truncate">{{ book.Genres.split(',')[0].strip() }}</p>
+                            {% endif %}
+                        </div>
+
+                        <div class="flex items-center justify-between mt-3">
+                            <!-- Availability pill -->
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full {{ 'bg-green-600 shadow-[0_0_6px_rgba(22,163,74,0.5)]' if book.is_available else 'bg-red-400/50' }}"></span>
+                                <span class="font-headline text-[10px] font-black uppercase tracking-widest {{ 'text-green-700' if book.is_available else 'text-red-700/40' }}">
+                                    {% if book.is_available %}
+                                        {{ book.available_copies }} of {{ book.total_copies }} available
+                                    {% else %}
+                                        {% if location.Type == 'Library' %}Checked out{% else %}Out of stock{% endif %}
+                                    {% endif %}
+                                </span>
+                            </div>
+
+                            {% if book.Price %}
+                            <span class="font-headline text-sm font-bold text-[#113819]">
+                                ₹{{ "%.0f"|format(book.Price) }}
+                                {% if book.DiscountPercent %}<span class="text-[10px] text-green-700 ml-1">{{ book.DiscountPercent }}% OFF</span>{% endif %}
+                            </span>
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
+                </a>
+                {% endfor %}
+            </div>
 
-                <div class="mt-6 pt-4 border-t border-[#113819]/8 flex items-center justify-between">
-                    <div class="flex items-center gap-1.5">
-                        <span class="w-1.5 h-1.5 rounded-full bg-green-600 animate-pulse"></span>
-                        <span class="font-headline text-[10px] font-bold uppercase tracking-widest text-green-700">Active Partner</span>
-                    </div>
-                    <span class="font-headline text-[10px] font-bold text-[#113819]/30 uppercase tracking-widest flex items-center gap-1">
-                        View details
-                        <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                    </span>
-                </div>
-            </a>
-            {% endfor %}
-        </div>
-
-        <!-- No results after filter -->
-        <div id="no-filter-results" class="hidden text-center py-20">
-            <p class="font-body italic text-[#424941]/50 text-lg">No saved locations in this category.</p>
-        </div>
-
-        {% else %}
-        <!-- Empty state -->
-        <div class="py-32 text-center border-2 border-dashed border-[#113819]/10 rounded-[32px] bg-white/40">
-            <span class="material-symbols-outlined text-7xl text-[#113819]/10 mb-6 block" style="font-variation-settings:'FILL' 1;">location_off</span>
-            <h2 class="font-headline text-2xl font-bold text-[#113819]/30 mb-3">No saved locations yet</h2>
-            <p class="font-body italic text-[#424941]/50 mb-8 max-w-sm mx-auto">
-                Explore our library and bookstore network and save the places that spark your reading journey.
-            </p>
-            <a href="{{ url_for('books.locations') }}"
-               class="inline-flex items-center gap-2 bg-[#113819] text-[#f5eebf] px-10 py-3 rounded-full font-headline font-bold text-sm hover:scale-[1.02] active:scale-95 transition-all no-underline">
-                <span class="material-symbols-outlined text-base">explore</span>
-                Explore Locations
-            </a>
-        </div>
-        {% endif %}
+            {% else %}
+            <!-- Empty state -->
+            <div class="py-24 text-center border-2 border-dashed border-[#113819]/10 rounded-[32px]">
+                <span class="material-symbols-outlined text-5xl text-[#113819]/10 mb-4 block">inventory_2</span>
+                <p class="font-body italic text-[#113819]/40 text-lg mb-2">No books registered here yet.</p>
+                <p class="font-headline text-xs font-bold text-[#113819]/20 uppercase tracking-widest">Check back soon as this location grows its collection.</p>
+            </div>
+            {% endif %}
+        </section>
     </main>
 
     <!-- Footer -->
-    <footer style="background:#fcf5c5; border-top:1px solid rgba(17,56,25,0.1); padding:80px 0 40px; margin-top:120px; width:100%; font-family:'Outfit',sans-serif;">
+    <footer style="background:#fcf5c5; border-top:1px solid rgba(17,56,25,0.1); padding:80px 0 40px; margin-top:120px; width:100%; font-family: 'Outfit', sans-serif;">
         <div style="max-width:1280px; margin:0 auto; padding:0 32px;">
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:flex-start; margin-bottom:80px;">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:64px; align-items:flex-start; margin-bottom:80px;">
                 <div style="max-width:400px;">
                     <a href="{{ url_for('index') }}" style="text-decoration:none; display:flex; align-items:center; gap:8px; margin-bottom:28px;">
                         <span class="material-symbols-outlined" style="font-size:32px;color:#113819;font-variation-settings:'FILL' 1;">eco</span>
@@ -315,8 +337,8 @@
                         "Explore our partner libraries and independent bookstores across India — each one a gateway to ArdenLeaf."
                     </p>
                 </div>
-                <div style="display:flex; justify-content:flex-end;">
-                    <div style="min-width:180px;">
+                <div style="display:flex; justify-content: flex-end;">
+                    <div style="min-width: 180px;">
                         <h4 style="font-weight:900; color:#113819; text-transform:uppercase; letter-spacing:0.15em; font-size:0.75rem; margin-bottom:32px;">Discover</h4>
                         <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:20px;">
                             <li><a href="{{ url_for('books.search') }}" style="text-decoration:none; color:#6b7280; font-size:1.15rem; font-family:'Lora',serif; font-style:italic; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Search Books</a></li>
@@ -360,37 +382,54 @@
             }
         })();
 
-        // ── Filter tabs ──
-        const tabs  = document.querySelectorAll('.filter-tab');
-        const cards = document.querySelectorAll('.loc-card');
-        const noResults = document.getElementById('no-filter-results');
+        // ── Save Location toggle ──
+        async function toggleSaveLocation(locationId, locationType) {
+            const btn  = document.getElementById('saveLocBtn');
+            const icon = document.getElementById('saveLocIcon');
+            const text = document.getElementById('saveLocText');
+            if (!btn) return;
 
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                tabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
+            btn.disabled = true;
 
-                const filter = tab.id.replace('tab-', '');
-                let visible = 0;
+            try {
+                const formData = new FormData();
+                formData.append('location_type', locationType);
 
-                cards.forEach(card => {
-                    const type = card.getAttribute('data-type').toLowerCase();
-                    const show = filter === 'all' || type === filter;
-                    card.style.display = show ? '' : 'none';
-                    if (show) visible++;
+                const res = await fetch(`/locations/${locationId}/save`, {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                    body: formData,
                 });
+                const data = await res.json();
 
-                if (noResults) noResults.classList.toggle('hidden', visible > 0);
-            });
-        });
+                if (data.success) {
+                    if (data.saved) {
+                        btn.classList.add('saved');
+                        icon.style.fontVariationSettings = "'FILL' 1";
+                        text.textContent = 'Saved';
+                    } else {
+                        btn.classList.remove('saved');
+                        icon.style.fontVariationSettings = "'FILL' 0";
+                        text.textContent = 'Save Location';
+                    }
+                    showToast(data.message, null, data.type || 'success');
+                } else {
+                    showToast(data.message || 'Something went wrong.', null, 'error');
+                }
+            } catch (err) {
+                showToast('Connection error. Please try again.', null, 'error');
+            } finally {
+                btn.disabled = false;
+            }
+        }
 
         // ── Toast Manager ──
         (function () {
             const TOAST_COLORS = {
-                success: { bg: '#c1eec0', border: '#113819', icon: '#113819', symbol: '\u2713' },
-                error:   { bg: '#ffdad6', border: '#ba1a1a', icon: '#93000a', symbol: '\u2715' },
-                info:    { bg: '#f6efc0', border: '#526351', icon: '#526351', symbol: 'i' },
-                warning: { bg: '#f0e9bb', border: '#727970', icon: '#424941', symbol: '!' },
+                success: { bg: '#c1eec0', border: '#113819', icon: '#113819', symbol: '\u2713', bar: '#113819' },
+                error:   { bg: '#ffdad6', border: '#ba1a1a', icon: '#93000a', symbol: '\u2715', bar: '#ba1a1a' },
+                info:    { bg: '#f6efc0', border: '#526351', icon: '#526351', symbol: 'i', bar: '#526351' },
+                warning: { bg: '#f0e9bb', border: '#727970', icon: '#424941', symbol: '!', bar: '#727970' },
             };
             class ToastManager {
                 constructor() { this.container = document.getElementById('toast-container'); this.queue = []; this.MAX = 5; }
@@ -398,7 +437,7 @@
                     type = TOAST_COLORS[type] ? type : 'info';
                     if (this.queue.length >= this.MAX) this._dismiss(this.queue[0]);
                     const el = document.createElement('div');
-                    el.className = 'toast-item';
+                    el.className = `toast-item ${url ? 'toast-clickable' : ''}`;
                     el.style.backgroundColor = TOAST_COLORS[type].bg;
                     el.style.border = `1px solid ${TOAST_COLORS[type].border}`;
                     if (url) el.onclick = () => window.location.href = url;
@@ -419,6 +458,7 @@
             }
             const _mgr = new ToastManager();
             window.showToast = (msg, url, type) => _mgr.show(msg, url, type);
+            // Flash messages
             const flashes = JSON.parse(document.getElementById('flash-data').textContent || '[]');
             flashes.forEach(f => showToast(f[1], null, f[0] === 'error' ? 'error' : f[0] === 'success' ? 'success' : 'info'));
         })();

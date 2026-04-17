@@ -11,7 +11,33 @@ def require_admin():
 
 @admin_bp.route('/')
 def dashboard():
-    return render_template('admin/dashboard.html')
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Total Books
+    cursor.execute("SELECT COUNT(*) FROM Book")
+    total_books = cursor.fetchone()[0]
+    
+    # Active Loans
+    cursor.execute("SELECT COUNT(*) FROM Loan WHERE ReturnDate IS NULL")
+    active_loans = cursor.fetchone()[0]
+    
+    # Total Members
+    cursor.execute("SELECT COUNT(*) FROM User WHERE UserType = 'Member'")
+    total_members = cursor.fetchone()[0]
+    
+    # Partner Locations
+    cursor.execute("SELECT (SELECT COUNT(*) FROM Library) + (SELECT COUNT(*) FROM Bookstore)")
+    total_locations = cursor.fetchone()[0]
+    
+    cursor.close()
+    conn.close()
+    
+    return render_template('admin/dashboard.html', 
+                           total_books=total_books, 
+                           active_loans=active_loans, 
+                           total_members=total_members, 
+                           total_locations=total_locations)
 
 @admin_bp.route('/books/add', methods=['GET', 'POST'])
 def add_book():

@@ -3,12 +3,12 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>{% block title %}Admin Panel — ArdenLeaf{% endblock %}</title>
+    <title>{% block title %}Owner Portal — ArdenLeaf{% endblock %}</title>
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Epilogue:wght@300;400;700&family=Newsreader:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet" />
     <!-- Material Symbols -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-    
+
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script id="tailwind-config">
         tailwind.config = {
@@ -100,27 +100,25 @@
             <span class="font-headline text-xl font-black text-[#113819] tracking-tighter uppercase">ArdenLeaf</span>
         </a>
 
+        <!-- Location Info Block -->
+        <div class="px-8 pb-4 -mt-2">
+            <p class="font-headline text-[10px] font-bold text-[#113819]/40 uppercase tracking-widest mb-0.5">{{ session.get('location_type', 'Location') }}</p>
+            <p class="font-headline text-sm font-bold text-[#113819] truncate leading-snug">{{ session.get('location_name', 'Your Location') }}</p>
+        </div>
+
         <!-- Navigation Tabs -->
-        <nav class="flex-1 py-6 flex flex-col gap-1 pr-4">
-            <a class="flex items-center gap-4 px-8 py-3.5 {% if request.endpoint == 'admin.dashboard' %}text-[#113819] font-bold bg-[#fcf5c5] rounded-r-full{% else %}text-[#113819]/70 hover:text-[#113819] hover:bg-[#fcf5c5]/50 transition-all duration-200 rounded-r-full{% endif %}" href="{{ url_for('admin.dashboard') }}">
-                <span class="material-symbols-outlined text-[22px]" {% if request.endpoint == 'admin.dashboard' %}style="font-variation-settings: 'FILL' 1;"{% endif %}>dashboard</span>
+        <nav class="flex-1 py-4 flex flex-col gap-1 pr-4">
+            <a class="flex items-center gap-4 px-8 py-3.5 {% if request.endpoint == 'owner.dashboard' %}text-[#113819] font-bold bg-[#fcf5c5] rounded-r-full{% else %}text-[#113819]/70 hover:text-[#113819] hover:bg-[#fcf5c5]/50 transition-all duration-200 rounded-r-full{% endif %}" href="{{ url_for('owner.dashboard') }}">
+                <span class="material-symbols-outlined text-[22px]" {% if request.endpoint == 'owner.dashboard' %}style="font-variation-settings: 'FILL' 1;"{% endif %}>dashboard</span>
                 <span class="font-body text-sm font-medium">Dashboard</span>
             </a>
-            <a class="flex items-center gap-4 px-8 py-3.5 {% if request.endpoint == 'admin.add_book' %}text-[#113819] font-bold bg-[#fcf5c5] rounded-r-full{% else %}text-[#113819]/70 hover:text-[#113819] hover:bg-[#fcf5c5]/50 transition-all duration-200 rounded-r-full{% endif %}" href="{{ url_for('admin.add_book') }}">
-                <span class="material-symbols-outlined text-[22px]" {% if request.endpoint == 'admin.add_book' %}style="font-variation-settings: 'FILL' 1;"{% endif %}>menu_book</span>
-                <span class="font-body text-sm font-medium">Add Book</span>
-            </a>
-            <a class="flex items-center gap-4 px-8 py-3.5 {% if request.endpoint == 'admin.add_copy' %}text-[#113819] font-bold bg-[#fcf5c5] rounded-r-full{% else %}text-[#113819]/70 hover:text-[#113819] hover:bg-[#fcf5c5]/50 transition-all duration-200 rounded-r-full{% endif %}" href="{{ url_for('admin.add_copy') }}">
-                <span class="material-symbols-outlined text-[22px]" {% if request.endpoint == 'admin.add_copy' %}style="font-variation-settings: 'FILL' 1;"{% endif %}>library_add</span>
+            <a class="flex items-center gap-4 px-8 py-3.5 {% if request.endpoint == 'owner.add_copy' %}text-[#113819] font-bold bg-[#fcf5c5] rounded-r-full{% else %}text-[#113819]/70 hover:text-[#113819] hover:bg-[#fcf5c5]/50 transition-all duration-200 rounded-r-full{% endif %}" href="{{ url_for('owner.add_copy') }}">
+                <span class="material-symbols-outlined text-[22px]" {% if request.endpoint == 'owner.add_copy' %}style="font-variation-settings: 'FILL' 1;"{% endif %}>library_add</span>
                 <span class="font-body text-sm font-medium">Add Copy</span>
             </a>
-            <a class="flex items-center gap-4 px-8 py-3.5 {% if request.endpoint == 'admin.add_location' %}text-[#113819] font-bold bg-[#fcf5c5] rounded-r-full{% else %}text-[#113819]/70 hover:text-[#113819] hover:bg-[#fcf5c5]/50 transition-all duration-200 rounded-r-full{% endif %}" href="{{ url_for('admin.add_location') }}">
-                <span class="material-symbols-outlined text-[22px]" {% if request.endpoint == 'admin.add_location' %}style="font-variation-settings: 'FILL' 1;"{% endif %}>location_on</span>
-                <span class="font-body text-sm font-medium">Add Location</span>
-            </a>
-            <a class="flex items-center gap-4 px-8 py-3.5 {% if request.endpoint == 'admin.loans' %}text-[#113819] font-bold bg-[#fcf5c5] rounded-r-full{% else %}text-[#113819]/70 hover:text-[#113819] hover:bg-[#fcf5c5]/50 transition-all duration-200 rounded-r-full{% endif %}" href="{{ url_for('admin.loans') }}">
-                <span class="material-symbols-outlined text-[22px]" {% if request.endpoint == 'admin.loans' %}style="font-variation-settings: 'FILL' 1;"{% endif %}>import_contacts</span>
-                <span class="font-body text-sm font-medium">Active Loans</span>
+            <a class="flex items-center gap-4 px-8 py-3.5 {% if request.endpoint == 'owner.add_book' %}text-[#113819] font-bold bg-[#fcf5c5] rounded-r-full{% else %}text-[#113819]/70 hover:text-[#113819] hover:bg-[#fcf5c5]/50 transition-all duration-200 rounded-r-full{% endif %}" href="{{ url_for('owner.add_book') }}">
+                <span class="material-symbols-outlined text-[22px]" {% if request.endpoint == 'owner.add_book' %}style="font-variation-settings: 'FILL' 1;"{% endif %}>menu_book</span>
+                <span class="font-body text-sm font-medium">Add Book</span>
             </a>
         </nav>
 
@@ -142,12 +140,12 @@
         <!-- Header -->
         <header class="sticky top-0 z-40 bg-surface/80 backdrop-blur-md px-12 h-20 flex items-center justify-between border-b border-[#113819]/10">
             <div>
-                <h1 class="font-headline text-3xl font-black text-primary-container tracking-tight">{% block page_title %}Admin{% endblock %}</h1>
+                <h1 class="font-headline text-3xl font-black text-primary-container tracking-tight">{% block page_title %}Owner Portal{% endblock %}</h1>
             </div>
             <div class="flex items-center gap-4">
                 <div class="text-right">
-                    <p class="font-headline text-sm font-bold text-primary">{{ session.get('user_name', 'Administrator') }}</p>
-                    <p class="font-body text-[11px] text-primary/60 uppercase tracking-widest font-black">Admin Panel</p>
+                    <p class="font-headline text-sm font-bold text-primary">{{ session.get('user_name', 'Owner') }}</p>
+                    <p class="font-body text-[11px] text-primary/60 uppercase tracking-widest font-black">{{ session.get('location_type', '') }} Owner</p>
                 </div>
             </div>
         </header>
@@ -168,7 +166,7 @@
                 {% endif %}
             {% endwith %}
 
-            {% block admin_content %}{% endblock %}
+            {% block owner_content %}{% endblock %}
         </div>
     </main>
 </body>

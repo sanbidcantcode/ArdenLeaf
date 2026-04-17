@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from models.book import Book
 from models.library import Library, Bookstore
 from models.bookmark import Bookmark
+from models.saved_location import SavedLocation
 from utils.google_books import get_book_details
 from utils.book_cache import get as cache_get
 import time
@@ -30,10 +31,8 @@ def search():
     covers = {}
     for book in books:
         isbn = book['ISBN']
-        data = get_book_details(isbn)
+        data = get_book_details(isbn, title=book.get('Title'), author=book.get('Authors'))
         covers[isbn] = data.get('cover_image')
-        if data and not data.get('_from_cache'):
-            time.sleep(0.12)
 
     return render_template(
         'search.html',
@@ -55,7 +54,7 @@ def book_detail(isbn):
         return "Book not found", 404
 
     availability = Book.get_availability(isbn)
-    google_data  = get_book_details(isbn)
+    google_data  = get_book_details(isbn, title=book.get('Title'), author=book.get('Authors'))
 
     # Check bookmark state for logged-in users
     user_id       = session.get('user_id')
@@ -74,7 +73,10 @@ def book_detail(isbn):
 
 @book_bp.route('/book/<isbn>/bookmark', methods=['POST'])
 def bookmark(isbn):
-    wants_json = 'application/json' in request.headers.get('Accept', '')
+    wants_json = (
+        'application/json' in request.headers.get('Accept', '') or
+        request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+    )
 
     if not session.get('user_id'):
         if wants_json:
@@ -121,26 +123,39 @@ def bookmarks_page():
     user_id   = session['user_id']
     bookmarks = Bookmark.get_user_bookmarks(user_id)
 
-    # Attach cover images from disk cache — no new API calls
+    all_genres = set()
+    from models.book import Book
+    
+    # Attach cover images and availability from disk cache/DB
     for bm in bookmarks:
         cached = cache_get(bm['ISBN']) or {}
         bm['cover_image'] = cached.get('cover_image')
+        
+        # Check availability
+        copies = Book.get_availability(bm['ISBN'])
+        bm['is_available'] = any(c['Status'] == 'Available' for c in copies)
+        
+        if bm['Genres']:
+            for g in bm['Genres'].split(','):
+                all_genres.add(g.strip())
 
-    return render_template('bookmarks.html', bookmarks=bookmarks)
+    return render_template('bookmarks.html', 
+                           bookmarks=bookmarks, 
+                           unique_genres=sorted(list(all_genres)))
 
 
-# ── Libraries / Bookstores ────────────────────────────────────────────────────
+# ── Saved Locations ("Your Libraries") ───────────────────────────────────────
 
 @book_bp.route('/libraries')
 def libraries_list():
-    libraries = Library.get_all()
-    return render_template('libraries.html', locations=libraries, type="Library")
+    if not session.get('user_id'):
+        flash('Please log in to view your saved locations.', 'error')
+        return redirect(url_for('auth.auth_page'))
 
+    from models.saved_location import SavedLocation
+    saved = SavedLocation.get_user_saved(session['user_id'])
+    return render_template('libraries.html', saved=saved)
 
-@book_bp.route('/bookstores')
-def bookstores_list():
-    stores = Bookstore.get_all()
-    return render_template('libraries.html', locations=stores, type="Bookstore")
 
 @book_bp.route('/locations')
 def locations():
@@ -164,3 +179,92 @@ def locations():
         })
     
     return render_template('locations.html', locations=combined)
+    
+@book_bp.route('/locations/<int:location_id>')
+def location_detail(location_id):
+    libs = Library.get_all()
+    stores = Bookstore.get_all()
+    location = None
+
+    for l in libs:
+        if l['LibraryID'] == location_id:
+            location = {
+                'ID': l['LibraryID'],
+                'Name': l['Name'],
+                'Location': l['Location'],
+                'Type': 'Library'
+            }
+            break
+
+    if not location:
+        for s in stores:
+            if s['StoreID'] == location_id:
+                location = {
+                    'ID': s['StoreID'],
+                    'Name': s['Name'],
+                    'Location': s['Location'],
+                    'Type': 'Bookstore'
+                }
+                break
+
+    if not location:
+        from flask import abort
+        abort(404)
+
+    # Fetch books at this location
+    books = Book.get_books_at_location(location_id, location['Type'])
+
+    # Attach cover images from cache
+    for book in books:
+        cached = cache_get(book['ISBN']) or {}
+        book['cover_image'] = cached.get('cover_image')
+
+    # Check if user has saved this location
+    user_id = session.get('user_id')
+    is_saved = SavedLocation.is_saved(user_id, location_id, location['Type']) if user_id else False
+
+    return render_template(
+        'location_detail.html',
+        location=location,
+        books=books,
+        is_saved=is_saved,
+    )
+
+
+@book_bp.route('/locations/<int:location_id>/save', methods=['POST'])
+def save_location(location_id):
+    wants_json = (
+        'application/json' in request.headers.get('Accept', '') or
+        request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+    )
+
+    if not session.get('user_id'):
+        if wants_json:
+            return jsonify({'success': False, 'message': 'Please log in to save locations.', 'saved': False})
+        flash('Please log in to save locations.', 'error')
+        return redirect(url_for('auth.auth_page'))
+
+    user_id = session['user_id']
+    location_type = request.form.get('location_type', 'Library')
+
+    if SavedLocation.is_saved(user_id, location_id, location_type):
+        SavedLocation.unsave(user_id, location_id, location_type)
+        now_saved = False
+        message = 'Location removed from saved.'
+        toast_type = 'info'
+    else:
+        SavedLocation.save(user_id, location_id, location_type)
+        now_saved = True
+        message = 'Location saved! Find it in Your Libraries.'
+        toast_type = 'success'
+
+    if wants_json:
+        return jsonify({
+            'success': True,
+            'saved': now_saved,
+            'message': message,
+            'type': toast_type,
+        })
+
+    flash(message, toast_type)
+    return redirect(url_for('books.location_detail', location_id=location_id))

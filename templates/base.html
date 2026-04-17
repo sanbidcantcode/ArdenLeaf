@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}ArdenLeaf{% endblock %}</title>
     <meta name="description" content="ArdenLeaf — India's centralized book discovery platform connecting libraries and bookstores.">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=Lora:ital,wght@0,400;0,600;1,400&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 
     <style>
@@ -21,14 +23,14 @@
             transition: background 0.15s, border-color 0.15s;
             user-select: none;
         }
-        .profile-trigger:hover { background: #f1f5f9; border-color: #e2e8f0; }
+        .profile-trigger:hover { background: rgba(17, 56, 25, 0.05); }
 
         .profile-avatar {
             width: 34px; height: 34px; border-radius: 50%;
-            background: linear-gradient(135deg, #6366f1, #2563eb);
+            background: #113819;
             display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
-        .profile-avatar svg { width: 18px; height: 18px; fill: #fff; }
+        .profile-avatar svg { width: 18px; height: 18px; fill: #f5eebf; }
 
         .profile-name {
             font-size: 0.875rem; font-weight: 600; color: #1f2937;
@@ -175,15 +177,24 @@
     </style>
 </head>
 <body>
-    <header class="navbar">
-        <div class="container nav-content">
-            <a href="{{ url_for('index') }}" class="logo">🍃 ArdenLeaf</a>
-            <nav class="nav-links">
-                <a href="{{ url_for('books.search') }}">Search Books</a>
-                <a href="{{ url_for('books.locations') }}">Locations</a>
+    <header style="background:#f5eebf; position:sticky; top:0; z-index:50; border-bottom:1px solid rgba(17,56,25,0.1);">
+        <div style="max-width:1280px; margin:0 auto; padding:12px 32px; display:flex; justify-content:space-between; align-items:center;">
+            <a href="{{ url_for('index') }}" style="display:flex; align-items:center; gap:8px; text-decoration:none;">
+                <span class="material-symbols-outlined" style="font-size:28px; color:#113819; font-variation-settings:'FILL' 1;">eco</span>
+                <span style="font-family:'Outfit',sans-serif; font-weight:900; font-size:1.4rem; color:#113819;">ArdenLeaf</span>
+            </a>
+            
+            <nav style="display:flex; gap:32px; align-items:center;">
+                <a href="{{ url_for('books.search') }}" class="nav-link-standard">Search Books</a>
+                <a href="{{ url_for('books.locations') }}" class="nav-link-standard">Locations</a>
+            </nav>
+            
+            <div style="display:flex; align-items:center; gap:24px;">
+                <a href="{{ url_for('books.bookmarks_page') }}" class="nav-bookmark-icon" title="Bookmarks">
+                    <span class="material-symbols-outlined">bookmark</span>
+                </a>
 
                 {% if session.get('user_id') %}
-                <!-- ── Profile dropdown ── -->
                 <div class="profile-menu-wrap" id="profileMenuWrap">
                     <div class="profile-trigger" id="profileTrigger" role="button" aria-haspopup="true" aria-expanded="false">
                         <div class="profile-avatar">
@@ -199,21 +210,19 @@
 
                     <div class="profile-dropdown" id="profileDropdown" role="menu">
                         <div class="dropdown-user-info">
-                            <div class="dui-name">{{ session.get('user_name', '') }}</div>
-                            <div class="dui-type">{{ session.get('user_type', 'User') }}</div>
+                            <div class="dui-name">{{ session.get('user_name', 'Account') }}</div>
+                            <div class="dui-type">{{ session.get('user_type', 'Member') }}</div>
                         </div>
 
-                        {% if session.get('user_type') == 'Member' %}
+                        {% if session.get('user_type') in ('LibraryAdmin', 'StoreAdmin') %}
+                        <a href="{{ url_for('owner.dashboard') }}" class="dropdown-item" role="menuitem">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                            Owner Portal
+                        </a>
+                        {% elif session.get('user_type') == 'Member' %}
                         <a href="{{ url_for('loans.dashboard') }}" class="dropdown-item" role="menuitem">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                             Dashboard
-                        </a>
-                        {% endif %}
-
-                        {% if session.get('user_type') == 'Admin' %}
-                        <a href="{{ url_for('admin.dashboard') }}" class="dropdown-item" role="menuitem">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                            Admin Tools
                         </a>
                         {% endif %}
 
@@ -222,24 +231,9 @@
                             Account Details
                         </a>
 
-                        <a href="/profile/addresses" class="dropdown-item" role="menuitem">
+                        <a href="/libraries" class="dropdown-item" role="menuitem">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                            Addresses
-                        </a>
-
-                        <a href="{{ url_for('books.bookmarks_page') }}" class="dropdown-item" role="menuitem">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-                            Bookmarks
-                        </a>
-
-                        <a href="/saved-locations" class="dropdown-item" role="menuitem">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
                             Saved Locations
-                        </a>
-
-                        <a href="#" class="dropdown-item" role="menuitem">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                            Switch Accounts
                         </a>
 
                         <div class="dropdown-separator"></div>
@@ -250,11 +244,10 @@
                         </a>
                     </div>
                 </div>
-
                 {% else %}
-                <a href="{{ url_for('auth.auth_page') }}" class="btn btn-primary" id="nav-login-btn">Login</a>
+                <a href="{{ url_for('auth.auth_page') }}" style="background:#113819; color:#f5eebf; padding:10px 24px; border-radius:8px; text-decoration:none; font-family:'Outfit',sans-serif; font-weight:700; font-size:0.9rem; transition:transform 0.15s;" onmouseover="this.style.transform='scale(0.98)'" onmouseout="this.style.transform='scale(1)'">Login</a>
                 {% endif %}
-            </nav>
+            </div>
         </div>
     </header>
 
@@ -265,9 +258,34 @@
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2025 ArdenLeaf. Made with 🍃 for India's readers.</p>
+    <footer style="background:#fcf5c5; padding:80px 0 40px; border-top:1px solid rgba(17,56,25,0.1); margin-top:120px; font-family: 'Outfit', sans-serif; width:100%;">
+        <div style="max-width:1280px; margin:0 auto; padding:0 32px;">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:64px; align-items:flex-start; margin-bottom:80px;">
+                <div style="max-width:400px;">
+                    <a href="{{ url_for('index') }}" style="text-decoration:none; display:flex; align-items:center; gap:8px; margin-bottom:28px;">
+                        <span class="material-symbols-outlined" style="font-size:32px;color:#113819;font-variation-settings:'FILL' 1;">eco</span>
+                        <span style="font-family:'Outfit',sans-serif;font-weight:900;font-size:1.8rem;color:#113819;letter-spacing:-0.05em;">ArdenLeaf</span>
+                    </a>
+                    <p style="font-family:'Lora',serif; color:#4b5563; font-size:1.15rem; line-height:1.7; font-style:italic; opacity:0.85;">
+                        "Explore our partner libraries and independent bookstores across India — each one a gateway to ArdenLeaf."
+                    </p>
+                </div>
+                <div style="display:flex; justify-content: flex-end;">
+                    <div style="min-width: 180px;">
+                        <h4 style="font-weight:900; color:#113819; text-transform:uppercase; letter-spacing:0.15em; font-size:0.75rem; margin-bottom:32px;">Discover</h4>
+                        <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:20px;">
+                            <li><a href="{{ url_for('books.search') }}" style="text-decoration:none; color:#6b7280; font-size:1.15rem; font-family:'Lora',serif; font-style:italic; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Search Books</a></li>
+                            <li><a href="{{ url_for('books.locations') }}" style="text-decoration:none; color:#6b7280; font-size:1.15rem; font-family:'Lora',serif; font-style:italic; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Locations</a></li>
+                            <li><a href="{{ url_for('books.bookmarks_page') }}" style="text-decoration:none; color:#6b7280; font-size:1.15rem; font-family:'Lora',serif; font-style:italic; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Bookmarks</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div style="padding-top:40px; border-top:1px solid rgba(17,56,25,0.08); display:flex; justify-content:space-between; align-items:center;">
+                <p style="font-family:'Lora',serif; font-style:italic; font-size:0.95rem; color:#6b7280; opacity:0.7;">
+                    © 2024 ArdenLeaf. Made with 🍃 for India's readers.
+                </p>
+            </div>
         </div>
     </footer>
 
@@ -279,10 +297,10 @@
         'use strict';
 
         const TOAST_COLORS = {
-            success: { bg: '#f0fdf4', border: '#86efac', icon: '#16a34a', symbol: '✓', bar: '#16a34a' },
-            error:   { bg: '#fff5f5', border: '#fca5a5', icon: '#dc2626', symbol: '✕', bar: '#dc2626' },
-            info:    { bg: '#eff6ff', border: '#93c5fd', icon: '#2563eb', symbol: 'i', bar: '#2563eb' },
-            warning: { bg: '#fffbeb', border: '#fcd34d', icon: '#d97706', symbol: '!', bar: '#d97706' },
+            success: { bg: '#c1eec0', border: '#113819', icon: '#113819', symbol: '✓', bar: '#113819' },
+            error:   { bg: '#ffdad6', border: '#ba1a1a', icon: '#93000a', symbol: '✕', bar: '#ba1a1a' },
+            info:    { bg: '#f6efc0', border: '#526351', icon: '#526351', symbol: 'i', bar: '#526351' },
+            warning: { bg: '#f0e9bb', border: '#727970', icon: '#424941', symbol: '!', bar: '#727970' },
         };
 
         class ToastManager {

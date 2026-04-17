@@ -13,41 +13,72 @@ from utils import book_cache
 GOOGLE_BOOKS_API = "https://www.googleapis.com/books/v1/volumes"
 
 
-def get_book_details(isbn: str) -> dict:
+def get_book_details(isbn: str, title: str = None, author: str = None) -> dict:
     """
-    Fetch book metadata from the Google Books API by ISBN.
+    Fetch book metadata from the Google Books API by ISBN, with title/author fallback.
 
-    Checks the disk cache first. Only calls the API when the ISBN has never
-    been fetched before. Returns an empty dict {} on failure or no results.
+    Checks the disk cache first (using original isbn as key).
     """
     # --- Cache hit ---
     cached = book_cache.get(isbn)
     if cached is not None:
         return cached
 
-    # --- API call ---
+    clean_isbn = isbn.replace('-', '').replace(' ', '').strip()
+
+    # --- 1. Primary Search: By ISBN ---
     try:
         response = requests.get(
             GOOGLE_BOOKS_API,
-            params={"q": f"isbn:{isbn}"},
+            params={"q": f"isbn:{clean_isbn}"},
             timeout=5,
         )
         response.raise_for_status()
         data = response.json()
-        print(f"[google_books] Fetched ISBN {isbn} → {response.status_code}, items: {data.get('totalItems', 0)}")
     except requests.exceptions.HTTPError as e:
-        print(f"[google_books] HTTP {e.response.status_code} for ISBN {isbn}")
-        book_cache.set(isbn, {})   # cache the failure so we don't retry
-        return {}
+        if e.response.status_code == 429:
+            print(f"[google_books] Rate limited for ISBN {isbn}, will retry later")
+            return {}
+        print(f"[google_books] ISBN search failed for {isbn}: {e}")
+        data = {"totalItems": 0}
     except Exception as e:
-        print(f"[google_books] Request failed for ISBN {isbn}: {e}")
-        return {}   # don't cache network timeouts — may be transient
+        print(f"[google_books] ISBN search connection error for {isbn}: {e}")
+        data = {"totalItems": 0}
+
+    # --- 2. Fallback Search: By Title+Author ---
+    if data.get("totalItems", 0) == 0 and title:
+        time.sleep(0.3) # Rate limit protection for second call
+        try:
+            query = f"intitle:{title}"
+            if author:
+                query += f"+inauthor:{author}"
+            
+            print(f"[google_books] Falling back to title search: {query}")
+            response = requests.get(
+                GOOGLE_BOOKS_API,
+                params={"q": query},
+                timeout=5,
+            )
+            response.raise_for_status()
+            data = response.json()
+        except requests.exceptions.HTTPError as e:
+            if e.response.status_code == 429:
+                print(f"[google_books] Rate limited during fallback for {title}")
+                return {}
+            print(f"[google_books] Fallback search failed for {title}: {e}")
+            data = {"totalItems": 0}
+        except Exception as e:
+            print(f"[google_books] Fallback connection error for {title}: {e}")
+            data = {"totalItems": 0}
 
     items = data.get("items")
     if not items:
-        book_cache.set(isbn, {})
+        # Only cache "empty" results if the call actually succeeded with totalItems=0
+        if data.get("totalItems") == 0:
+            book_cache.set(isbn, {})
         return {}
 
+    # Extract info from the best match
     volume_info = items[0].get("volumeInfo", {})
     image_links = volume_info.get("imageLinks", {})
 

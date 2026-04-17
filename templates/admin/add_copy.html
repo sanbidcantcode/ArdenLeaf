@@ -1,76 +1,108 @@
 {% extends "admin/base_admin.html" %}
 
+{% block title %}Add Copy | Admin Panel | ArdenLeaf{% endblock %}
+{% block page_title %}Add Copy{% endblock %}
+
 {% block admin_content %}
-<div class="admin-card">
-    <h2 class="admin-title">Add Book Copy</h2>
-    <form class="admin-form" method="POST" action="{{ url_for('admin.add_copy') }}">
-        <div class="form-group">
-            <label>Book ISBN</label>
-            <input type="text" name="isbn" required placeholder="Must match an existing book">
+<div class="max-w-3xl mx-auto">
+    <!-- Breadcrumbs -->
+    <div class="mb-8 flex items-center gap-2">
+        <span class="text-xs uppercase tracking-widest font-headline text-secondary font-bold">Circulation</span>
+        <span class="material-symbols-outlined text-[10px] opacity-30">chevron_right</span>
+        <span class="text-xs uppercase tracking-widest font-headline text-primary-container font-black">Register Copy</span>
+    </div>
+
+    <!-- Main Form Card -->
+    <div class="bg-white rounded-[20px] shadow-sm border border-[#e8dfa0] p-12">
+        <div class="mb-10">
+            <h2 class="font-headline font-black text-3xl tracking-tighter text-primary-container mb-2">Register Book Copy</h2>
+            <p class="font-body italic text-on-surface-variant/70 leading-relaxed italic">Assign physical items to specific locations in our network.</p>
         </div>
-        <div class="form-group">
-            <label>Location Type</label>
-            <select name="loc_type" id="loc-type-select" onchange="toggleLocType()" required>
-                <option value="Library">Library</option>
-                <option value="Bookstore">Bookstore</option>
-            </select>
-        </div>
-        
-        <div class="form-group" id="lib-group">
-            <label>Select Library</label>
-            <select name="loc_id" id="lib-select">
-                {% for lib in libraries %}
-                <option value="{{ lib.LibraryID }}">{{ lib.Name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        
-        <div class="form-group" id="store-group" style="display:none;">
-            <label>Select Bookstore</label>
-            <select name="loc_id" id="store-select" disabled>
-                {% for s in bookstores %}
-                <option value="{{ s.StoreID }}">{{ s.Name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        
-        <div class="form-group">
-            <label>Condition</label>
-            <select name="condition">
-                <option value="New">New</option>
-                <option value="Good">Good</option>
-                <option value="Fair">Fair</option>
-            </select>
-        </div>
-        
-        <div class="form-group" id="price-group" style="display:none;">
-            <label>Price (₹) - Only for Bookstores</label>
-            <input type="number" step="0.01" name="price" id="price-input">
-        </div>
-        
-        <div style="margin-top:24px;">
-            <button type="submit" class="admin-btn">Add Copy</button>
-        </div>
-    </form>
+
+        <form class="space-y-8" action="{{ url_for('admin.add_copy') }}" method="POST">
+            <!-- ISBN -->
+            <div class="flex flex-col space-y-2">
+                <label class="text-[10px] font-headline font-bold uppercase tracking-widest text-[#113819] opacity-60">Book ISBN (Required)</label>
+                <input name="isbn" required class="w-full bg-transparent border-0 border-b border-outline-variant/30 py-4 font-body text-lg focus:border-primary-container transition-all placeholder:text-outline-variant/30 focus:ring-0 outline-none" placeholder="Enter matching book ISBN" type="text" />
+            </div>
+
+            <!-- Location Type -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div class="flex flex-col space-y-2">
+                    <label class="text-[10px] font-headline font-bold uppercase tracking-widest text-[#113819] opacity-60">Location Type</label>
+                    <select name="loc_type" id="loc-type-select" onchange="toggleLocType()" required class="w-full bg-transparent border-0 border-b border-outline-variant/30 py-4 font-body text-lg focus:border-primary-container transition-all focus:ring-0 outline-none cursor-pointer appearance-none">
+                        <option value="Library">Library Branch</option>
+                        <option value="Bookstore">Independent Bookstore</option>
+                    </select>
+                </div>
+                <!-- Condition -->
+                <div class="flex flex-col space-y-2">
+                    <label class="text-[10px] font-headline font-bold uppercase tracking-widest text-[#113819] opacity-60">Physical Condition</label>
+                    <select name="condition" class="w-full bg-transparent border-0 border-b border-outline-variant/30 py-4 font-body text-lg focus:border-primary-container transition-all focus:ring-0 outline-none cursor-pointer appearance-none">
+                        <option value="New">Pristine / New</option>
+                        <option value="Good">Good / Used</option>
+                        <option value="Fair">Fair / Aged</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Contextual Location Selects -->
+            <div id="lib-group" class="flex flex-col space-y-2">
+                <label class="text-[10px] font-headline font-bold uppercase tracking-widest text-[#113819] opacity-60">Select Library Branch</label>
+                <select name="loc_id" id="lib-select" class="w-full bg-transparent border-0 border-b border-outline-variant/30 py-4 font-body text-lg focus:border-primary-container transition-all focus:ring-0 outline-none cursor-pointer appearance-none">
+                    {% for lib in libraries %}
+                    <option value="{{ lib.LibraryID }}">{{ lib.Name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div id="store-group" class="hidden flex flex-col space-y-2">
+                <label class="text-[10px] font-headline font-bold uppercase tracking-widest text-[#113819] opacity-60">Select Bookstore</label>
+                <select name="loc_id" id="store-select" disabled class="w-full bg-transparent border-0 border-b border-outline-variant/30 py-4 font-body text-lg focus:border-primary-container transition-all focus:ring-0 outline-none cursor-pointer appearance-none">
+                    {% for s in bookstores %}
+                    <option value="{{ s.StoreID }}">{{ s.Name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Bookstore Price -->
+            <div id="price-group" class="hidden flex flex-col space-y-2">
+                <label class="text-[10px] font-headline font-bold uppercase tracking-widest text-[#113819] opacity-60">Retail Price (₹)</label>
+                <input name="price" id="price-input" step="0.01" class="w-full bg-transparent border-0 border-b border-outline-variant/30 py-4 font-body text-lg focus:border-primary-container transition-all placeholder:text-outline-variant/30 focus:ring-0 outline-none" placeholder="0.00" type="number" />
+            </div>
+
+            <!-- Submit -->
+            <div class="pt-8">
+                <button class="w-full bg-primary-container text-white font-headline font-bold text-sm tracking-wide py-5 px-8 rounded-xl flex items-center justify-center gap-3 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-primary-container/10" type="submit">
+                    <span>Assign Copy to Inventory</span>
+                    <span class="material-symbols-outlined text-sm">library_add</span>
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <script>
 function toggleLocType() {
     var type = document.getElementById('loc-type-select').value;
+    var libGroup = document.getElementById('lib-group');
+    var storeGroup = document.getElementById('store-group');
+    var libSelect = document.getElementById('lib-select');
+    var storeSelect = document.getElementById('store-select');
+    var priceGroup = document.getElementById('price-group');
+
     if (type === 'Library') {
-        document.getElementById('lib-group').style.display = 'block';
-        document.getElementById('store-group').style.display = 'none';
-        document.getElementById('lib-select').disabled = false;
-        document.getElementById('store-select').disabled = true;
-        
-        document.getElementById('price-group').style.display = 'none';
+        libGroup.classList.remove('hidden');
+        storeGroup.classList.add('hidden');
+        libSelect.disabled = false;
+        storeSelect.disabled = true;
+        priceGroup.classList.add('hidden');
     } else {
-        document.getElementById('lib-group').style.display = 'none';
-        document.getElementById('store-group').style.display = 'block';
-        document.getElementById('lib-select').disabled = true;
-        document.getElementById('store-select').disabled = false;
-        
-        document.getElementById('price-group').style.display = 'block';
+        libGroup.classList.add('hidden');
+        storeGroup.classList.remove('hidden');
+        libSelect.disabled = true;
+        storeSelect.disabled = false;
+        priceGroup.classList.remove('hidden');
     }
 }
 </script>

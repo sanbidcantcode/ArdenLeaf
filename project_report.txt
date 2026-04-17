@@ -1,0 +1,266 @@
+================ PROJECT REPORT ================
+
+### 1. ROUTES
+- HTTP Method(s): ['GET']
+  URL Rule: /
+  Function Name: index (in app.py)
+  Renders Template: index.html
+
+- HTTP Method(s): ['GET']
+  URL Rule: /
+  Function Name: dashboard (in routes\admin_routes.py)
+  Renders Template: admin/dashboard.html
+
+- HTTP Method(s): GET,POST
+  URL Rule: /auth
+  Function Name: auth_page (in routes\auth_routes.py)
+  Renders Template: auth.html
+
+- HTTP Method(s): ['GET']
+  URL Rule: /book/<isbn>
+  Function Name: book_detail (in routes\book_routes.py)
+  Renders Template: book_detail.html
+
+- HTTP Method(s): POST
+  URL Rule: /book/<isbn>/bookmark
+  Function Name: bookmark (in routes\book_routes.py)
+  Renders Template: None
+
+- HTTP Method(s): ['GET']
+  URL Rule: /bookmarks
+  Function Name: bookmarks_page (in routes\book_routes.py)
+  Renders Template: bookmarks.html
+
+- HTTP Method(s): GET,POST
+  URL Rule: /books/add
+  Function Name: add_book (in routes\admin_routes.py)
+  Renders Template: admin/add_book.html
+
+- HTTP Method(s): ['GET']
+  URL Rule: /bookstores
+  Function Name: bookstores_list (in routes\book_routes.py)
+  Renders Template: libraries.html
+
+- HTTP Method(s): POST
+  URL Rule: /borrow/<int:copy_id>
+  Function Name: borrow (in routes\loan_routes.py)
+  Renders Template: None
+
+- HTTP Method(s): GET,POST
+  URL Rule: /copies/add
+  Function Name: add_copy (in routes\admin_routes.py)
+  Renders Template: admin/add_copy.html
+
+- HTTP Method(s): ['GET']
+  URL Rule: /dashboard
+  Function Name: dashboard (in routes\loan_routes.py)
+  Renders Template: dashboard.html
+
+- HTTP Method(s): ['GET']
+  URL Rule: /libraries
+  Function Name: libraries_list (in routes\book_routes.py)
+  Renders Template: libraries.html
+
+- HTTP Method(s): ['GET']
+  URL Rule: /loans
+  Function Name: loans (in routes\admin_routes.py)
+  Renders Template: admin/loans.html
+
+- HTTP Method(s): POST
+  URL Rule: /loans/borrow
+  Function Name: borrow_book (in routes\loan_routes.py)
+  Renders Template: None
+
+- HTTP Method(s): POST
+  URL Rule: /loans/return/<int:loan_id>
+  Function Name: return_book (in routes\loan_routes.py)
+  Renders Template: None
+
+- HTTP Method(s): GET
+  URL Rule: /location
+  Function Name: location_step (in routes\auth_routes.py)
+  Renders Template: location.html
+
+- HTTP Method(s): POST
+  URL Rule: /location/save
+  Function Name: save_location (in routes\auth_routes.py)
+  Renders Template: None
+
+- HTTP Method(s): ['GET']
+  URL Rule: /locations
+  Function Name: locations (in routes\book_routes.py)
+  Renders Template: locations.html
+
+- HTTP Method(s): GET,POST
+  URL Rule: /locations/add
+  Function Name: add_location (in routes\admin_routes.py)
+  Renders Template: admin/add_location.html
+
+- HTTP Method(s): ['GET']
+  URL Rule: /login
+  Function Name: login (in routes\auth_routes.py)
+  Renders Template: None
+
+- HTTP Method(s): ['GET']
+  URL Rule: /logout
+  Function Name: logout (in routes\auth_routes.py)
+  Renders Template: None
+
+- HTTP Method(s): ['GET']
+  URL Rule: /my_loans
+  Function Name: my_loans (in routes\loan_routes.py)
+  Renders Template: loans.html
+
+- HTTP Method(s): GET,POST
+  URL Rule: /profile
+  Function Name: profile (in routes\profile_routes.py)
+  Renders Template: profile.html
+
+- HTTP Method(s): ['GET']
+  URL Rule: /register
+  Function Name: register (in routes\auth_routes.py)
+  Renders Template: None
+
+- HTTP Method(s): ['GET']
+  URL Rule: /saved-locations
+  Function Name: saved_locations (in routes\profile_routes.py)
+  Renders Template: None
+
+- HTTP Method(s): ['GET']
+  URL Rule: /search
+  Function Name: search (in routes\book_routes.py)
+  Renders Template: search.html
+
+### 2. TEMPLATES
+- templates\admin\add_book.html
+- templates\admin\add_copy.html
+- templates\admin\add_location.html
+- templates\admin\base_admin.html
+- templates\admin\dashboard.html
+- templates\admin\loans.html
+- templates\auth.html
+- templates\base.html
+- templates\book_detail.html
+- templates\bookmarks.html
+- templates\dashboard.html
+- templates\error.html
+- templates\index.html
+- templates\libraries.html
+- templates\loans.html
+- templates\location.html
+- templates\locations.html
+- templates\login.html
+- templates\profile.html
+- templates\register.html
+- templates\search.html
+
+### 3. BLUEPRINTS
+- Name: admin
+  Prefix: Not registered/Unknown
+  File: routes\admin_routes.py
+
+- Name: auth
+  Prefix: Not registered/Unknown
+  File: routes\auth_routes.py
+
+- Name: books
+  Prefix: Not registered/Unknown
+  File: routes\book_routes.py
+
+- Name: loans
+  Prefix: Not registered/Unknown
+  File: routes\loan_routes.py
+
+- Name: profile
+  Prefix: Not registered/Unknown
+  File: routes\profile_routes.py
+
+### 4. NAVBAR LINKS
+- base.html: 'Search Books' pointing to -> {{ url_for(
+- bookmarks.html: 'icon/unknown' pointing to -> {{ url_for(
+- book_detail.html: 'icon/unknown' pointing to -> {{ url_for(
+- book_detail.html: 'icon/unknown' pointing to -> {{ request.referrer or url_for(
+- dashboard.html: 'icon/unknown' pointing to -> {{ url_for(
+- index.html: 'icon/unknown' pointing to -> {{ url_for(
+- locations.html: 'icon/unknown' pointing to -> {{ url_for(
+- profile.html: 'icon/unknown' pointing to -> {{ url_for(
+- search.html: 'icon/unknown' pointing to -> {{ url_for(
+
+### 5. FILE STRUCTURE
+ArdenLeaf/
+    .env
+    .env.example
+    .gitignore
+    app.py
+    ARCHITECTURE.md
+    config.py
+    fix_dashboard.py
+    fix_navbars.py
+    generate_report.py
+    project_report.txt
+    PROJECT_RULES.md
+    README.md
+    requirements.txt
+    ROADMAP.md
+    server.log
+    SPEC.md
+    STACK.md
+    STATE.md
+    database/
+        all query runs.sql
+        database drop, do not open.sql
+        db.py
+        schema.sql
+        seed_data.sql
+    models/
+        book.py
+        bookmark.py
+        library.py
+        loan.py
+        user.py
+    routes/
+        admin_routes.py
+        auth_routes.py
+        book_routes.py
+        loan_routes.py
+        profile_routes.py
+    scripts/
+        refresh_db.py
+        seed_db.py
+    static/
+        css/
+            styles.css
+    templates/
+        auth.html
+        base.html
+        bookmarks.html
+        book_detail.html
+        dashboard.html
+        error.html
+        index.html
+        libraries.html
+        loans.html
+        location.html
+        locations.html
+        login.html
+        profile.html
+        register.html
+        search.html
+        admin/
+            add_book.html
+            add_copy.html
+            add_location.html
+            base_admin.html
+            dashboard.html
+            loans.html
+    utils/
+        .book_cache.json
+        book_cache.py
+        google_books.py
+        __init__.py
+    _agent/
+        workflows/
+            execute.md
+            map.md
+            new-project.md
+            plan.md

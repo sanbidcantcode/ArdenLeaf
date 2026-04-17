@@ -5,16 +5,9 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>{{ book.Title }} | ArdenLeaf</title>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com" rel="preconnect" />
-    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&amp;family=Lora:ital,wght@0,400;0,700;1,400&amp;family=Epilogue:wght@700;800&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,700;1,6..72,400&amp;display=swap"
-        rel="stylesheet" />
-    <!-- Material Symbols -->
-    <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-        rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=Lora:ital,wght@0,400;0,600;1,400&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script id="tailwind-config">
         tailwind.config = {
@@ -75,10 +68,10 @@
                         "body": ["Lora", "Newsreader", "serif"],
                         "label": ["Outfit", "Newsreader", "sans-serif"]
                     },
-                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                        borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                    },
                 },
-            },
-        }
+            };
     </script>
     <style>
         .material-symbols-outlined {
@@ -159,87 +152,94 @@
             line-height: 1;
         }
 
-        /* Profile Dropdown (Copied from base.html) */
-        .profile-menu-wrap {
+        /* ── Global Font Consistency ── */
+        h1, h2, h3, h4, .font-headline { font-family: 'Outfit', sans-serif !important; }
+        body, p, .font-body { font-family: 'Lora', serif !important; }
+        .font-label, label, .small-caps { font-family: 'Outfit', sans-serif !important; }
+
+        /* ── Navbar ── */
+        .nav-link-standard {
             position: relative;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            color: #113819;
+            font-size: 0.9rem;
+            text-decoration: none;
+            padding: 4px 0;
+        }
+        .nav-link-standard::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #113819;
+            transform: translateX(-50%);
+            transition: width 0.3s ease;
+        }
+        .nav-link-standard:hover::after {
+            width: 100%;
         }
 
-        .profile-trigger {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            padding: 5px 10px 5px 5px;
-            border-radius: 999px;
-            border: 1.5px solid transparent;
-            transition: background 0.15s, border-color 0.15s;
-            user-select: none;
-        }
-
-        .profile-trigger:hover {
-            background: #f1f5f9;
-            border-color: #e2e8f0;
-        }
-
-        .profile-avatar {
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #113819, #406743);
+        .nav-bookmark-icon {
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
+            color: rgba(17, 56, 25, 0.6);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .nav-bookmark-icon:hover { color: #113819; }
+        .nav-bookmark-icon .material-symbols-outlined {
+            font-size: 1.4rem;
+            font-variation-settings: 'FILL' 0, 'wght' 400;
+        }
+        .nav-bookmark-icon:hover .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1, 'wght' 400;
         }
 
-        .profile-avatar svg {
-            width: 18px;
-            height: 18px;
-            fill: #fff;
+        /* ══════════════════════════════════════════════
+           PROFILE DROPDOWN
+        ══════════════════════════════════════════════ */
+        .profile-menu-wrap { position: relative; }
+
+        .profile-trigger {
+            display: flex; align-items: center; gap: 8px;
+            cursor: pointer; padding: 5px 10px 5px 5px;
+            border-radius: 999px; border: 1.5px solid transparent;
+            transition: background 0.15s, border-color 0.15s;
+            user-select: none;
         }
+        .profile-trigger:hover { background: rgba(17, 56, 25, 0.05); }
+
+        .profile-avatar {
+            width: 34px; height: 34px; border-radius: 50%;
+            background: #113819;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .profile-avatar svg { width: 18px; height: 18px; fill: #f5eebf; }
 
         .profile-name {
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: #113819;
-            max-width: 120px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-size: 0.875rem; font-weight: 600; color: #1f2937;
+            max-width: 120px; white-space: nowrap;
+            overflow: hidden; text-overflow: ellipsis;
         }
-
-        .profile-chevron {
-            width: 14px;
-            height: 14px;
-            color: #113819;
-            transition: transform 0.2s;
-        }
-
-        .profile-menu-wrap.open .profile-chevron {
-            transform: rotate(180deg);
-        }
+        .profile-chevron { width: 14px; height: 14px; color: #9ca3af; transition: transform 0.2s; }
+        .profile-menu-wrap.open .profile-chevron { transform: rotate(180deg); }
 
         .profile-dropdown {
-            position: absolute;
-            top: calc(100% + 10px);
-            right: 0;
-            min-width: 220px;
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            border-radius: 14px;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
-            padding: 6px;
-            z-index: 1000;
-            opacity: 0;
-            transform: translateY(-6px) scale(0.98);
+            position: absolute; top: calc(100% + 10px); right: 0;
+            min-width: 220px; background: #fff;
+            border: 1px solid #e5e7eb; border-radius: 14px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+            padding: 6px; z-index: 1000;
+            opacity: 0; transform: translateY(-6px) scale(0.98);
             pointer-events: none;
             transition: opacity 0.18s ease, transform 0.18s ease;
         }
-
         .profile-menu-wrap.open .profile-dropdown {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            pointer-events: auto;
+            opacity: 1; transform: translateY(0) scale(1); pointer-events: auto;
         }
 
         .dropdown-user-info {
@@ -247,210 +247,112 @@
             border-bottom: 1px solid #f1f5f9;
             margin-bottom: 4px;
         }
-
-        .dropdown-user-info .dui-name {
-            font-weight: 700;
-            font-size: 0.875rem;
-            color: #111827;
-        }
-
-        .dropdown-user-info .dui-type {
-            font-size: 0.72rem;
-            color: #9ca3af;
-            margin-top: 1px;
-        }
+        .dropdown-user-info .dui-name { font-weight: 700; font-size: 0.875rem; color: #111827; }
+        .dropdown-user-info .dui-type { font-size: 0.72rem; color: #9ca3af; margin-top: 1px; }
 
         .dropdown-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 9px 12px;
-            border-radius: 9px;
-            font-size: 0.85rem;
-            color: #374151;
-            font-weight: 500;
-            text-decoration: none;
-            cursor: pointer;
+            display: flex; align-items: center; gap: 10px;
+            padding: 9px 12px; border-radius: 9px;
+            font-size: 0.85rem; color: #374151; font-weight: 500;
+            text-decoration: none; cursor: pointer;
             transition: background 0.12s;
         }
-
-        .dropdown-item:hover {
-            background: #f8fafc;
-            color: #111827;
-        }
-
-        .dropdown-item svg {
-            width: 16px;
-            height: 16px;
-            opacity: 0.55;
-            flex-shrink: 0;
-        }
-
-        .dropdown-separator {
-            height: 1px;
-            background: #f1f5f9;
-            margin: 4px 0;
-        }
-
-        .dropdown-item.logout {
-            color: #dc2626;
-        }
-
-        .dropdown-item.logout:hover {
-            background: #fff5f5;
-            color: #b91c1c;
-        }
-
-        .dropdown-item.logout svg {
-            opacity: 0.7;
-        }
-
-        .bookmark-active {
-            background-color: #113819 !important;
-            color: #f5eebf !important;
-            border-color: #113819 !important;
-        }
+        .dropdown-item:hover { background: #f8fafc; color: #111827; }
+        .dropdown-item svg { width: 16px; height: 16px; opacity: 0.55; flex-shrink: 0; }
+        .dropdown-separator { height: 1px; background: #f1f5f9; margin: 4px 0; }
+        .dropdown-item.logout { color: #dc2626; }
+        .dropdown-item.logout:hover { background: #fff5f5; color: #b91c1c; }
+        .dropdown-item.logout svg { opacity: 0.7; }
     </style>
 </head>
 
 <body class="bg-background text-on-surface font-body selection:bg-primary-fixed-dim">
-    <!-- Navbar -->
-    <nav class="bg-[#f5eebf] border-b border-[#113819]/10 sticky top-0 z-50">
-        <div class="flex justify-between items-center px-8 py-3 max-w-7xl mx-auto">
-            <a href="{{ url_for('index') }}"
-                class="text-3xl font-headline font-black text-[#113819] flex items-center gap-2 no-underline">
-                <span class="material-symbols-outlined text-[32px] text-[#113819]"
-                    style="font-variation-settings: 'FILL' 1;">eco</span>
-                ArdenLeaf
+    <header style="background:#f5eebf; position:sticky; top:0; z-index:50; border-bottom:1px solid rgba(17,56,25,0.1); font-family: 'Outfit', sans-serif;">
+        <div style="max-width:1280px; margin:0 auto; padding:12px 32px; display:flex; justify-content:space-between; align-items:center;">
+            <a href="{{ url_for('index') }}" style="display:flex;align-items:center;gap:8px;text-decoration:none;">
+                <span class="material-symbols-outlined" style="font-size:28px;color:#113819;font-variation-settings:'FILL' 1;">eco</span>
+                <span style="font-family:'Outfit',sans-serif;font-weight:900;font-size:1.4rem;color:#113819;">ArdenLeaf</span>
             </a>
-            <div class="hidden md:flex gap-10 items-center">
-                <a class="text-[#113819] font-headline font-semibold text-base tracking-tight hover:opacity-75 transition-opacity no-underline"
-                    href="{{ url_for('books.search') }}">Search Books</a>
-                <a class="text-[#113819] font-headline font-semibold text-base tracking-tight hover:opacity-75 transition-opacity no-underline"
-                    href="{{ url_for('books.libraries_list') }}">Locations</a>
-            </div>
-            <div class="flex items-center gap-6">
+            
+            <nav style="display:flex; gap:32px; align-items:center;">
+                <a href="{{ url_for('books.search') }}" class="nav-link-standard">Search Books</a>
+                <a href="{{ url_for('books.locations') }}" class="nav-link-standard">Locations</a>
+            </nav>
+            
+            <div style="display:flex; align-items:center; gap:24px;">
+                <a href="{{ url_for('books.bookmarks_page') }}" class="nav-bookmark-icon" title="Bookmarks">
+                    <span class="material-symbols-outlined">bookmark</span>
+                </a>
+
                 {% if session.get('user_id') %}
-                <!-- ── Profile dropdown ── -->
                 <div class="profile-menu-wrap" id="profileMenuWrap">
-                    <div class="profile-trigger" id="profileTrigger" role="button" aria-haspopup="true"
-                        aria-expanded="false">
+                    <div class="profile-trigger" id="profileTrigger" role="button" aria-haspopup="true" aria-expanded="false">
                         <div class="profile-avatar">
                             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
+                                <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
                             </svg>
                         </div>
                         <span class="profile-name">{{ session.get('user_name', 'Account') }}</span>
-                        <svg class="profile-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="6 9 12 15 18 9" />
+                        <svg class="profile-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"/>
                         </svg>
                     </div>
 
                     <div class="profile-dropdown" id="profileDropdown" role="menu">
                         <div class="dropdown-user-info">
-                            <div class="dui-name">{{ session.get('user_name', '') }}</div>
-                            <div class="dui-type">{{ session.get('user_type', 'User') }}</div>
+                            <div class="dui-name">{{ session.get('user_name', 'Account') }}</div>
+                            <div class="dui-type">{{ session.get('user_type', 'Member') }}</div>
                         </div>
 
-                        {% if session.get('user_type') == 'Member' %}
-                        <a href="{{ url_for('loans.dashboard') }}" class="dropdown-item" role="menuitem">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="3" y="3" width="7" height="7" />
-                                <rect x="14" y="3" width="7" height="7" />
-                                <rect x="14" y="14" width="7" height="7" />
-                                <rect x="3" y="14" width="7" height="7" />
-                            </svg>
-                            Dashboard
+                        {% if session.get('user_type') in ('LibraryAdmin', 'StoreAdmin') %}
+                        <a href="{{ url_for('owner.dashboard') }}" class="dropdown-item" role="menuitem">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                            Owner Portal
                         </a>
                         {% endif %}
 
                         {% if session.get('user_type') == 'Admin' %}
                         <a href="{{ url_for('admin.dashboard') }}" class="dropdown-item" role="menuitem">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="3" y="3" width="7" height="7" />
-                                <rect x="14" y="3" width="7" height="7" />
-                                <rect x="14" y="14" width="7" height="7" />
-                                <rect x="3" y="14" width="7" height="7" />
-                            </svg>
-                            Admin Tools
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                            Admin Panel
+                        </a>
+                        {% endif %}
+
+                        {% if session.get('user_type') == 'Member' %}
+                        <a href="{{ url_for('loans.dashboard') }}" class="dropdown-item" role="menuitem">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                            Dashboard
                         </a>
                         {% endif %}
 
                         <a href="/profile" class="dropdown-item" role="menuitem">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                                <circle cx="12" cy="7" r="4" />
-                            </svg>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                             Account Details
                         </a>
 
-                        <a href="/profile/addresses" class="dropdown-item" role="menuitem">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                                <circle cx="12" cy="10" r="3" />
-                            </svg>
-                            Addresses
-                        </a>
-
-                        <a href="{{ url_for('books.bookmarks_page') }}" class="dropdown-item" role="menuitem">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-                            </svg>
-                            Bookmarks
-                        </a>
-
-                        <a href="/saved-locations" class="dropdown-item" role="menuitem">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <polygon points="3 11 22 2 13 21 11 13 3 11" />
-                            </svg>
+                        <a href="/libraries" class="dropdown-item" role="menuitem">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                             Saved Locations
-                        </a>
-
-                        <a href="#" class="dropdown-item" role="menuitem">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                                <circle cx="9" cy="7" r="4" />
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                            </svg>
-                            Switch Accounts
                         </a>
 
                         <div class="dropdown-separator"></div>
 
                         <a href="{{ url_for('auth.logout') }}" class="dropdown-item logout" role="menuitem">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                                <polyline points="16 17 21 12 16 7" />
-                                <line x1="21" y1="12" x2="9" y2="12" />
-                            </svg>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
                             Logout
                         </a>
                     </div>
                 </div>
                 {% else %}
-                <a href="{{ url_for('auth.auth_page') }}"
-                    class="px-6 py-2 bg-[#113819] text-[#f5eebf] font-headline font-bold rounded-lg transition-transform active:scale-95 duration-150 text-sm no-underline">
-                    Login
-                </a>
+                <a href="{{ url_for('auth.auth_page') }}" style="background:#113819; color:#f5eebf; padding:10px 24px; border-radius:8px; text-decoration:none; font-family:'Outfit',sans-serif; font-weight:700; font-size:0.9rem; transition:transform 0.15s;" onmouseover="this.style.transform='scale(0.98)'" onmouseout="this.style.transform='scale(1)'">Login</a>
                 {% endif %}
             </div>
         </div>
-    </nav>
+    </header>
 
-    <main class="max-w-screen-xl mx-auto px-6 pt-8 pb-24">
+    <main class="max-w-screen-xl mx-auto px-6 pt-12 pb-32">
         <!-- Breadcrumb -->
-        <nav class="mb-12">
+        <nav class="mb-8">
             <a class="flex items-center gap-2 text-outline hover:text-primary transition-colors group no-underline"
                 href="{{ request.referrer or url_for('books.search') }}">
                 <span
@@ -460,26 +362,26 @@
         </nav>
 
         <!-- Hero Section -->
-        <section class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start mb-20">
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start mb-16">
             <!-- Book Cover Column -->
-            <div class="lg:col-span-5 flex justify-center lg:justify-start">
+            <div class="lg:col-span-4 flex justify-center lg:justify-start sticky top-28">
                 {% if google_data.cover_image %}
                 <div class="relative group">
                     <div class="absolute inset-0 bg-primary-container opacity-5 blur-2xl rounded-full scale-110"></div>
                     <img alt="Cover of {{ book.Title }}"
-                        class="w-full max-w-sm rounded-[14px] book-shadow z-10 relative"
+                        class="w-64 md:w-72 lg:w-80 rounded-[14px] book-shadow z-10 relative"
                         src="{{ google_data.cover_image }}" />
                 </div>
                 {% else %}
                 <div
-                    class="w-full max-w-sm aspect-[2/3] bg-surface-container flex items-center justify-center rounded-[14px] book-shadow text-outline">
+                    class="w-64 md:w-72 lg:w-80 aspect-[2/3] bg-surface-container flex items-center justify-center rounded-[14px] book-shadow text-outline">
                     <span class="material-symbols-outlined text-6xl">book</span>
                 </div>
                 {% endif %}
             </div>
 
             <!-- Content Column -->
-            <div class="lg:col-span-7 space-y-8">
+            <div class="lg:col-span-8 space-y-8">
                 <div class="space-y-4">
                     <div class="flex flex-wrap gap-2 mb-4">
                         {% if google_data.categories %}
@@ -496,9 +398,9 @@
                         {% endfor %}
                         {% endif %}
                     </div>
-                    <h1 class="text-5xl md:text-6xl font-headline font-black tracking-tight leading-[1.0] text-primary">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-headline font-black tracking-tight leading-[1.0] text-primary">
                         {{ book.Title }}</h1>
-                    <p class="text-2xl font-body italic text-primary-container">by {{ book.Authors or 'Unknown Author'
+                    <p class="text-xl font-body italic text-primary-container">by {{ book.Authors or 'Unknown Author'
                         }}</p>
                 </div>
 
@@ -567,13 +469,13 @@
         </section>
 
         <!-- Main Content Layout -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             <!-- Left: Description -->
             <div class="lg:col-span-8 space-y-8">
                 <article
-                    class="bg-surface-container-lowest p-10 rounded-[14px] paper-elevation border border-outline-variant/15">
-                    <h2 class="text-3xl font-headline font-black text-primary mb-6">About this book</h2>
-                    <div class="font-body text-xl leading-relaxed text-on-surface-variant space-y-6">
+                    class="bg-surface-container-lowest p-8 rounded-[14px] paper-elevation border border-outline-variant/15">
+                    <h2 class="text-2xl font-headline font-black text-primary mb-6">About this book</h2>
+                    <div class="font-body text-base leading-relaxed text-on-surface-variant space-y-6">
                         {% if google_data.description %}
                         <p>{{ google_data.description }}</p>
                         {% else %}
@@ -587,7 +489,7 @@
             <aside class="lg:col-span-4 space-y-6">
                 <div
                     class="bg-surface-container-lowest p-8 rounded-[14px] paper-elevation border border-outline-variant/15">
-                    <h2 class="text-2xl font-headline font-black text-primary mb-6">Availability</h2>
+                    <h2 class="text-xl font-headline font-black text-primary mb-6">Availability</h2>
                     <div class="space-y-4">
                         {% if availability %}
                         {% for copy in availability %}
@@ -681,51 +583,33 @@
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-[#fcf5c5] border-t border-outline-variant/20 pt-16 pb-10">
-        <div class="max-w-7xl mx-auto px-8">
-            <div class="flex flex-col md:flex-row justify-between items-start mb-16 gap-12">
-                <div class="max-w-xs">
-                    <div class="text-3xl font-headline font-black text-[#113819] flex items-center gap-2 mb-6">
-                        <span class="material-symbols-outlined text-[32px] text-[#113819]"
-                            style="font-variation-settings: 'FILL' 1;">eco</span>
-                        ArdenLeaf
-                    </div>
-                    <p class="font-body text-stone-600 text-base leading-relaxed italic opacity-80">"Cultivating the
-                        digital garden for India's readers and writers. Preserving history, promoting curiosity."</p>
+    <footer style="background:#fcf5c5; border-top:1px solid rgba(17,56,25,0.1); padding:80px 0 40px; margin-top:120px; width:100%; font-family: 'Outfit', sans-serif;">
+        <div style="max-width:1280px; margin:0 auto; padding:0 32px;">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:64px; align-items:flex-start; margin-bottom:80px;">
+                <div style="max-width:400px;">
+                    <a href="{{ url_for('index') }}" style="text-decoration:none; display:flex; align-items:center; gap:8px; margin-bottom:28px;">
+                        <span class="material-symbols-outlined" style="font-size:32px;color:#113819;font-variation-settings:'FILL' 1;">eco</span>
+                        <span style="font-family:'Outfit',sans-serif;font-weight:900;font-size:1.8rem;color:#113819;letter-spacing:-0.05em;">ArdenLeaf</span>
+                    </a>
+                    <p style="font-family:'Lora',serif; color:#4b5563; font-size:1.15rem; line-height:1.7; font-style:italic; opacity:0.85;">
+                        "Explore our partner libraries and independent bookstores across India — each one a gateway to ArdenLeaf."
+                    </p>
                 </div>
-                <div class="grid grid-cols-2 gap-24">
-                    <div class="flex flex-col gap-4">
-                        <h4
-                            class="font-headline font-bold text-primary-container uppercase tracking-widest text-[10px]">
-                            Discover</h4>
-                        <a class="text-stone-500 text-base hover:text-primary-container transition-all"
-                            href="{{ url_for('books.search') }}">Search Books</a>
-                        <a class="text-stone-500 text-base hover:text-primary-container transition-all"
-                            href="{{ url_for('books.locations') }}">Locations</a>
-                        <a class="text-stone-500 text-base hover:text-primary-container transition-all"
-                            href="{{ url_for('books.bookmarks_page') }}">Bookmarks</a>
-                    </div>
-                    <div class="flex flex-col gap-4">
-                        <h4
-                            class="font-headline font-bold text-primary-container uppercase tracking-widest text-[10px]">
-                            Connect</h4>
-                        <a class="text-stone-500 text-base hover:text-primary-container transition-all" href="#">About
-                            Us</a>
-                        <a class="text-stone-500 text-base hover:text-primary-container transition-all"
-                            href="#">Contact</a>
+                <div style="display:flex; justify-content: flex-end;">
+                    <div style="min-width: 180px;">
+                        <h4 style="font-weight:900; color:#113819; text-transform:uppercase; letter-spacing:0.15em; font-size:0.75rem; margin-bottom:32px;">Discover</h4>
+                        <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:20px;">
+                            <li><a href="{{ url_for('books.search') }}" style="text-decoration:none; color:#6b7280; font-size:1.15rem; font-family:'Lora',serif; font-style:italic; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Search Books</a></li>
+                            <li><a href="{{ url_for('books.locations') }}" style="text-decoration:none; color:#6b7280; font-size:1.15rem; font-family:'Lora',serif; font-style:italic; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Locations</a></li>
+                            <li><a href="{{ url_for('books.bookmarks_page') }}" style="text-decoration:none; color:#6b7280; font-size:1.15rem; font-family:'Lora',serif; font-style:italic; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Bookmarks</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
-            <div class="pt-8 border-t border-stone-300/30 flex flex-col md:flex-row justify-between items-center gap-6">
-                <p class="font-label text-sm italic text-stone-500">© 2024 ArdenLeaf. Made with <span
-                        class="text-primary-container">🍃</span> for India's readers.</p>
-                <div class="flex gap-8">
-                    <span
-                        class="material-symbols-outlined text-stone-400 cursor-pointer hover:text-primary-container text-xl">language</span>
-                    <span
-                        class="material-symbols-outlined text-stone-400 cursor-pointer hover:text-primary-container text-xl">mail</span>
-                </div>
+            <div style="padding-top:40px; border-top:1px solid rgba(17,56,25,0.08); display:flex; justify-content:space-between; align-items:center;">
+                <p style="font-family:'Lora',serif; font-style:italic; font-size:0.95rem; color:#6b7280; opacity:0.7;">
+                    © 2024 ArdenLeaf. Made with 🍃 for India's readers.
+                </p>
             </div>
         </div>
     </footer>
@@ -738,10 +622,10 @@
             (function () {
                 'use strict';
                 const TOAST_COLORS = {
-                    success: { bg: '#f0fdf4', border: '#86efac', icon: '#16a34a', symbol: '✓' },
-                    error: { bg: '#fff5f5', border: '#fca5a5', icon: '#dc2626', symbol: '✕' },
-                    info: { bg: '#eff6ff', border: '#93c5fd', icon: '#2563eb', symbol: 'i' },
-                    warning: { bg: '#fffbeb', border: '#fcd34d', icon: '#d97706', symbol: '!' },
+                    success: { bg: '#c1eec0', border: '#113819', icon: '#113819', symbol: '\u2713' },
+                    error: { bg: '#ffdad6', border: '#ba1a1a', icon: '#93000a', symbol: '\u2715' },
+                    info: { bg: '#f6efc0', border: '#526351', icon: '#526351', symbol: 'i' },
+                    warning: { bg: '#f0e9bb', border: '#727970', icon: '#424941', symbol: '!' },
                 };
                 class ToastManager {
                     constructor() { this.container = document.getElementById('toast-container'); this.queue = []; this.MAX = 5; }

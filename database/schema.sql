@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS User (
     Name VARCHAR(100) NOT NULL,
     Email VARCHAR(100) UNIQUE NOT NULL,
     PasswordHash VARCHAR(255) NOT NULL,
-    UserType ENUM('Member', 'Customer') NOT NULL,
+    UserType ENUM('Member', 'Customer', 'Admin', 'LibraryAdmin', 'StoreAdmin') NOT NULL,
     CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -141,4 +141,16 @@ CREATE TABLE IF NOT EXISTS Bookmark (
     FOREIGN KEY (UserID) REFERENCES User(UserID) ON DELETE CASCADE,
     FOREIGN KEY (ISBN) REFERENCES Book(ISBN) ON DELETE CASCADE,
     UNIQUE KEY uq_user_isbn (UserID, ISBN)  -- A user cannot bookmark the same book twice
+);
+
+-- 15. LocationAdmin (LibraryAdmin or StoreAdmin mapped to exactly one location)
+-- Note: MySQL 8.0 forbids CHECK constraints on columns used in ON DELETE SET NULL FK actions.
+--       The XOR rule (LibraryID XOR StoreID must be set) is enforced at the application level.
+CREATE TABLE IF NOT EXISTS LocationAdmin (
+    UserID INT PRIMARY KEY,
+    LibraryID INT DEFAULT NULL,
+    StoreID INT DEFAULT NULL,
+    FOREIGN KEY (UserID) REFERENCES User(UserID) ON DELETE CASCADE,
+    FOREIGN KEY (LibraryID) REFERENCES Library(LibraryID) ON DELETE SET NULL,
+    FOREIGN KEY (StoreID) REFERENCES Bookstore(StoreID) ON DELETE SET NULL
 );

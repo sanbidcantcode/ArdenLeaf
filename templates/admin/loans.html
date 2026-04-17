@@ -1,48 +1,98 @@
 {% extends "admin/base_admin.html" %}
 
+{% block title %}Active Loans | Admin Panel | ArdenLeaf{% endblock %}
+{% block page_title %}Active Loans{% endblock %}
+
 {% block admin_content %}
-<div class="admin-card">
-    <h2 class="admin-title">Active Member Loans</h2>
-    
-    {% if loans %}
-    <div style="overflow-x: auto;">
-        <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left;">
-            <thead>
-                <tr>
-                    <th style="padding: 12px 16px; border-bottom: 2px solid #e5e7eb; color: #475569;">Member</th>
-                    <th style="padding: 12px 16px; border-bottom: 2px solid #e5e7eb; color: #475569;">Book Title</th>
-                    <th style="padding: 12px 16px; border-bottom: 2px solid #e5e7eb; color: #475569;">Location</th>
-                    <th style="padding: 12px 16px; border-bottom: 2px solid #e5e7eb; color: #475569;">Borrowed On</th>
-                    <th style="padding: 12px 16px; border-bottom: 2px solid #e5e7eb; color: #475569;">Due Date</th>
-                    <th style="padding: 12px 16px; border-bottom: 2px solid #e5e7eb; color: #475569;">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for loan in loans %}
-                <tr style="border-bottom: 1px solid #f1f5f9;">
-                    <td style="padding: 12px 16px; font-weight: 500; color: #111827;">{{ loan.MemberName }}</td>
-                    <td style="padding: 12px 16px; color: #2563eb; font-weight: 500;">{{ loan.BookTitle }}</td>
-                    <td style="padding: 12px 16px; color: #475569;">{{ loan.LibraryName }}</td>
-                    <td style="padding: 12px 16px; color: #475569;">{{ loan.IssueDate.strftime('%d %b %Y') if loan.IssueDate else '' }}</td>
-                    <td style="padding: 12px 16px; color: #475569;">{{ loan.DueDate.strftime('%d %b %Y') if loan.DueDate else '' }}</td>
-                    <td style="padding: 12px 16px;">
-                        {% if loan.Status == 'Overdue' %}
-                        <span style="background: #fee2e2; color: #991b1b; padding: 2px 8px; border-radius: 999px; font-weight: 600; font-size: 0.75rem;">Overdue</span>
-                        {% else %}
-                        <span style="background: #d1fae5; color: #065f46; padding: 2px 8px; border-radius: 999px; font-weight: 600; font-size: 0.75rem;">Active</span>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<div class="max-w-6xl mx-auto">
+    <!-- Context Header -->
+    <div class="mb-10">
+        <p class="font-body text-on-secondary-container font-medium text-lg leading-relaxed italic">Overseeing current circulation items across the ArdenLeaf network.</p>
     </div>
-    {% else %}
-    <div style="text-align: center; padding: 60px 20px; border: 1.5px dashed #d1d5db; border-radius: 14px; background: #f8fafc; margin-top: 16px;">
-        <div style="font-size: 3rem; margin-bottom: 8px;">📚</div>
-        <h3 style="margin: 0 0 8px; font-family: 'Outfit', sans-serif; color: #111827; font-size: 1.2rem;">No active loans</h3>
-        <p style="margin: 0; color: #6b7280; font-size: 0.95rem;">All books have been returned across the system.</p>
+
+    <!-- Active Loans Table Card -->
+    <div class="bg-surface-container-lowest rounded-[20px] shadow-sm overflow-hidden border border-[#e8dfa0]">
+        <!-- Search & Filters Toolbar (UI Only) -->
+        <div class="px-8 py-6 flex items-center justify-between bg-surface-container-low/30 border-b border-[#113819]/5">
+            <div class="flex items-center gap-4 flex-1">
+                <div class="relative w-full max-w-md">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline opacity-40">search</span>
+                    <input class="w-full bg-transparent border-0 border-b border-outline/30 focus:ring-0 focus:border-primary-container pl-10 py-2 text-sm font-['Lora'] placeholder:italic outline-none transition-all" placeholder="Search members or titles..." type="text" />
+                </div>
+            </div>
+            <div class="flex items-center gap-6">
+                <button class="flex items-center gap-2 text-xs font-headline font-bold uppercase tracking-widest text-[#113819] hover:opacity-70 transition-opacity">
+                    <span class="material-symbols-outlined text-sm">filter_list</span>
+                    Filter
+                </button>
+                <button class="flex items-center gap-2 text-xs font-headline font-bold uppercase tracking-widest text-[#113819] hover:opacity-70 transition-opacity">
+                    <span class="material-symbols-outlined text-sm">sort</span>
+                    Sort
+                </button>
+            </div>
+        </div>
+
+        <!-- Table Content -->
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="border-b border-[#113819]/5">
+                        <th class="px-8 py-4 font-headline font-bold text-xs uppercase tracking-widest text-[#113819]/60">Member</th>
+                        <th class="px-8 py-4 font-headline font-bold text-xs uppercase tracking-widest text-[#113819]/60">Book Title</th>
+                        <th class="px-8 py-4 font-headline font-bold text-xs uppercase tracking-widest text-[#113819]/60">Location</th>
+                        <th class="px-8 py-4 font-headline font-bold text-xs uppercase tracking-widest text-[#113819]/60 text-center">Borrowed</th>
+                        <th class="px-8 py-4 font-headline font-bold text-xs uppercase tracking-widest text-[#113819]/60 text-center">Due Date</th>
+                        <th class="px-8 py-4 font-headline font-bold text-xs uppercase tracking-widest text-[#113819]/60 text-right">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-[#113819]/5">
+                    {% if loans %}
+                        {% for loan in loans %}
+                        <tr class="hover:bg-surface-container-low/20 transition-colors">
+                            <td class="px-8 py-5">
+                                <div class="font-headline font-bold text-primary-container leading-tight">{{ loan.MemberName }}</div>
+                                <div class="text-[10px] text-outline font-medium tracking-widest uppercase opacity-60">Authorized Member</div>
+                            </td>
+                            <td class="px-8 py-5">
+                                <div class="font-['Lora'] font-bold text-[#113819] leading-snug">{{ loan.BookTitle }}</div>
+                                <div class="text-[10px] text-outline italic opacity-70">Circulating Item</div>
+                            </td>
+                            <td class="px-8 py-5">
+                                <div class="flex items-center gap-1.5 text-[#113819]/80 font-headline font-bold text-sm">
+                                    <span class="material-symbols-outlined text-base opacity-40">location_on</span>
+                                    {{ loan.LibraryName }}
+                                </div>
+                            </td>
+                            <td class="px-8 py-5 text-center text-sm font-body italic text-on-surface-variant/80">
+                                {{ loan.IssueDate.strftime('%d %b %Y') if loan.IssueDate else '—' }}
+                            </td>
+                            <td class="px-8 py-5 text-center text-sm font-headline font-black {% if loan.Status == 'Overdue' %}text-error{% else %}text-primary-container/70{% endif %}">
+                                {{ loan.DueDate.strftime('%d %b %Y') if loan.DueDate else '—' }}
+                            </td>
+                            <td class="px-8 py-5 text-right">
+                                {% if loan.Status == 'Overdue' %}
+                                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-[10px] font-headline font-black uppercase tracking-tighter bg-error-container text-on-error-container border border-error/20">
+                                    Overdue
+                                </span>
+                                {% else %}
+                                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-[10px] font-headline font-black uppercase tracking-tighter bg-primary-fixed text-on-primary-fixed border border-primary-container/10">
+                                    Active
+                                </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="px-8 py-32 text-center">
+                                <span class="material-symbols-outlined text-6xl text-[#113819] opacity-10 mb-6 block">history_edu</span>
+                                <p class="font-body italic text-lg text-on-surface-variant/40 leading-relaxed italic">No active loans found in the current circulation cycle.</p>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
     </div>
-    {% endif %}
 </div>
 {% endblock %}

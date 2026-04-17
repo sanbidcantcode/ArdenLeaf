@@ -152,3 +152,13 @@ def profile():
     return render_template('profile.html', user=user, stats=stats, 
                            history_json=json.dumps(history), 
                            fines_json=json.dumps(fines))
+
+@profile_bp.route('/saved-locations')
+def saved_locations():
+    if not session.get('user_id'):
+        flash('Please log in to view your saved locations.', 'error')
+        return redirect(url_for('auth.auth_page'))
+    # For now, we'll just show the locations page or a placeholder
+    # In a real app we might fetch user-specific saved locations.
+    # We will reuse the locations logic or just redirect to books.libraries_list
+    return redirect(url_for('books.libraries_list'))

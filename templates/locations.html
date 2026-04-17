@@ -1,177 +1,448 @@
-{% extends "base.html" %}
-{% block title %}Our Locations — ArdenLeaf{% endblock %}
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Our Library Network — ArdenLeaf</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=Lora:ital,wght@0,400;0,600;1,400&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#ebe4b5",
+                        "on-secondary-fixed": "#101f11",
+                        "on-primary-container": "#79a37a",
+                        "surface-tint": "#406743",
+                        "secondary-fixed-dim": "#b9cbb6",
+                        "on-primary": "#ffffff",
+                        "primary": "#002208",
+                        "secondary-fixed": "#d5e8d2",
+                        "inverse-on-surface": "#f9f2c3",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#586957",
+                        "outline-variant": "#c2c8be",
+                        "tertiary-container": "#502131",
+                        "tertiary-fixed": "#ffd9e2",
+                        "on-surface": "#1f1c01",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#e2dbad",
+                        "surface-container-highest": "#ebe4b5",
+                        "primary-container": "#113819",
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#fff9e4",
+                        "on-tertiary-fixed-variant": "#6a3747",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#a6d2a6",
+                        "surface-container-high": "#f0e9bb",
+                        "inverse-surface": "#343111",
+                        "tertiary": "#360c1c",
+                        "error": "#ba1a1a",
+                        "on-background": "#1f1c01",
+                        "on-primary-fixed": "#002108",
+                        "on-primary-fixed-variant": "#284f2d",
+                        "surface-container-low": "#fcf5c5",
+                        "secondary": "#526351",
+                        "on-surface-variant": "#424941",
+                        "surface-container": "#f6efc0",
+                        "secondary-container": "#d5e8d2",
+                        "outline": "#727970",
+                        "on-tertiary-fixed": "#360c1c",
+                        "on-tertiary": "#ffffff",
+                        "background": "#fff9e4",
+                        "primary-fixed": "#c1eec0",
+                        "tertiary-fixed-dim": "#fab3c6",
+                        "surface": "#fff9e4",
+                        "primary-fixed-dim": "#a6d2a6",
+                        "on-tertiary-container": "#c78699",
+                        "on-secondary-fixed-variant": "#3b4b3b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Outfit", "sans-serif"],
+                        "body": ["Lora", "serif"]
+                    }
+                },
+            },
+        };
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
 
-{% block content %}
-<style>
-    .loc-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 24px;
-        flex-wrap: wrap;
-        gap: 16px;
-    }
-    .loc-header-text h1 {
-        font-family: 'Outfit', sans-serif;
-        font-size: 1.75rem;
-        font-weight: 800;
-        color: #111827;
-        margin: 0 0 2px;
-    }
-    .loc-badge {
-        display: inline-block;
-        background: #eff6ff;
-        color: #2563eb;
-        border-radius: 999px;
-        font-size: 0.8rem;
-        font-weight: 700;
-        padding: 2px 10px;
-        margin-left: 8px;
-        vertical-align: middle;
-    }
+        /* ── Global Font Consistency ── */
+        h1, h2, h3, h4, .font-headline { font-family: 'Outfit', sans-serif !important; }
+        body, p, .font-body { font-family: 'Lora', serif !important; }
 
-    /* ── Tabs ── */
-    .loc-tabs {
-        display: flex;
-        gap: 8px;
-        margin-bottom: 28px;
-        padding: 4px;
-        background: #f1f5f9;
-        border-radius: 12px;
-        width: fit-content;
-    }
-    .loc-tab {
-        padding: 8px 18px;
-        border-radius: 9px;
-        font-size: 0.88rem;
-        font-weight: 600;
-        color: #64748b;
-        cursor: pointer;
-        transition: all 0.15s;
-        border: none;
-        background: transparent;
-    }
-    .loc-tab:hover { color: #1e293b; }
-    .loc-tab.active {
-        background: #fff;
-        color: #2563eb;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
+        /* ── Navbar ── */
+        .nav-link-standard {
+            position: relative;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            color: #113819;
+            font-size: 0.9rem;
+            text-decoration: none;
+            padding: 4px 0;
+        }
+        .nav-link-standard::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #113819;
+            transform: translateX(-50%);
+            transition: width 0.3s ease;
+        }
+        .nav-link-standard:hover::after {
+            width: 100%;
+        }
 
-    /* ── Grid ── */
-    .loc-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 20px;
-    }
+        .nav-bookmark-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(17, 56, 25, 0.6);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .nav-bookmark-icon:hover { color: #113819; }
+        .nav-bookmark-icon .material-symbols-outlined {
+            font-size: 1.4rem;
+            font-variation-settings: 'FILL' 0, 'wght' 400;
+        }
+        .nav-bookmark-icon:hover .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1, 'wght' 400;
+        }
 
-    .loc-card {
-        background: #fff;
-        border: 1px solid #e5e7eb;
-        border-radius: 14px;
-        padding: 24px;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        transition: transform 0.15s, box-shadow 0.15s;
-    }
-    .loc-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 32px rgba(0,0,0,0.06);
-    }
+        /* ══════════════════════════════════════════════
+           PROFILE DROPDOWN
+        ══════════════════════════════════════════════ */
+        .profile-menu-wrap { position: relative; }
 
-    .loc-type-tag {
-        font-size: 0.7rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        padding: 2px 8px;
-        border-radius: 6px;
-        width: fit-content;
-    }
-    .type-library { background: #eff6ff; color: #2563eb; }
-    .type-bookstore { background: #f0fdf4; color: #16a34a; }
+        .profile-trigger {
+            display: flex; align-items: center; gap: 8px;
+            cursor: pointer; padding: 5px 10px 5px 5px;
+            border-radius: 999px; border: 1.5px solid transparent;
+            transition: background 0.15s, border-color 0.15s;
+            user-select: none;
+        }
+        .profile-trigger:hover { background: rgba(17, 56, 25, 0.05); }
 
-    .loc-name {
-        font-family: 'Outfit', sans-serif;
-        font-size: 1.15rem;
-        font-weight: 700;
-        color: #111827;
-        margin: 0;
-    }
-    .loc-area {
-        font-size: 0.88rem;
-        color: #6b7280;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-    .loc-details {
-        margin-top: 4px;
-        padding-top: 12px;
-        border-top: 1px solid #f1f5f9;
-        font-size: 0.8rem;
-        color: #475569;
-        line-height: 1.6;
-    }
-    .loc-details b { color: #111827; }
-</style>
+        .profile-avatar {
+            width: 34px; height: 34px; border-radius: 50%;
+            background: #113819;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .profile-avatar svg { width: 18px; height: 18px; fill: #f5eebf; }
 
-<div class="loc-header">
-    <div class="loc-header-text">
-        <h1>Participating Locations <span class="loc-badge">{{ locations|length }}</span></h1>
-        <p>Browse our network of partner libraries and independent bookstores.</p>
-    </div>
-</div>
+        .profile-name {
+            font-size: 0.875rem; font-weight: 600; color: #1f2937;
+            max-width: 120px; white-space: nowrap;
+            overflow: hidden; text-overflow: ellipsis;
+        }
+        .profile-chevron { width: 14px; height: 14px; color: #9ca3af; transition: transform 0.2s; }
+        .profile-menu-wrap.open .profile-chevron { transform: rotate(180deg); }
 
-<div class="loc-tabs">
-    <button class="loc-tab active" data-filter="all">All</button>
-    <button class="loc-tab" data-filter="Library">Libraries</button>
-    <button class="loc-tab" data-filter="Bookstore">Bookstores</button>
-</div>
+        .profile-dropdown {
+            position: absolute; top: calc(100% + 10px); right: 0;
+            min-width: 220px; background: #fff;
+            border: 1px solid #e5e7eb; border-radius: 14px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+            padding: 6px; z-index: 1000;
+            opacity: 0; transform: translateY(-6px) scale(0.98);
+            pointer-events: none;
+            transition: opacity 0.18s ease, transform 0.18s ease;
+        }
+        .profile-menu-wrap.open .profile-dropdown {
+            opacity: 1; transform: translateY(0) scale(1); pointer-events: auto;
+        }
 
-<div class="loc-grid" id="locations-grid">
-    {% for loc in locations %}
-    <div class="loc-card" data-type="{{ loc.Type }}">
-        <span class="loc-type-tag {{ 'type-library' if loc.Type == 'Library' else 'type-bookstore' }}">
-            {{ '🏛️ Library' if loc.Type == 'Library' else '🏬 Bookstore' }}
-        </span>
-        <h2 class="loc-name">{{ loc.Name }}</h2>
-        <div class="loc-area">📍 {{ loc.Location }}</div>
-        
-        <div class="loc-details">
-            <b>System ID:</b> {{ loc.ID }}<br>
-            <b>Status:</b> Active Partner
+        .dropdown-user-info {
+            padding: 10px 12px 8px;
+            border-bottom: 1px solid #f1f5f9;
+            margin-bottom: 4px;
+        }
+        .dropdown-user-info .dui-name { font-weight: 700; font-size: 0.875rem; color: #111827; }
+        .dropdown-user-info .dui-type { font-size: 0.72rem; color: #9ca3af; margin-top: 1px; }
+
+        .dropdown-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 9px 12px; border-radius: 9px;
+            font-size: 0.85rem; color: #374151; font-weight: 500;
+            text-decoration: none; cursor: pointer;
+            transition: background 0.12s;
+        }
+        .dropdown-item:hover { background: #f8fafc; color: #111827; }
+        .dropdown-item svg { width: 16px; height: 16px; opacity: 0.55; flex-shrink: 0; }
+        .dropdown-separator { height: 1px; background: #f1f5f9; margin: 4px 0; }
+        .dropdown-item.logout { color: #dc2626; }
+        .dropdown-item.logout:hover { background: #fff5f5; color: #b91c1c; }
+        .dropdown-item.logout svg { opacity: 0.7; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-fixed selection:text-primary">
+
+    <!-- Header / Navbar -->
+    <header style="background:#f5eebf; position:sticky; top:0; z-index:50; border-bottom:1px solid rgba(17,56,25,0.1); font-family: 'Outfit', sans-serif;">
+        <div style="max-width:1280px; margin:0 auto; padding:12px 32px; display:flex; justify-content:space-between; align-items:center;">
+            <a href="{{ url_for('index') }}" style="display:flex;align-items:center;gap:8px;text-decoration:none;">
+                <span class="material-symbols-outlined" style="font-size:28px;color:#113819;font-variation-settings:'FILL' 1;">eco</span>
+                <span style="font-family:'Outfit',sans-serif;font-weight:900;font-size:1.4rem;color:#113819;">ArdenLeaf</span>
+            </a>
+            
+            <nav style="display:flex; gap:32px; align-items:center;">
+                <a href="{{ url_for('books.search') }}" class="nav-link-standard">Search Books</a>
+                <a href="{{ url_for('books.locations') }}" class="nav-link-standard" style="border-bottom: 2px solid #113819;">Locations</a>
+            </nav>
+            
+            <div style="display:flex; align-items:center; gap:24px;">
+                <a href="{{ url_for('books.bookmarks_page') }}" class="nav-bookmark-icon" title="Bookmarks">
+                    <span class="material-symbols-outlined">bookmark</span>
+                </a>
+
+                {% if session.get('user_id') %}
+                <div class="profile-menu-wrap" id="profileMenuWrap">
+                    <div class="profile-trigger" id="profileTrigger" role="button" aria-haspopup="true" aria-expanded="false">
+                        <div class="profile-avatar">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                            </svg>
+                        </div>
+                        <span class="profile-name">{{ session.get('user_name', 'Account') }}</span>
+                        <svg class="profile-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+
+                    <div class="profile-dropdown" id="profileDropdown" role="menu">
+                        <div class="dropdown-user-info">
+                            <div class="dui-name">{{ session.get('user_name', 'Account') }}</div>
+                            <div class="dui-type">{{ session.get('user_type', 'Member') }}</div>
+                        </div>
+
+                        {% if session.get('user_type') in ('LibraryAdmin', 'StoreAdmin') %}
+                        <a href="{{ url_for('owner.dashboard') }}" class="dropdown-item" role="menuitem">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                            Owner Portal
+                        </a>
+                        {% endif %}
+
+                        {% if session.get('user_type') == 'Admin' %}
+                        <a href="{{ url_for('admin.dashboard') }}" class="dropdown-item" role="menuitem">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                            Admin Panel
+                        </a>
+                        {% endif %}
+
+                        {% if session.get('user_type') == 'Member' %}
+                        <a href="{{ url_for('loans.dashboard') }}" class="dropdown-item" role="menuitem">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                            Dashboard
+                        </a>
+                        {% endif %}
+
+                        <a href="/profile" class="dropdown-item" role="menuitem">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            Account Details
+                        </a>
+
+                        <a href="/libraries" class="dropdown-item" role="menuitem">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            Saved Locations
+                        </a>
+
+                        <div class="dropdown-separator"></div>
+
+                        <a href="{{ url_for('auth.logout') }}" class="dropdown-item logout" role="menuitem">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                            Logout
+                        </a>
+                    </div>
+                </div>
+                {% else %}
+                <a href="{{ url_for('auth.auth_page') }}" style="background:#113819; color:#f5eebf; padding:10px 24px; border-radius:8px; text-decoration:none; font-family:'Outfit',sans-serif; font-weight:700; font-size:0.9rem; transition:transform 0.15s;" onmouseover="this.style.transform='scale(0.98)'" onmouseout="this.style.transform='scale(1)'">Login</a>
+                {% endif %}
+            </div>
         </div>
-    </div>
-    {% endfor %}
-</div>
+    </header>
 
-{% endblock %}
+    <main class="max-w-6xl mx-auto px-6 py-4 pb-24">
+        <!-- Hero Section -->
+        <header class="mb-16">
+            <div class="flex items-center gap-6 mb-4">
+                <h1 class="text-4xl md:text-5xl font-black text-primary-container font-headline tracking-tighter">
+                    Our Library Network
+                </h1>
+                <span class="px-5 py-1 bg-primary-container text-surface-container-low rounded-full font-headline font-black text-xl shadow-sm">{{ locations|length }}</span>
+            </div>
+            <p class="text-lg font-body italic text-on-surface-variant max-w-3xl leading-relaxed">
+                Explore our partner libraries and independent bookstores across India — each one a gateway to ArdenLeaf.
+            </p>
+        </header>
 
-{% block scripts %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const tabs = document.querySelectorAll('.loc-tab');
-    const cards = document.querySelectorAll('.loc-card');
+        <!-- Filter Tabs -->
+        <div class="flex flex-wrap gap-4 mb-12">
+            <button id="tab-all" class="filter-tab px-10 py-3.5 rounded-full bg-primary-container text-surface-container-low font-headline font-black text-sm tracking-wide shadow-lg transition-transform active:scale-95 duration-200">
+                All Locations
+            </button>
+            <button id="tab-library" class="filter-tab px-10 py-3.5 rounded-full bg-primary-container/5 text-primary-container font-headline font-bold text-sm tracking-wide hover:bg-primary-container/10 transition-colors duration-200">
+                Public Libraries
+            </button>
+            <button id="tab-bookstore" class="filter-tab px-10 py-3.5 rounded-full bg-primary-container/5 text-primary-container font-headline font-bold text-sm tracking-wide hover:bg-primary-container/10 transition-colors duration-200">
+                Independent Bookstores
+            </button>
+        </div>
 
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            // Update tabs
-            tabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
+        <!-- Locations Grid -->
+        <div id="locations-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {% for loc in locations %}
+            <a href="{{ url_for('books.location_detail', location_id=loc.ID) }}" class="block no-underline" style="text-decoration:none;">
+                <div class="location-card bg-surface-container-lowest rounded-2xl p-4 border border-surface-container-highest transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(17,56,25,0.08)] group" data-type="{{ loc.Type }}">
+                    <div class="mb-4 flex justify-between items-start">
+                        {% if loc.Type == 'Library' %}
+                        <span class="px-3.5 py-1 bg-primary-container text-surface-container-low text-[10px] font-headline font-black uppercase tracking-[0.12em] rounded-full">Library</span>
+                        {% else %}
+                        <span class="px-3.5 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-headline font-black uppercase tracking-[0.12em] rounded-full">Bookstore</span>
+                        {% endif %}
+                    </div>
+                    <h3 class="text-lg font-black text-primary-container font-headline mb-2 leading-tight tracking-tight">{{ loc.Name }}</h3>
+                    <div class="flex items-start gap-2 mb-4 text-on-surface-variant font-body italic text-sm opacity-80">
+                        <span class="material-symbols-outlined text-base shrink-0 opacity-40 not-italic">location_on</span>
+                        <span class="leading-snug">{{ loc.Location }}</span>
+                    </div>
+                    <div class="h-[1px] bg-surface-container-highest w-full mb-6"></div>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center bg-stone-50/50 px-3 py-2 rounded-xl">
+                            <span class="text-xs font-headline font-bold text-stone-500 uppercase tracking-widest text-[9px]">ID</span>
+                            <span class="text-xs font-headline font-black text-primary-container">{{ loc.ID }}</span>
+                        </div>
+                        <div class="flex justify-between items-center px-4">
+                            <span class="text-[9px] font-headline font-bold text-stone-500 uppercase tracking-widest">Status</span>
+                            <span class="text-xs font-headline font-black text-green-700 tracking-wide">Active Partner</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        <!-- Pagination -->
+        <div id="pagination-container" class="mt-20 mb-12 flex justify-center hidden">
+            <div class="bg-white border border-[#e8dfa0] rounded-full px-6 py-3 flex items-center gap-6 shadow-md transition-all hover:shadow-lg">
+                <button id="prevBtn" onclick="changePage(-1)" class="text-black disabled:opacity-20 hover:scale-110 transition-transform">
+                    <span class="material-symbols-outlined font-bold">chevron_left</span>
+                </button>
+                <div id="pageDots" class="flex items-center gap-3"></div>
+                <button id="nextBtn" onclick="changePage(1)" class="text-black disabled:opacity-20 hover:scale-110 transition-transform">
+                    <span class="material-symbols-outlined font-bold">chevron_right</span>
+                </button>
+            </div>
+        </div>
+    </main>
 
-            const filter = tab.getAttribute('data-filter');
+    <!-- Footer -->
+    <footer style="background:#fcf5c5; border-top:1px solid rgba(17,56,25,0.1); padding:80px 0 40px; margin-top:120px; width:100%; font-family: 'Outfit', sans-serif;">
+        <div style="max-width:1280px; margin:0 auto; padding:0 32px;">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:64px; align-items:flex-start; margin-bottom:80px;">
+                <div style="max-width:400px;">
+                    <a href="{{ url_for('index') }}" style="text-decoration:none; display:flex; align-items:center; gap:8px; margin-bottom:28px;">
+                        <span class="material-symbols-outlined" style="font-size:32px;color:#113819;font-variation-settings:'FILL' 1;">eco</span>
+                        <span style="font-family:'Outfit',sans-serif;font-weight:900;font-size:1.8rem;color:#113819;letter-spacing:-0.05em;">ArdenLeaf</span>
+                    </a>
+                    <p style="font-family:'Lora',serif; color:#4b5563; font-size:1.15rem; line-height:1.7; font-style:italic; opacity:0.85;">
+                        "Explore our partner libraries and independent bookstores across India — each one a gateway to ArdenLeaf."
+                    </p>
+                </div>
+                <div style="display:flex; justify-content: flex-end;">
+                    <div style="min-width: 180px;">
+                        <h4 style="font-weight:900; color:#113819; text-transform:uppercase; letter-spacing:0.15em; font-size:0.75rem; margin-bottom:32px;">Discover</h4>
+                        <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:20px;">
+                            <li><a href="{{ url_for('books.search') }}" style="text-decoration:none; color:#6b7280; font-size:1.15rem; font-family:'Lora',serif; font-style:italic; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Search Books</a></li>
+                            <li><a href="{{ url_for('books.locations') }}" style="text-decoration:none; color:#113819; font-size:1.15rem; font-family:'Lora',serif; font-style:italic; font-weight:700; border-bottom:1.5px solid #113819; padding-bottom:2px;">Locations</a></li>
+                            <li><a href="{{ url_for('books.bookmarks_page') }}" style="text-decoration:none; color:#6b7280; font-size:1.15rem; font-family:'Lora',serif; font-style:italic; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Bookmarks</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div style="padding-top:40px; border-top:1px solid rgba(17,56,25,0.08); display:flex; justify-content:space-between; align-items:center;">
+                <p style="font-family:'Lora',serif; font-style:italic; font-size:0.95rem; color:#6b7280; opacity:0.7;">
+                    © 2024 ArdenLeaf. Made with 🍃 for India's readers.
+                </p>
+            </div>
+        </div>
+    </footer>
 
-            // Filter cards
-            cards.forEach(card => {
-                if (filter === 'all' || card.getAttribute('data-type') === filter) {
-                    card.style.display = 'flex';
-                } else {
-                    card.style.display = 'none';
+    <script>
+        // Profile Dropdown
+        const wrap    = document.getElementById('profileMenuWrap');
+        const trigger = document.getElementById('profileTrigger');
+        if (wrap && trigger) {
+            const toggle = () => {
+                const isOpen = wrap.classList.toggle('open');
+                trigger.setAttribute('aria-expanded', String(isOpen));
+            };
+            trigger.addEventListener('click', (e) => { e.stopPropagation(); toggle(); });
+            document.addEventListener('click', (e) => {
+                if (!wrap.contains(e.target)) {
+                    wrap.classList.remove('open');
+                    trigger.setAttribute('aria-expanded', 'false');
                 }
             });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    wrap.classList.remove('open');
+                    trigger.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+
+        // Filter Functionality
+        const tabs = document.querySelectorAll('.filter-tab');
+        const cards = document.querySelectorAll('.location-card');
+
+        const activeClasses = ['bg-primary-container', 'text-surface-container-low', 'font-black', 'shadow-lg'];
+        const inactiveClasses = ['bg-primary-container/5', 'text-primary-container', 'font-bold'];
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const filter = tab.id.replace('tab-', '');
+                
+                // Update UI of tabs
+                tabs.forEach(t => {
+                    t.classList.remove(...activeClasses);
+                    t.classList.add(...inactiveClasses);
+                });
+                tab.classList.remove(...inactiveClasses);
+                tab.classList.add(...activeClasses);
+
+                // Filter cards
+                 cards.forEach(card => {
+                     const wrapper = card.closest('a') || card;
+                     if (filter === 'all' || card.getAttribute('data-type') === (filter.charAt(0).toUpperCase() + filter.slice(1))) {
+                         card.setAttribute('data-filtered', 'true');
+                         wrapper.style.display = '';
+                     } else {
+                         card.setAttribute('data-filtered', 'false');
+                         wrapper.style.display = 'none';
+                     }
+                 });
+            });
         });
-    });
-});
-</script>
-{% endblock %}
+    </script>
+</body>
+</html>

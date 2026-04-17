@@ -1,6 +1,9 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
 from models.loan import Loan
 from utils.book_cache import get as cache_get
+from database.db import get_db_connection
+import datetime
+
 
 loan_bp = Blueprint('loans', __name__)
 
@@ -34,7 +37,66 @@ def dashboard():
         cached = cache_get(loan['ISBN']) or {}
         loan['cover_image'] = cached.get('cover_image')
 
-    return render_template('dashboard.html', loans=active_loans)
+    from routes.profile_routes import get_quick_stats
+    stats = get_quick_stats(member_id)
+
+    # Fetch histories for modals
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    all_loans = []
+    fines = []
+    try:
+        # Full borrow history
+        cursor.execute("""
+            SELECT 
+                l.LoanID, b.Title, b.ISBN,
+                COALESCE(lib.Name, s.Name) AS SourceName,
+                l.IssueDate, l.ReturnDate, l.DueDate
+            FROM Loan l
+            JOIN BookCopy bc ON l.CopyID = bc.CopyID
+            JOIN Book b ON bc.ISBN = b.ISBN
+            LEFT JOIN Library lib ON bc.LibraryID = lib.LibraryID
+            LEFT JOIN Bookstore s ON bc.StoreID = s.StoreID
+            WHERE l.MemberID = %s
+            ORDER BY l.IssueDate DESC
+        """, (member_id,))
+        all_loans = cursor.fetchall()
+            
+        # Fines history
+        cursor.execute("""
+            SELECT 
+                lf.LoanID, b.Title, b.ISBN,
+                lf.FineAmount, l.IssueDate, lf.DueDate, lf.ReturnDate
+            FROM LoanFines lf
+            JOIN Loan l ON lf.LoanID = l.LoanID
+            JOIN BookCopy bc ON l.CopyID = bc.CopyID
+            JOIN Book b ON bc.ISBN = b.ISBN
+            WHERE lf.MemberID = %s AND lf.FineAmount > 0
+            ORDER BY l.IssueDate DESC
+        """, (member_id,))
+        fines = cursor.fetchall()
+    except Exception as e:
+        print(f"Error fetching dashboard histories: {e}")
+    finally:
+        cursor.close()
+        conn.close()
+
+    today = datetime.date.today()
+    overdue_count = sum(
+        1 for loan in active_loans
+        if loan.get('DueDate') and (
+            loan['DueDate'].date() if hasattr(loan['DueDate'], 'date') else loan['DueDate']
+        ) < today
+    )
+
+    return render_template('dashboard.html', loans=active_loans,
+                           all_loans=all_loans,
+                           fines=fines,
+                           active_loans_count=stats['active_loans'],
+                           total_loans=stats['total_borrowed'],
+                           bookmarks_count=stats['bookmarks'],
+                           fines_due=stats['fines'],
+                           overdue_count=overdue_count)
 
 
 # ── My Loans (full history) ───────────────────────────────────────────────────

@@ -1,459 +1,647 @@
-{% extends "base.html" %}
-{% block title %}Account Details — ArdenLeaf{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Details — ArdenLeaf</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=Lora:ital,wght@0,400;0,600;1,400&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ── Global Font Consistency ── */
+        h1, h2, h3, h4, .font-headline { font-family: 'Outfit', sans-serif !important; }
+        body, p, .font-body { font-family: 'Lora', serif !important; }
+        .font-label, label, .small-caps { font-family: 'Outfit', sans-serif !important; }
 
-{% block content %}
-<style>
-    /* ── Layout ── */
-    .profile-header {
-        margin-bottom: 28px;
-    }
-    .profile-header h1 {
-        font-family: 'Outfit', sans-serif;
-        font-size: 1.75rem;
-        font-weight: 800;
-        color: #111827;
-        margin: 0 0 2px;
-    }
-    .profile-header p {
-        color: #6b7280;
-        font-size: 0.9rem;
-        margin: 0;
-    }
-
-    .profile-grid {
-        display: grid;
-        grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-        gap: 24px;
-        align-items: start;
-    }
-    @media (max-width: 800px) {
-        .profile-grid {
-            grid-template-columns: 1fr;
+        /* ── Navbar ── */
+        .nav-link-standard {
+            position: relative;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            color: #113819;
+            font-size: 0.9rem;
+            text-decoration: none;
+            padding: 4px 0;
         }
-    }
+        .nav-link-standard::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #113819;
+            transform: translateX(-50%);
+            transition: width 0.3s ease;
+        }
+        .nav-link-standard:hover::after {
+            width: 100%;
+        }
 
-    /* ── Cards ── */
-    .card {
-        background: #fff;
-        border: 1px solid #e5e7eb;
-        border-radius: 14px;
-        padding: 24px 28px;
-    }
-    .card-title {
-        font-family: 'Outfit', sans-serif;
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: #111827;
-        margin: 0 0 20px;
-    }
+        .nav-bookmark-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(17, 56, 25, 0.6);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .nav-bookmark-icon:hover { color: #113819; }
+        .nav-bookmark-icon .material-symbols-outlined {
+            font-size: 1.4rem;
+            font-variation-settings: 'FILL' 0, 'wght' 400;
+        }
+        .nav-bookmark-icon:hover .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1, 'wght' 400;
+        }
 
-    /* ── Avatar Section ── */
-    .avatar-section {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        margin-bottom: 24px;
-    }
-    .avatar-circle {
-        width: 64px;
-        height: 64px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #6366f1, #2563eb);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #fff;
-        font-family: 'Outfit', sans-serif;
-        font-size: 1.5rem;
-        font-weight: 700;
-        flex-shrink: 0;
-    }
-    .avatar-info h2 {
-        font-family: 'Outfit', sans-serif;
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: #111827;
-        margin: 0 0 4px;
-    }
-    .badge {
-        display: inline-block;
-        background: #eff6ff;
-        color: #2563eb;
-        border-radius: 999px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        padding: 3px 10px;
-    }
+        /* ══════════════════════════════════════════════
+           PROFILE DROPDOWN
+        ══════════════════════════════════════════════ */
+        .profile-menu-wrap { position: relative; }
 
-    /* ── Form Items ── */
-    .form-group {
-        margin-bottom: 16px;
-    }
-    .form-group label {
-        display: block;
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: #374151;
-        margin-bottom: 6px;
-    }
-    .form-control {
-        width: 100%;
-        padding: 10px 14px;
-        border: 1px solid #d1d5db;
-        border-radius: 8px;
-        font-family: 'Inter', sans-serif;
-        font-size: 0.9rem;
-        color: #111827;
-        transition: border-color 0.15s, box-shadow 0.15s;
-    }
-    .form-control:focus {
-        outline: none;
-        border-color: #2563eb;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-    }
-    .form-control[readonly] {
-        background-color: #f9fafb;
-        color: #6b7280;
-        cursor: not-allowed;
-    }
+        .profile-trigger {
+            display: flex; align-items: center; gap: 8px;
+            cursor: pointer; padding: 5px 10px 5px 5px;
+            border-radius: 999px; border: 1.5px solid transparent;
+            transition: background 0.15s, border-color 0.15s;
+            user-select: none;
+        }
+        .profile-trigger:hover { background: rgba(17, 56, 25, 0.05); }
 
-    .form-actions {
-        margin-top: 24px;
-        display: flex;
-        justify-content: flex-end;
-    }
-    .btn-save {
-        padding: 10px 20px;
-        background: #2563eb;
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        font-weight: 600;
-        font-size: 0.9rem;
-        cursor: pointer;
-        transition: background 0.15s;
-    }
-    .btn-save:hover {
-        background: #1d4ed8;
-    }
-    .btn-save:disabled {
-        background: #9ca3af;
-        cursor: not-allowed;
-    }
+        .profile-avatar {
+            width: 34px; height: 34px; border-radius: 50%;
+            background: #113819;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .profile-avatar svg { width: 18px; height: 18px; fill: #f5eebf; }
 
-    .btn-cancel {
-        padding: 10px 16px;
-        background: transparent;
-        border: none;
-        color: #6b7280;
-        font-weight: 600;
-        font-size: 0.9rem;
-        cursor: pointer;
-        transition: color 0.15s;
-    }
-    .btn-cancel:hover {
-        color: #111827;
-    }
+        .profile-name {
+            font-size: 0.875rem; font-weight: 600; color: #1f2937;
+            max-width: 120px; white-space: nowrap;
+            overflow: hidden; text-overflow: ellipsis;
+        }
+        .profile-chevron { width: 14px; height: 14px; color: #9ca3af; transition: transform 0.2s; }
+        .profile-menu-wrap.open .profile-chevron { transform: rotate(180deg); }
 
-    .join-date {
-        font-size: 0.72rem;
-        color: #9ca3af;
-        font-weight: 500;
-        margin-top: 6px;
-    }
+        .profile-dropdown {
+            position: absolute; top: calc(100% + 10px); right: 0;
+            min-width: 220px; background: #fff;
+            border: 1px solid #e5e7eb; border-radius: 14px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+            padding: 6px; z-index: 1000;
+            opacity: 0; transform: translateY(-6px) scale(0.98);
+            pointer-events: none;
+            transition: opacity 0.18s ease, transform 0.18s ease;
+        }
+        .profile-menu-wrap.open .profile-dropdown {
+            opacity: 1; transform: translateY(0) scale(1); pointer-events: auto;
+        }
 
-    /* ── Quick Stats Grid ── */
-    .stats-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 16px;
-    }
-    .stat-item {
-        background: #f8fafc;
-        border: 1px solid #f1f5f9;
-        border-radius: 10px;
-        padding: 16px;
-        text-align: center;
-        cursor: pointer;
-        transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
-    }
-    .stat-item:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        border-color: #cbd5e1;
-    }
-    .stat-value {
-        font-family: 'Outfit', sans-serif;
-        font-size: 1.75rem;
-        font-weight: 800;
-        color: #111827;
-        margin: 0 0 4px;
-    }
-    .stat-value.danger {
-        color: #dc2626;
-    }
-    .stat-label {
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: #6b7280;
-    }
+        .dropdown-user-info {
+            padding: 10px 12px 8px;
+            border-bottom: 1px solid #f1f5f9;
+            margin-bottom: 4px;
+        }
+        .dropdown-user-info .dui-name { font-weight: 700; font-size: 0.875rem; color: #111827; }
+        .dropdown-user-info .dui-type { font-size: 0.72rem; color: #9ca3af; margin-top: 1px; }
 
-    /* ── Modals ── */
-    .modal-overlay {
-        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(17, 24, 39, 0.6);
-        display: none; align-items: center; justify-content: center;
-        z-index: 1000; opacity: 0; transition: opacity 0.2s;
-    }
-    .modal-overlay.show { display: flex; opacity: 1; }
-    
-    .modal-content {
-        background: #fff;
-        border-radius: 16px;
-        padding: 28px;
-        width: 100%;
-        max-width: 900px;
-        max-height: 85vh;
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        transform: scale(0.95); transition: transform 0.2s;
-    }
-    .modal-overlay.show .modal-content { transform: scale(1); }
-    
-    .modal-close {
-        position: absolute; top: 20px; right: 20px;
-        background: none; border: none; font-size: 1.5rem;
-        color: #9ca3af; cursor: pointer; line-height: 1;
-        z-index: 20;
-    }
-    .modal-close:hover { color: #111827; }
-    
-    .modal-title {
-        font-family: 'Outfit', sans-serif; font-size: 1.5rem;
-        font-weight: 700; color: #111827; margin: 0 0 16px 0;
-        flex-shrink: 0;
-    }
-    
-    .table-container {
-        overflow-y: auto;
-        border-radius: 8px;
-        min-height: 100px;
-    }
-    
-    .data-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.88rem; }
-    .data-table th, .data-table td { 
-        padding: 12px 16px; 
-        text-align: left; 
-        white-space: nowrap;
-    }
-    .data-table td { border-bottom: 1px solid #e5e7eb; }
-    .data-table th { 
-        position: sticky; 
-        top: 0; 
-        background: #f8fafc; 
-        font-weight: 600; 
-        color: #475569; 
-        z-index: 10;
-        border-bottom: 2px solid #e5e7eb;
-    }
-    .data-table a { color: #2563eb; font-weight: 600; text-decoration: none; }
-    .data-table a:hover { text-decoration: underline; }
-    
-    .badge-clear { background: #d1fae5; color: #065f46; padding: 3px 10px; border-radius: 999px; font-weight: 600; font-size: 0.75rem; }
-    .badge-due { background: #fef3c7; color: #b45309; padding: 3px 10px; border-radius: 999px; font-weight: 600; font-size: 0.75rem; }
-    .badge-past { background: #fee2e2; color: #991b1b; padding: 3px 10px; border-radius: 999px; font-weight: 600; font-size: 0.75rem; }
-</style>
+        .dropdown-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 9px 12px; border-radius: 9px;
+            font-size: 0.85rem; color: #374151; font-weight: 500;
+            text-decoration: none; cursor: pointer;
+            transition: background 0.12s;
+        }
+        .dropdown-item:hover { background: #f8fafc; color: #111827; }
+        .dropdown-item svg { width: 16px; height: 16px; opacity: 0.55; flex-shrink: 0; }
+        .dropdown-separator { height: 1px; background: #f1f5f9; margin: 4px 0; }
+        .dropdown-item.logout { color: #dc2626; }
+        .dropdown-item.logout:hover { background: #fff5f5; color: #b91c1c; }
+        .dropdown-item.logout svg { opacity: 0.7; }
 
-<div class="profile-header">
-    <h1>Account Details</h1>
-    <p>Manage your personal information and view reading statistics.</p>
-</div>
+        /* ── Profile Stat Card ── */
+        .stat-card-profile { transition: box-shadow 0.2s ease, border-color 0.2s ease; }
+        .stat-card-profile:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.10); }
 
-<div class="profile-grid">
-    <!-- Left Card: Form -->
-    <div class="card">
-        <div class="avatar-section">
-            <div class="avatar-circle">
-                {% set initials = user.Name.split() %}
-                {{ initials[0][0]|upper if initials else '?' }}{{ initials[-1][0]|upper if initials|length > 1 else '' }}
+        /* ── Modal Overlay ── */
+        .modal-overlay {
+            display: none;
+            position: fixed; inset: 0; z-index: 100;
+            background: rgba(17, 56, 25, 0.4);
+            backdrop-filter: blur(8px);
+            align-items: center; justify-content: center; padding: 24px;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal-content {
+            background: #ffffff; width: 100%; max-width: 800px;
+            border: 1px solid #e8dfa0; border-radius: 24px;
+            padding: 40px; position: relative;
+            max-height: 90vh; overflow-y: auto;
+            box-shadow: 0 20px 50px rgba(17, 56, 25, 0.15);
+        }
+        
+        /* ── Modal Table Styling ── */
+        .modal-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .modal-table thead tr { background: #f5eebf; }
+        .modal-table thead th { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #113819; padding: 12px 16px; text-align: left; }
+        .modal-table tbody td { font-family: 'Lora', serif; font-size: 0.875rem; padding: 14px 16px; border-bottom: 1px solid #f5eebf; color: #374151; }
+
+        .form-input-wrapper {
+            background: #ffffff;
+            border: 1px solid #1f1c01;
+            border-radius: 8px;
+            padding: 4px 0;
+            transition: border-color 0.2s;
+        }
+        .form-input-wrapper:focus-within {
+            border-color: #113819;
+        }
+    </style>
+</head>
+<body class="bg-[#fff9e4] font-body text-on-surface">
+
+    <header style="background:#f5eebf; position:sticky; top:0; z-index:50; border-bottom:1px solid rgba(17,56,25,0.1); font-family: 'Outfit', sans-serif;">
+        <div style="max-width:1280px; margin:0 auto; padding:12px 32px; display:flex; justify-content:space-between; align-items:center;">
+            <a href="{{ url_for('index') }}" style="display:flex;align-items:center;gap:8px;text-decoration:none;">
+                <span class="material-symbols-outlined" style="font-size:28px;color:#113819;font-variation-settings:'FILL' 1;">eco</span>
+                <span style="font-family:'Outfit',sans-serif;font-weight:900;font-size:1.4rem;color:#113819;">ArdenLeaf</span>
+            </a>
+            
+            <nav style="display:flex; gap:32px; align-items:center;">
+                <a href="{{ url_for('books.search') }}" class="nav-link-standard">Search Books</a>
+                <a href="{{ url_for('books.locations') }}" class="nav-link-standard">Locations</a>
+            </nav>
+            
+            <div style="display:flex; align-items:center; gap:24px;">
+                <a href="{{ url_for('books.bookmarks_page') }}" class="nav-bookmark-icon" title="Bookmarks">
+                    <span class="material-symbols-outlined">bookmark</span>
+                </a>
+
+                {% if session.get('user_id') %}
+                <div class="profile-menu-wrap" id="profileMenuWrap">
+                    <div class="profile-trigger" id="profileTrigger" role="button" aria-haspopup="true" aria-expanded="false">
+                        <div class="profile-avatar">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                            </svg>
+                        </div>
+                        <span class="profile-name">{{ session.get('user_name', 'Account') }}</span>
+                        <svg class="profile-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+
+                    <div class="profile-dropdown" id="profileDropdown" role="menu">
+                        <div class="dropdown-user-info">
+                            <div class="dui-name">{{ session.get('user_name', 'Account') }}</div>
+                            <div class="dui-type">{{ session.get('user_type', 'Member') }}</div>
+                        </div>
+
+                        {% if session.get('user_type') in ('LibraryAdmin', 'StoreAdmin') %}
+                        <a href="{{ url_for('owner.dashboard') }}" class="dropdown-item" role="menuitem">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                            Owner Portal
+                        </a>
+                        {% endif %}
+
+                        {% if session.get('user_type') == 'Admin' %}
+                        <a href="{{ url_for('admin.dashboard') }}" class="dropdown-item" role="menuitem">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                            Admin Panel
+                        </a>
+                        {% endif %}
+
+                        {% if session.get('user_type') == 'Member' %}
+                        <a href="{{ url_for('loans.dashboard') }}" class="dropdown-item" role="menuitem">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                            Dashboard
+                        </a>
+                        {% endif %}
+
+                        <a href="/profile" class="dropdown-item" role="menuitem">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            Account Details
+                        </a>
+
+                        <a href="/libraries" class="dropdown-item" role="menuitem">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            Saved Locations
+                        </a>
+
+                        <div class="dropdown-separator"></div>
+
+                        <a href="{{ url_for('auth.logout') }}" class="dropdown-item logout" role="menuitem">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                            Logout
+                        </a>
+                    </div>
+                </div>
+                {% else %}
+                <a href="{{ url_for('auth.auth_page') }}" style="background:#113819; color:#f5eebf; padding:10px 24px; border-radius:8px; text-decoration:none; font-family:'Outfit',sans-serif; font-weight:700; font-size:0.9rem; transition:transform 0.15s;" onmouseover="this.style.transform='scale(0.98)'" onmouseout="this.style.transform='scale(1)'">Login</a>
+                {% endif %}
             </div>
-            <div class="avatar-info">
-                <h2>{{ user.Name }}</h2>
-                <div style="display: flex; flex-direction: column; gap: 2px;">
-                    <span class="join-date">Joined {{ user.MembershipDate.strftime('%d %b %Y') if user.MembershipDate else 'N/A' }}</span>
-                    <span class="badge" style="width: fit-content;">{{ user.UserType }}</span>
+        </div>
+    </header>
+
+    <!-- Toast container -->
+    <div id="toast-container" role="region" aria-live="polite" aria-label="Notifications"></div>
+
+    <main class="max-w-7xl mx-auto px-6 py-12 md:py-20">
+        <div class="mb-12 px-2">
+            <h1 class="font-headline text-5xl font-extrabold text-primary-container tracking-tighter mb-4">Account Details</h1>
+            <p class="font-body text-xl italic text-on-surface-variant max-w-xl mb-12">Curating your personal literary identity.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start px-2">
+            <!-- Profile Info Card (Left 7/12) -->
+            <div class="lg:col-span-7 bg-surface-container-lowest rounded-[24px] p-8 md:p-10 border border-[#e8dfa0] shadow-sm">
+                <div class="flex items-center gap-8 mb-10">
+                    <div class="w-24 h-24 rounded-full bg-white border-2 border-[#113819] flex items-center justify-center text-[#113819] text-2xl font-headline font-bold shadow-lg flex-shrink-0">
+                        {% set names = user.Name.split() %}
+                        {{ names[0][0]|upper if names else '?' }}{{ names[-1][0]|upper if names|length > 1 else '' }}
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-4 mb-1">
+                            <h2 id="displayUserName" class="font-headline text-3xl font-bold text-primary-container">{{ user.Name }}</h2>
+                            <span class="px-3 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-headline text-[9px] font-bold tracking-widest uppercase">
+                                {% if stats.total_borrowed <= 5 %} New Reader
+                                {% elif stats.total_borrowed <= 20 %} Bookworm
+                                {% elif stats.total_borrowed <= 50 %} Avid Reader
+                                {% elif stats.total_borrowed <= 100 %} Literary Scholar
+                                {% else %} Master Bibliophile
+                                {% endif %}
+                            </span>
+                        </div>
+                        <p class="font-body text-on-surface-variant italic text-sm">Member since {{ user.CreatedAt.strftime('%B %Y') if user.CreatedAt else 'the beginning' }}</p>
+                    </div>
+                </div>
+
+                <form id="profileForm" class="space-y-6">
+                    <div class="flex flex-col gap-2">
+                        <label class="font-headline text-[11px] font-bold uppercase tracking-widest text-[#113819] ml-1">Full Name</label>
+                        <div class="form-input-wrapper px-4 py-1.5">
+                            <input name="name" id="profileName" class="w-full bg-white border-0 focus:ring-0 p-0 font-body text-[#113819] text-base" 
+                                   type="text" value="{{ user.Name }}" required />
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col gap-2">
+                        <label class="font-headline text-[11px] font-bold uppercase tracking-widest text-[#113819] ml-1">Email Address (Read-Only)</label>
+                        <div class="form-input-wrapper opacity-50 bg-stone-50 px-4 py-1.5">
+                            <input name="email" id="profileEmail" class="w-full bg-transparent border-0 focus:ring-0 p-0 font-body text-[#113819] text-base cursor-not-allowed" 
+                                   type="email" value="{{ user.Email }}" readonly />
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class="font-headline text-[11px] font-bold uppercase tracking-widest text-[#113819] ml-1">Phone Number</label>
+                        <div class="form-input-wrapper px-4 py-1.5">
+                            <input name="phone" id="profilePhone" class="w-full bg-white border-0 focus:ring-0 p-0 font-body text-[#113819] text-base" 
+                                   type="tel" value="{{ user.Phone }}" placeholder="9876543210" maxlength="10" />
+                        </div>
+                    </div>
+
+                    <div class="pt-4 flex justify-end">
+                        <button type="button" id="editTrigger" class="flex items-center gap-2 text-[#113819] font-headline font-bold text-sm tracking-tight hover:opacity-70 transition-opacity">
+                            Edit Details
+                            <span class="material-symbols-outlined text-sm">edit</span>
+                        </button>
+                        <div id="actionButtons" class="flex gap-4 hidden">
+                            <button type="submit" id="saveBtn" class="bg-[#113819] text-[#f5eebf] px-8 py-2.5 rounded-lg font-headline font-bold text-xs tracking-wide hover:opacity-90 transition-all">
+                                Save Changes
+                            </button>
+                            <button type="button" id="cancelBtn" class="bg-[#dc2626] text-white px-8 py-2.5 rounded-lg font-headline font-bold text-xs tracking-wide hover:opacity-90 transition-all">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Stats Grid (Right 5/12) -->
+            <div class="lg:col-span-5 grid grid-cols-2 gap-4 h-fit">
+                <div onclick="window.location.href='/dashboard'" class="stat-card-profile bg-white border border-[#1f1c01] p-6 rounded-2xl flex flex-col items-start transition-all cursor-pointer group">
+                    <span class="material-symbols-outlined text-primary-container text-2xl mb-4 group-hover:scale-110 transition-transform">menu_book</span>
+                    <div class="text-3xl font-headline font-extrabold text-primary-container">{{ stats.active_loans }}</div>
+                    <div class="font-body text-xs italic text-on-surface-variant font-medium">Active Loans</div>
+                </div>
+                <div onclick="openModal('historyModal')" class="stat-card-profile bg-white border border-[#1f1c01] p-6 rounded-2xl flex flex-col items-start transition-all cursor-pointer group">
+                    <span class="material-symbols-outlined text-primary-container text-2xl mb-4 group-hover:scale-110 transition-transform">history_edu</span>
+                    <div class="text-3xl font-headline font-extrabold text-primary-container">{{ stats.total_borrowed }}</div>
+                    <div class="font-body text-xs italic text-on-surface-variant font-medium">Total Borrowed</div>
+                </div>
+                <div onclick="window.location.href='/bookmarks'" class="stat-card-profile bg-white border border-[#1f1c01] p-6 rounded-2xl flex flex-col items-start transition-all cursor-pointer group">
+                    <span class="material-symbols-outlined text-primary-container text-2xl mb-4 group-hover:scale-110 transition-transform">bookmark</span>
+                    <div class="text-3xl font-headline font-extrabold text-primary-container">{{ stats.bookmarks }}</div>
+                    <div class="font-body text-xs italic text-on-surface-variant font-medium">Bookmarks</div>
+                </div>
+                <div onclick="openModal('finesModal')" class="stat-card-profile bg-white border border-[#1f1c01] p-6 rounded-2xl flex flex-col items-start transition-all cursor-pointer group">
+                    <span class="material-symbols-outlined {{ 'text-red-700' if stats.fines > 0 else 'text-primary-container' }} text-2xl mb-4 group-hover:scale-110 transition-transform">payments</span>
+                    <div class="text-3xl font-headline font-extrabold text-primary-container">₹ {{ stats.fines|int }}</div>
+                    <div class="font-body text-xs italic text-on-surface-variant font-medium">Fines Due</div>
                 </div>
             </div>
         </div>
+    </main>
 
-        <form id="profile-form" action="{{ url_for('profile.profile') }}" method="POST">
-            <div class="form-group">
-                <label for="name">Full Name</label>
-                <input type="text" id="name" name="name" class="form-control" value="{{ user.Name }}" required>
-            </div>
+    <!-- Modals -->
+    <div id="historyModal" class="modal-overlay" style="display:none;" onclick="if(event.target==this) closeModal('historyModal')">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="closeModal('historyModal')">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            <h2 class="font-headline text-2xl font-bold text-primary-container mb-2">Reading History</h2>
+            <p class="font-body text-xs italic text-on-surface-variant mb-6">A chronicle of your literary travels.</p>
             
-            <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" class="form-control" value="{{ user.Email }}" readonly title="Email cannot be changed as it is used for login.">
-            </div>
-            
-            <div class="form-group">
-                <label for="phone">Phone Number</label>
-                <input type="tel" id="phone" name="phone" class="form-control" 
-                       value="{{ user.Phones[0] if user.Phones else '' }}" 
-                       placeholder="98765 43210" maxlength="10" pattern="[0-9]{10}"
-                       oninput="this.value = this.value.replace(/[^0-9]/g, '');">
-            </div>
-            
-            <div class="form-actions" style="gap: 12px; align-items: center;">
-                <button type="button" class="btn-cancel" id="cancel-btn">Cancel</button>
-                <button type="submit" class="btn-save" id="save-btn">Save Changes</button>
-            </div>
-        </form>
-    </div>
-
-    <!-- Right Card: Quick Stats -->
-    <div class="card">
-        <h3 class="card-title">Quick Stats</h3>
-        <div class="stats-grid">
-            <div class="stat-item" onclick="window.location.href='/dashboard'">
-                <div class="stat-value">{{ stats.active_loans }}</div>
-                <div class="stat-label">Active Loans</div>
-            </div>
-            <div class="stat-item" onclick="openHistoryModal()">
-                <div class="stat-value">{{ stats.total_borrowed }}</div>
-                <div class="stat-label">Total Borrowed</div>
-            </div>
-            <div class="stat-item" onclick="window.location.href='/bookmarks'">
-                <div class="stat-value">{{ stats.bookmarks }}</div>
-                <div class="stat-label">Bookmarks</div>
-            </div>
-            <div class="stat-item" onclick="openFinesModal()">
-                <div class="stat-value {% if stats.fines > 0 %}danger{% endif %}">
-                    ₹{{ "%.0f"|format(stats.fines) }}
-                </div>
-                <div class="stat-label">Fines Due</div>
-            </div>
+            <table class="modal-table">
+                <thead>
+                    <tr>
+                        <th>Book Title</th>
+                        <th>Library Source</th>
+                        <th>Borrowed Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="historyTableBody">
+                    <!-- Dynamic -->
+                </tbody>
+            </table>
         </div>
     </div>
-</div>
 
-<!-- History Modal -->
-<div class="modal-overlay" id="history-modal" onclick="if(event.target===this) closeModals()">
-    <div class="modal-content">
-        <button class="modal-close" onclick="closeModals()">&times;</button>
-        <h2 class="modal-title">Borrow History</h2>
-        <div id="history-table-container" class="table-container"></div>
+    <div id="finesModal" class="modal-overlay" style="display:none;" onclick="if(event.target==this) closeModal('finesModal')">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="closeModal('finesModal')">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            <h2 class="font-headline text-2xl font-bold text-primary-container mb-2">Fines Overview</h2>
+            <p class="font-body text-xs italic text-on-surface-variant mb-6">Maintaining balance in the digital garden.</p>
+            
+            <table class="modal-table">
+                <thead>
+                    <tr>
+                        <th>Book Title</th>
+                        <th>Amount</th>
+                        <th>Issued</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="finesTableBody">
+                    <!-- Dynamic -->
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 
-<!-- Fines Modal -->
-<div class="modal-overlay" id="fines-modal" onclick="if(event.target===this) closeModals()">
-    <div class="modal-content">
-        <button class="modal-close" onclick="closeModals()">&times;</button>
-        <h2 class="modal-title">Fines History</h2>
-        <div id="fines-table-container" class="table-container"></div>
-    </div>
-</div>
+    <!-- Footer -->
+    <footer style="background:#fcf5c5; border-top:1px solid rgba(17,56,25,0.1); padding:80px 0 40px; margin-top:120px; width:100%; font-family: 'Outfit', sans-serif;">
+        <div style="max-width:1280px; margin:0 auto; padding:0 32px;">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:64px; align-items:flex-start; margin-bottom:80px;">
+                <div style="max-width:400px;">
+                    <a href="{{ url_for('index') }}" style="text-decoration:none; display:flex; align-items:center; gap:8px; margin-bottom:28px;">
+                        <span class="material-symbols-outlined" style="font-size:32px;color:#113819;font-variation-settings:'FILL' 1;">eco</span>
+                        <span style="font-family:'Outfit',sans-serif;font-weight:900;font-size:1.8rem;color:#113819;letter-spacing:-0.05em;">ArdenLeaf</span>
+                    </a>
+                    <p style="font-family:'Lora',serif; color:#4b5563; font-size:1.15rem; line-height:1.7; font-style:italic; opacity:0.85;">
+                        "Explore our partner libraries and independent bookstores across India — each one a gateway to ArdenLeaf."
+                    </p>
+                </div>
+                <div style="display:flex; justify-content: flex-end;">
+                    <div style="min-width: 180px;">
+                        <h4 style="font-weight:900; color:#113819; text-transform:uppercase; letter-spacing:0.15em; font-size:0.75rem; margin-bottom:32px;">Discover</h4>
+                        <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:20px;">
+                            <li><a href="{{ url_for('books.search') }}" style="text-decoration:none; color:#6b7280; font-size:1.15rem; font-family:'Lora',serif; font-style:italic; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Search Books</a></li>
+                            <li><a href="{{ url_for('books.locations') }}" style="text-decoration:none; color:#6b7280; font-size:1.15rem; font-family:'Lora',serif; font-style:italic; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Locations</a></li>
+                            <li><a href="{{ url_for('books.bookmarks_page') }}" style="text-decoration:none; color:#6b7280; font-size:1.15rem; font-family:'Lora',serif; font-style:italic; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Bookmarks</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div style="padding-top:40px; border-top:1px solid rgba(17,56,25,0.08); display:flex; justify-content:space-between; align-items:center;">
+                <p style="font-family:'Lora',serif; font-style:italic; font-size:0.95rem; color:#6b7280; opacity:0.7;">
+                    © 2024 ArdenLeaf. Made with 🍃 for India's readers.
+                </p>
+            </div>
+        </div>
+    </footer>
 
-<script id="history-data" type="application/json">{{ history_json | safe }}</script>
-<script id="fines-data" type="application/json">{{ fines_json | safe }}</script>
-{% endblock %}
+    <script id="historyJson" type="application/json">{{ history_json | safe }}</script>
+    <script id="finesJson" type="application/json">{{ fines_json | safe }}</script>
 
-{% block scripts %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var form = document.getElementById('profile-form');
-    var btn = document.getElementById('save-btn');
-    var cancelBtn = document.getElementById('cancel-btn');
-    var originalText = btn.textContent;
-    
-    // Store original values for cancel functionality
-    var originals = {};
-    form.querySelectorAll('input:not([readonly])').forEach(function(input) {
-        originals[input.id] = input.value;
-    });
+    <script>
+        const originals = {
+            name: "{{ user.Name }}",
+            phone: "{{ user.Phone or '' }}"
+        };
 
-    cancelBtn.addEventListener('click', function() {
-        form.querySelectorAll('input:not([readonly])').forEach(function(input) {
-            input.value = originals[input.id];
+        const form = document.getElementById('profileForm');
+        const editTrigger = document.getElementById('editTrigger');
+        const actionButtons = document.getElementById('actionButtons');
+        const saveBtn = document.getElementById('saveBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const inputs = [document.getElementById('profileName'), document.getElementById('profilePhone')];
+
+        // Initial state: readonly and disabled
+        window.addEventListener('DOMContentLoaded', () => {
+            inputs.forEach(input => {
+                input.readOnly = true;
+                input.disabled = true;
+            });
         });
-    });
-    
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        btn.disabled = true;
-        btn.textContent = 'Saving...';
-        
-        var formData = new FormData(form);
-        
-        fetch(form.action, {
-            method: 'POST',
-            headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
-            body: formData
-        })
-        .then(function(res) { return res.json(); })
-        .then(function(data) {
-            btn.disabled = false;
-            btn.textContent = originalText;
-            
-            if(data.success) {
-                showToast(data.message, null, data.type || 'success');
-                // Dynamically update the header and avatar name if it changed
-                var newName = document.getElementById('name').value;
-                document.querySelector('.avatar-info h2').textContent = newName;
-                document.querySelector('.profile-name').textContent = newName; // Update navbar name
-            } else {
-                showToast(data.message || 'Error saving profile.', null, 'error');
+
+        editTrigger.addEventListener('click', () => {
+            inputs.forEach(input => {
+                input.readOnly = false;
+                input.disabled = false;
+            });
+            editTrigger.classList.add('hidden');
+            actionButtons.classList.remove('hidden');
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            inputs.forEach(input => {
+                input.readOnly = true;
+                input.disabled = true;
+            });
+            document.getElementById('profileName').value = originals.name;
+            document.getElementById('profilePhone').value = originals.phone;
+            editTrigger.classList.remove('hidden');
+            actionButtons.classList.add('hidden');
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const originalText = saveBtn.innerText;
+            saveBtn.innerHTML = '<span class="flex items-center gap-2"><svg class="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Saving...</span>';
+            saveBtn.disabled = true;
+
+            const formData = new FormData(form);
+            try {
+                const res = await fetch("{{ url_for('profile.profile') }}", {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json' },
+                    body: formData
+                });
+                const data = await res.json();
+                
+                if (data.success) {
+                    window.showToast("Profile changes preserved.", null, "success");
+                    originals.name = document.getElementById('profileName').value;
+                    originals.phone = document.getElementById('profilePhone').value;
+                    document.getElementById('displayUserName').textContent = originals.name;
+                    
+                    // Return to readonly
+                    inputs.forEach(input => {
+                        input.readOnly = true;
+                        input.disabled = true;
+                    });
+                    editTrigger.classList.remove('hidden');
+                    actionButtons.classList.add('hidden');
+                } else {
+                    window.showToast(data.message || "Error saving changes.", null, "error");
+                }
+            } catch (err) {
+                window.showToast("Connection failed.", null, "error");
+            } finally {
+                saveBtn.innerText = originalText;
+                saveBtn.disabled = false;
             }
-        })
-        .catch(function(err) {
-            btn.disabled = false;
-            btn.textContent = originalText;
-            console.error("Profile Error:", err);
-            showToast('Connection error — please try again.', null, 'error');
         });
-    });
-});
 
-function closeModals() {
-    document.querySelectorAll('.modal-overlay').forEach(el => el.classList.remove('show'));
-}
+        // Modal Logic
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
 
-function openHistoryModal() {
-    var data = JSON.parse(document.getElementById('history-data').textContent || '[]');
-    var html = '';
-    if (data.length === 0) {
-        html = '<p style="color:#6b7280;text-align:center;padding:20px;">No history yet.</p>';
-    } else {
-        html = '<table class="data-table"><thead><tr><th>Book Title</th><th>Source</th><th>Type</th><th>Date</th><th>Returned On</th></tr></thead><tbody>';
-        data.forEach(function(row) {
-            html += '<tr><td><a href="/book/' + row.isbn + '">' + row.title + '</a></td><td>' + row.source + '</td><td>' + row.type + '</td><td>' + row.date + '</td><td>' + row.returned + '</td></tr>';
+            if (id === 'historyModal') renderHistory();
+            if (id === 'finesModal') renderFines();
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal('historyModal');
+                closeModal('finesModal');
+            }
         });
-        html += '</tbody></table>';
-    }
-    document.getElementById('history-table-container').innerHTML = html;
-    document.getElementById('history-modal').classList.add('show');
-}
 
-function openFinesModal() {
-    var data = JSON.parse(document.getElementById('fines-data').textContent || '[]');
-    var html = '';
-    if (data.length === 0) {
-        html = '<p style="color:#6b7280;text-align:center;padding:20px;">No fines on record.</p>';
-    } else {
-        html = '<table class="data-table"><thead><tr><th>Book Title</th><th>Fine (₹)</th><th>Start Date</th><th>Due Date</th><th>Status</th></tr></thead><tbody>';
-        data.forEach(function(row) {
-            var badgeClass = row.status === 'Cleared' ? 'badge-clear' : row.status === 'Due' ? 'badge-due' : 'badge-past';
-            html += '<tr><td><a href="/book/' + row.isbn + '">' + row.title + '</a></td><td>' + row.amount + '</td><td>' + row.start_date + '</td><td>' + row.due_date + '</td><td><span class="' + badgeClass + '">' + row.status + '</span></td></tr>';
-        });
-        html += '</tbody></table>';
-    }
-    document.getElementById('fines-table-container').innerHTML = html;
-    document.getElementById('fines-modal').classList.add('show');
-}
-</script>
-{% endblock %}
+        function renderHistory() {
+            const data = JSON.parse(document.getElementById('historyJson').textContent || '[]');
+            const tbody = document.getElementById('historyTableBody');
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="padding:48px 0;text-align:center;font-family:\'Lora\',serif;font-style:italic;color:#9ca3af;">No records found</td></tr>';
+                return;
+            }
+            tbody.innerHTML = data.map(row => `
+                <tr>
+                    <td>${row.title}</td>
+                    <td>${row.source}</td>
+                    <td>${row.date}</td>
+                    <td>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${row.returned === 'Active' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'}">
+                            ${row.returned}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderFines() {
+            const data = JSON.parse(document.getElementById('finesJson').textContent || '[]');
+            const tbody = document.getElementById('finesTableBody');
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="padding:48px 0;text-align:center;font-family:\'Lora\',serif;font-style:italic;color:#9ca3af;">No records found</td></tr>';
+                return;
+            }
+            tbody.innerHTML = data.map(row => `
+                <tr>
+                    <td>${row.title}</td>
+                    <td class="font-bold">₹ ${row.amount}</td>
+                    <td>${row.start_date}</td>
+                    <td>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${row.status === 'Cleared' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">
+                            ${row.status}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Profile Menu Component Logic
+        // ── Profile dropdown ──────────────────────────────────────────────
+        const wrap    = document.getElementById('profileMenuWrap');
+        const trigger = document.getElementById('profileTrigger');
+        if (wrap && trigger) {
+            const toggle = () => {
+                const isOpen = wrap.classList.toggle('open');
+                trigger.setAttribute('aria-expanded', String(isOpen));
+            };
+            trigger.addEventListener('click', (e) => { e.stopPropagation(); toggle(); });
+            document.addEventListener('click', (e) => {
+                if (!wrap.contains(e.target)) {
+                    wrap.classList.remove('open');
+                    trigger.setAttribute('aria-expanded', 'false');
+                }
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    wrap.classList.remove('open');
+                    trigger.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+
+        // Toast Manager
+        (function () {
+            const TOAST_COLORS = {
+                success: { bg: '#c1eec0', border: '#113819', icon: '#113819', symbol: '\u2713', bar: '#113819' },
+                error:   { bg: '#ffdad6', border: '#ba1a1a', icon: '#93000a', symbol: '\u2715', bar: '#ba1a1a' },
+                info:    { bg: '#f6efc0', border: '#526351', icon: '#526351', symbol: 'i', bar: '#526351' },
+                warning: { bg: '#f0e9bb', border: '#727970', icon: '#424941', symbol: '!', bar: '#727970' },
+            };
+            class ToastManager {
+                constructor() { this.container = document.getElementById('toast-container'); this.queue = []; this.MAX = 5; }
+                show(message, url, type) {
+                    type = TOAST_COLORS[type] ? type : 'info';
+                    if (this.queue.length >= this.MAX) this._dismiss(this.queue[0]);
+                    const el = document.createElement('div');
+                    el.className = `toast-item ${url ? 'toast-clickable' : ''}`;
+                    el.style.backgroundColor = TOAST_COLORS[type].bg;
+                    el.style.border = `1px solid ${TOAST_COLORS[type].border}`;
+                    if (url) el.onclick = () => window.location.href = url;
+                    el.innerHTML = `<div class="toast-icon" style="background:${TOAST_COLORS[type].icon}">${TOAST_COLORS[type].symbol}</div><div class="toast-message">${message}</div><button class="toast-close">&times;</button><div class="toast-progress" style="background:${TOAST_COLORS[type].bar}"></div>`;
+                    el.querySelector('.toast-close').onclick = (e) => { e.stopPropagation(); this._dismiss(el); };
+                    this.container.appendChild(el); this.queue.push(el);
+                    requestAnimationFrame(() => el.classList.add('toast-show'));
+                    el._timer = setTimeout(() => this._dismiss(el), 4000);
+                }
+                _dismiss(el) {
+                    if (!el || !el.isConnected) return;
+                    clearTimeout(el._timer);
+                    const idx = this.queue.indexOf(el); if (idx !== -1) this.queue.splice(idx, 1);
+                    el.classList.remove('toast-show'); el.classList.add('toast-hide');
+                    el.addEventListener('transitionend', () => { if (el.isConnected) el.remove(); }, { once: true });
+                    setTimeout(() => { if (el.isConnected) el.remove(); }, 600);
+                }
+            }
+            const _mgr = new ToastManager();
+            window.showToast = (msg, url, type) => _mgr.show(msg, url, type);
+            // Flash messages
+            const flashes = JSON.parse(document.getElementById('flash-data').textContent || '[]');
+            flashes.forEach(f => showToast(f[1], null, f[0] === 'error' ? 'error' : f[0] === 'success' ? 'success' : 'info'));
+        })();
+    </script>
+
+    <!-- Flash data -->
+    <script id="flash-data" type="application/json">{{ get_flashed_messages(with_categories=true) | tojson }}</script>
+</body>
+</html>

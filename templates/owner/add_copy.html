@@ -1,0 +1,49 @@
+{% extends "owner/base_owner.html" %}
+
+{% block title %}Add Copy — {{ session.get('location_name', 'Owner Portal') }} | ArdenLeaf{% endblock %}
+{% block page_title %}Add Copy{% endblock %}
+
+{% block owner_content %}
+<div class="max-w-lg">
+
+    <!-- Form Card -->
+    <div class="bg-surface-container-lowest rounded-[20px] shadow-sm border border-[#e8dfa0] p-12">
+
+        <!-- Context Label -->
+        <p class="font-body italic text-on-surface-variant/60 text-sm mb-10">
+            Adding to <span class="font-bold not-italic text-primary-container">{{ session.get('location_name', 'your location') }}</span>
+        </p>
+
+        <form class="space-y-8" action="{{ url_for('owner.add_copy') }}" method="POST">
+
+            <!-- ISBN -->
+            <div class="flex flex-col space-y-2">
+                <label class="text-[10px] font-headline font-bold uppercase tracking-widest text-[#113819] opacity-60">Book ISBN (Required)</label>
+                <input name="isbn" required
+                    class="w-full bg-transparent border-0 border-b border-outline-variant/30 py-4 font-body text-lg focus:border-primary-container transition-all placeholder:text-outline-variant/30 focus:ring-0 outline-none"
+                    placeholder="e.g. 9780141036144" type="text" />
+            </div>
+
+            <!-- Price — Bookstore only -->
+            {% if session.get('location_type') == 'Bookstore' %}
+            <div class="flex flex-col space-y-2">
+                <label class="text-[10px] font-headline font-bold uppercase tracking-widest text-[#113819] opacity-60">Retail Price (₹)</label>
+                <input name="price" step="0.01"
+                    class="w-full bg-transparent border-0 border-b border-outline-variant/30 py-4 font-body text-lg focus:border-primary-container transition-all placeholder:text-outline-variant/30 focus:ring-0 outline-none"
+                    placeholder="0.00" type="number" />
+            </div>
+            {% endif %}
+
+            <!-- Submit -->
+            <div class="pt-4">
+                <button type="submit"
+                    class="w-full bg-primary-container text-white font-headline font-bold text-sm tracking-wide py-5 px-8 rounded-xl flex items-center justify-center gap-3 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-primary-container/10">
+                    <span>Add Copy</span>
+                    <span class="material-symbols-outlined text-sm">library_add</span>
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>
+{% endblock %}

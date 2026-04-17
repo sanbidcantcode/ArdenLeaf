@@ -3,46 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Error {{ code }} - ArdenLeaf</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Error {{ code }} — ArdenLeaf</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <style>
+        body {
+            background-color: #fff9e4;
+            color: #113819;
+            font-family: 'Lora', serif;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
         .error-container {
             text-align: center;
-            padding: 100px 20px;
-            max-width: 600px;
-            margin: 0 auto;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
         }
         .error-code {
+            font-family: 'Outfit', sans-serif;
             font-size: 8rem;
-            font-weight: bold;
-            color: #e74c3c;
+            font-weight: 900;
+            color: #113819;
+            line-height: 1;
             margin: 0;
+            opacity: 0.1;
         }
         .error-message {
-            font-size: 1.5rem;
-            color: #555;
-            margin-bottom: 30px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #113819;
+            margin: -20px 0 20px;
+            letter-spacing: -0.02em;
+        }
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            opacity: 0.8;
+            font-style: italic;
         }
         .btn-home {
             display: inline-block;
-            padding: 12px 24px;
-            background-color: #3498db;
-            color: white;
+            padding: 14px 32px;
+            background-color: #113819;
+            color: #f5eebf;
             text-decoration: none;
-            border-radius: 5px;
-            transition: background 0.3s;
+            border-radius: 12px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .btn-home:hover {
-            background-color: #2980b9;
+            transform: scale(0.98);
+            opacity: 0.9;
         }
     </style>
 </head>
 <body>
     <div class="error-container">
         <h1 class="error-code">{{ code }}</h1>
-        <p class="error-message">{{ message }}</p>
-        <p>Something went wrong. Please try again or head back to the homepage.</p>
-        <a href="{{ url_for('index') }}" class="btn-home">Return Home</a>
+        <h2 class="error-message">{{ message }}</h2>
+        <p>It seems this path has become overgrown with weeds. Let's find our way back to the garden.</p>
+        <a href="{{ url_for('index') }}" class="btn-home">Return to Garden</a>
     </div>
 </body>
 </html>

@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from models.user import User
+from database.db import get_db_connection
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -23,6 +24,36 @@ def auth_page():
                 session['user_name'] = user['Name']
                 session['user_type'] = user['UserType']
                 flash('Welcome back, {}!'.format(user['Name']), 'success')
+                # LibraryAdmin / StoreAdmin → owner dashboard
+                if user['UserType'] in ('LibraryAdmin', 'StoreAdmin'):
+                    conn2 = get_db_connection()
+                    cur2 = conn2.cursor(dictionary=True)
+                    cur2.execute("SELECT * FROM LocationAdmin WHERE UserID = %s", (user['UserID'],))
+                    loc = cur2.fetchone()
+                    cur2.close()
+                    conn2.close()
+                    if loc:
+                        if loc['LibraryID']:
+                            conn3 = get_db_connection()
+                            cur3 = conn3.cursor(dictionary=True)
+                            cur3.execute("SELECT Name FROM Library WHERE LibraryID = %s", (loc['LibraryID'],))
+                            loc_row = cur3.fetchone()
+                            cur3.close()
+                            conn3.close()
+                            session['location_id']   = loc['LibraryID']
+                            session['location_type'] = 'Library'
+                            session['location_name'] = loc_row['Name'] if loc_row else 'Your Library'
+                        else:
+                            conn3 = get_db_connection()
+                            cur3 = conn3.cursor(dictionary=True)
+                            cur3.execute("SELECT Name FROM Bookstore WHERE StoreID = %s", (loc['StoreID'],))
+                            loc_row = cur3.fetchone()
+                            cur3.close()
+                            conn3.close()
+                            session['location_id']   = loc['StoreID']
+                            session['location_type'] = 'Bookstore'
+                            session['location_name'] = loc_row['Name'] if loc_row else 'Your Store'
+                    return redirect(url_for('owner.dashboard'))
                 # Members go to their dashboard; Customers go home
                 if user['UserType'] == 'Member':
                     return redirect(url_for('loans.dashboard'))

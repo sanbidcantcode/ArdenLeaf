@@ -1,0 +1,147 @@
+{% extends "owner/base_owner.html" %}
+
+{% block title %}Dashboard — {{ session.get('location_name', 'Owner Portal') }} | ArdenLeaf{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block owner_content %}
+<div class="max-w-6xl mx-auto">
+
+    <!-- Stat Cards -->
+    <div class="grid grid-cols-3 gap-6 mb-10">
+        <!-- Total Copies -->
+        <div class="bg-surface-container-lowest rounded-[20px] border border-[#e8dfa0] p-8">
+            <p class="font-headline text-[10px] font-bold uppercase tracking-widest text-[#113819]/50 mb-3">Total Copies</p>
+            <p class="font-headline text-5xl font-black text-primary-container tracking-tight">{{ stats.get('total', 0) }}</p>
+        </div>
+        <!-- Available -->
+        <div class="bg-surface-container-lowest rounded-[20px] border border-[#e8dfa0] p-8">
+            <p class="font-headline text-[10px] font-bold uppercase tracking-widest text-[#113819]/50 mb-3">Available</p>
+            <p class="font-headline text-5xl font-black text-primary-container tracking-tight">{{ stats.get('available', 0) }}</p>
+        </div>
+        <!-- Borrowed / Sold -->
+        {% if session.get('location_type') == 'Library' %}
+        <div class="bg-surface-container-lowest rounded-[20px] border border-[#e8dfa0] p-8">
+            <p class="font-headline text-[10px] font-bold uppercase tracking-widest text-[#113819]/50 mb-3">Borrowed</p>
+            <p class="font-headline text-5xl font-black text-primary-container tracking-tight">{{ stats.get('borrowed', 0) }}</p>
+        </div>
+        {% else %}
+        <div class="bg-surface-container-lowest rounded-[20px] border border-[#e8dfa0] p-8">
+            <p class="font-headline text-[10px] font-bold uppercase tracking-widest text-[#113819]/50 mb-3">Sold</p>
+            <p class="font-headline text-5xl font-black text-primary-container tracking-tight">{{ stats.get('sold', 0) }}</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Book Inventory Table Card -->
+    <div class="bg-surface-container-lowest rounded-[20px] shadow-sm overflow-hidden border border-[#e8dfa0] mb-10">
+        <div class="px-8 py-6 border-b border-[#113819]/5">
+            <h2 class="font-headline font-black text-xl text-primary-container tracking-tight">Book Inventory</h2>
+        </div>
+        <div class="overflow-x-auto">
+            {% if copies %}
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="border-b border-[#113819]/5">
+                        <th class="px-8 py-4 font-headline font-bold text-xs uppercase tracking-widest text-[#113819]/60">Title</th>
+                        <th class="px-8 py-4 font-headline font-bold text-xs uppercase tracking-widest text-[#113819]/60">ISBN</th>
+                        <th class="px-8 py-4 font-headline font-bold text-xs uppercase tracking-widest text-[#113819]/60 text-center">Total</th>
+                        <th class="px-8 py-4 font-headline font-bold text-xs uppercase tracking-widest text-[#113819]/60 text-center">Available</th>
+                        {% if session.get('location_type') == 'Library' %}
+                        <th class="px-8 py-4 font-headline font-bold text-xs uppercase tracking-widest text-[#113819]/60 text-center">Borrowed</th>
+                        {% else %}
+                        <th class="px-8 py-4 font-headline font-bold text-xs uppercase tracking-widest text-[#113819]/60 text-center">Sold</th>
+                        <th class="px-8 py-4 font-headline font-bold text-xs uppercase tracking-widest text-[#113819]/60 text-center">Price</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-[#113819]/5">
+                    {% for copy in copies %}
+                    <tr class="hover:bg-surface-container-low/20 transition-colors">
+                        <td class="px-8 py-5">
+                            <div class="font-headline font-bold text-primary-container leading-tight">{{ copy.Title }}</div>
+                        </td>
+                        <td class="px-8 py-5">
+                            <div class="font-body text-xs text-outline/70 italic">{{ copy.ISBN }}</div>
+                        </td>
+                        <td class="px-8 py-5 text-center font-headline font-black text-primary-container">{{ copy.TotalCopies }}</td>
+                        <td class="px-8 py-5 text-center font-body text-sm text-on-surface-variant">{{ copy.Available or 0 }}</td>
+                        {% if session.get('location_type') == 'Library' %}
+                        <td class="px-8 py-5 text-center font-body text-sm text-on-surface-variant">{{ copy.Borrowed or 0 }}</td>
+                        {% else %}
+                        <td class="px-8 py-5 text-center font-body text-sm text-on-surface-variant">{{ copy.Sold or 0 }}</td>
+                        <td class="px-8 py-5 text-center font-headline font-bold text-primary-container">
+                            {% if copy.Price %}₹{{ copy.Price }}{% else %}—{% endif %}
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="px-8 py-24 text-center border-2 border-dashed border-[#113819]/10 m-8 rounded-xl">
+                <span class="material-symbols-outlined text-6xl text-[#113819] opacity-10 mb-6 block">inventory_2</span>
+                <p class="font-body italic text-lg text-on-surface-variant/40 leading-relaxed mb-4">No copies yet.</p>
+                <a href="{{ url_for('owner.add_copy') }}" class="font-headline text-sm font-bold text-primary-container underline underline-offset-2 hover:opacity-70 transition-opacity">Add your first copy →</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Borrow History — Library only, non-empty only -->
+    {% if session.get('location_type') == 'Library' and history %}
+    <div class="bg-surface-container-lowest rounded-[20px] shadow-sm overflow-hidden border border-[#e8dfa0]">
+        <div class="px-8 py-6 border-b border-[#113819]/5 flex items-baseline gap-3">
+            <h2 class="font-headline font-black text-xl text-primary-container tracking-tight">Borrow History</h2>
+            <span class="font-body text-xs italic text-on-surface-variant/50">last 20 loans</span>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="border-b border-[#113819]/5">
+                        <th class="px-8 py-4 font-headline font-bold text-xs uppercase tracking-widest text-[#113819]/60">Member</th>
+                        <th class="px-8 py-4 font-headline font-bold text-xs uppercase tracking-widest text-[#113819]/60">Book</th>
+                        <th class="px-8 py-4 font-headline font-bold text-xs uppercase tracking-widest text-[#113819]/60 text-center">Issued</th>
+                        <th class="px-8 py-4 font-headline font-bold text-xs uppercase tracking-widest text-[#113819]/60 text-center">Due</th>
+                        <th class="px-8 py-4 font-headline font-bold text-xs uppercase tracking-widest text-[#113819]/60 text-right">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-[#113819]/5">
+                    {% for row in history %}
+                    <tr class="hover:bg-surface-container-low/20 transition-colors">
+                        <td class="px-8 py-5">
+                            <div class="font-headline font-bold text-primary-container leading-tight">{{ row.MemberName }}</div>
+                        </td>
+                        <td class="px-8 py-5">
+                            <div class="font-body italic text-[#113819] leading-snug">{{ row.BookTitle }}</div>
+                        </td>
+                        <td class="px-8 py-5 text-center text-sm font-body italic text-on-surface-variant/80">
+                            {{ row.IssueDate.strftime('%d %b %Y') if row.IssueDate else '—' }}
+                        </td>
+                        <td class="px-8 py-5 text-center text-sm font-headline font-black {% if row.Status == 'Overdue' %}text-error{% else %}text-primary-container/70{% endif %}">
+                            {{ row.DueDate.strftime('%d %b %Y') if row.DueDate else '—' }}
+                        </td>
+                        <td class="px-8 py-5 text-right">
+                            {% if row.Status == 'Returned' %}
+                            <span class="inline-flex items-center px-4 py-1.5 rounded-full text-[10px] font-headline font-black uppercase tracking-tighter bg-primary-fixed text-on-primary-fixed border border-primary-container/10">
+                                Returned
+                            </span>
+                            {% elif row.Status == 'Overdue' %}
+                            <span class="inline-flex items-center px-4 py-1.5 rounded-full text-[10px] font-headline font-black uppercase tracking-tighter bg-error-container text-on-error-container border border-error/20">
+                                Overdue
+                            </span>
+                            {% else %}
+                            <span class="inline-flex items-center px-4 py-1.5 rounded-full text-[10px] font-headline font-black uppercase tracking-tighter bg-surface-container text-primary-container border border-primary-container/10">
+                                Active
+                            </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

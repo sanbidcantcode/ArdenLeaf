@@ -1,8 +1,75 @@
 {% extends "admin/base_admin.html" %}
 
+{% block title %}Dashboard | Admin Panel | ArdenLeaf{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
 {% block admin_content %}
-<div class="admin-card">
-    <h2 class="admin-title">Admin Dashboard</h2>
-    <p style="color: #475569;">Welcome to the ArdenLeaf admin portal. Select an action from the sidebar to manage books, copies, locations, and view active loans.</p>
+<!-- Welcome Canvas (Editorial Style) -->
+<section class="mb-12 relative overflow-hidden bg-primary-container rounded-3xl p-10 text-surface shadow-xl shadow-primary-container/20">
+    <div class="relative z-10 max-w-2xl">
+        <h2 class="font-headline text-4xl font-bold mb-4 leading-tight">Curating the <br/>Digital Sanctuary.</h2>
+        <p class="font-body text-surface/80 text-lg mb-8 leading-relaxed italic">Welcome back to the administrator's desk. Your efforts maintain the heartbeat of our literary community.</p>
+        <div class="border-2 border-dashed border-surface/30 rounded-2xl p-6 bg-surface/5 backdrop-blur-sm inline-block">
+            <p class="font-headline text-sm font-medium tracking-wide">Select a module from the sidebar to get started.</p>
+        </div>
+    </div>
+    <div class="absolute -right-20 -bottom-20 w-96 h-96 bg-surface-container/10 rounded-full blur-3xl"></div>
+    <div class="absolute right-12 top-1/2 -translate-y-1/2 opacity-20">
+        <span class="material-symbols-outlined text-[240px]">auto_stories</span>
+    </div>
+</section>
+
+<!-- Stat Cards Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+    <!-- Total Books -->
+    <div class="bg-surface-container-lowest p-8 rounded-2xl border border-surface-container-high hover:bg-surface-container-low transition-all duration-300 group">
+        <div class="flex justify-between items-start mb-6">
+            <div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-primary-container">menu_book</span>
+            </div>
+            <span class="text-[10px] font-headline font-bold uppercase tracking-widest text-on-primary-container/60">ArdenLeaf Catalog</span>
+        </div>
+        <p class="font-headline text-4xl font-black text-primary-container mb-1">{{ total_books }}</p>
+        <p class="font-body text-sm text-on-surface-variant font-medium">Total Books</p>
+    </div>
+    <!-- Active Loans -->
+    <div class="bg-surface-container-lowest p-8 rounded-2xl border border-surface-container-high hover:bg-surface-container-low transition-all duration-300 group">
+        <div class="flex justify-between items-start mb-6">
+            <div class="w-12 h-12 rounded-xl bg-[#fdf2f4] flex items-center justify-center group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-tertiary">import_contacts</span>
+            </div>
+            <span class="text-[10px] font-headline font-bold uppercase tracking-widest text-tertiary/60">In Circulation</span>
+        </div>
+        <p class="font-headline text-4xl font-black text-primary-container mb-1">{{ active_loans }}</p>
+        <p class="font-body text-sm text-on-surface-variant font-medium">Active Loans</p>
+    </div>
+    <!-- Registered Members -->
+    <div class="bg-surface-container-lowest p-8 rounded-2xl border border-surface-container-high hover:bg-surface-container-low transition-all duration-300 group">
+        <div class="flex justify-between items-start mb-6">
+            <div class="w-12 h-12 rounded-xl bg-[#e8f5e9] flex items-center justify-center group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-[#2e7d32]">group</span>
+            </div>
+            <span class="text-[10px] font-headline font-bold uppercase tracking-widest text-[#2e7d32]/60">Total Community</span>
+        </div>
+        <p class="font-headline text-4xl font-black text-primary-container mb-1">{{ total_members }}</p>
+        <p class="font-body text-sm text-on-surface-variant font-medium">Registered Members</p>
+    </div>
+    <!-- Partner Locations -->
+    <div class="bg-surface-container-lowest p-8 rounded-2xl border border-surface-container-high hover:bg-surface-container-low transition-all duration-300 group">
+        <div class="flex justify-between items-start mb-6">
+            <div class="w-12 h-12 rounded-xl bg-[#fffde7] flex items-center justify-center group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-[#fbc02d]">location_on</span>
+            </div>
+            <span class="text-[10px] font-headline font-bold uppercase tracking-widest text-[#fbc02d]/60">Library Network</span>
+        </div>
+        <p class="font-headline text-4xl font-black text-primary-container mb-1">{{ total_locations }}</p>
+        <p class="font-body text-sm text-on-surface-variant font-medium">Partner Locations</p>
+    </div>
+</div>
+
+<!-- Secondary Analytics (Placeholder) -->
+<div class="bg-surface-container-lowest rounded-3xl p-20 border border-dashed border-surface-container-high flex flex-col items-center justify-center text-on-surface-variant/40">
+    <span class="material-symbols-outlined text-6xl mb-4 italic opacity-20">analytics</span>
+    <p class="font-body italic text-lg leading-relaxed">More analytics and activity logs coming soon.</p>
 </div>
 {% endblock %}
