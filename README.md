@@ -16,9 +16,9 @@ The platform supports three distinct user roles: regular members, per-location l
 
 ---
 
-## Screenshots
+## Quick Preview
 
-> Visit the [live demo](https://ardenleaf-production.up.railway.app) to explore the platform. Sample accounts are provided below.
+> Visit the [live demo](https://ardenleaf-production.up.railway.app) to explore the platform.
 
 ---
 
