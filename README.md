@@ -1,148 +1,149 @@
 # ArdenLeaf
 
-![Python](https://img.shields.io/badge/Python-3.13-blue?logo=python&logoColor=white) ![Flask](https://img.shields.io/badge/Flask-3.0-black?logo=flask&logoColor=white) ![MySQL](https://img.shields.io/badge/MySQL-9.4-orange?logo=mysql&logoColor=white) ![Railway](https://img.shields.io/badge/Deployed-Railway-purple?logo=railway&logoColor=white) ![License](https://img.shields.io/badge/License-MIT-green)
+![Python](https://img.shields.io/badge/Python-3.x-blue?logo=python&logoColor=white) ![Flask](https://img.shields.io/badge/Flask-3.0-black?logo=flask&logoColor=white) ![MySQL](https://img.shields.io/badge/MySQL-8.0-orange?logo=mysql&logoColor=white) ![Railway](https://img.shields.io/badge/Deployed-Railway-purple?logo=railway&logoColor=white) ![License](https://img.shields.io/badge/License-MIT-green)
 
-> A centralized book discovery and library management platform built for India's independent libraries and bookstores.
+> A centralized book discovery and library management platform connecting independent libraries and bookstores across India.
 
-**Live:** https://ardenleaf-production.up.railway.app
+**Live Demo:** [ardenleaf-production.up.railway.app](https://ardenleaf-production.up.railway.app)
+
+---
+
+## Highlights
+
+*   **Production Deployed:** Fully functional full-stack application hosted on Railway.
+*   **Multi-Role Auth:** Granular access control for Members, Library/Store Owners, and Super-Admins.
+*   **Intuitive Dashboards:** Custom-tailored portals for different user types to manage loans, inventory, and stats.
+*   **Relational Architecture:** Complex MySQL schema with foreign keys, views, and specialization patterns.
+*   **Secure by Design:** Implements CSRF protection, password hashing, and secure session management.
 
 ---
 
 ## Overview
 
-ArdenLeaf connects multiple libraries and bookstores into a single platform. Users can discover books, check real-time availability across partner locations, borrow from libraries, and track their reading history — all from one place.
-
-The platform supports three distinct user roles: regular members, per-location library/bookstore owners, and a global super-admin.
+ArdenLeaf bridges the gap between India's heritage libraries and local bookstores. It provides a unified gateway for readers to discover titles, check real-time availability across physical locations, and manage library loans through a curated, modern interface.
 
 ---
 
-## Quick Preview
+## Screenshots
 
-> Visit the [live demo](https://ardenleaf-production.up.railway.app) to explore the platform.
+### Landing Page
+![Landing Page](screenshots/landing-page.png)
+
+### Member Dashboard
+![Member Dashboard](screenshots/member-dashboard.png)
+
+### Admin Panel
+![Admin Panel](screenshots/admin-panel.png)
+
+### Owner Portal
+![Owner Portal](screenshots/owner-portal.png)
+
+### Search Results
+![Search Results](screenshots/search-results.png)
 
 ---
 
-## Stack
+## Technical Stack
 
 | Layer | Technology |
 |---|---|
-| Backend | Python, Flask |
-| Database | MySQL |
-| Frontend | Jinja2, Tailwind CSS |
-| External API | Google Books API |
-| Deployment | Railway |
+| **Backend** | Python, Flask |
+| **Database** | MySQL |
+| **Frontend** | Jinja2, Tailwind CSS |
+| **Integration** | Google Books API |
+| **Infrastructure** | Railway |
 
 ---
 
 ## Try the Live Demo
 
-No installation required — the app is deployed and ready to use.
-
-Log in with one of these pre-seeded accounts to explore the platform without registering:
+Log in with one of these pre-seeded accounts to explore the platform:
 
 | Role | Email | Password |
 |---|---|---|
-| Admin | admin@ardenleaf.com | admin123 |
-| Library Owner 1 | lib1@ardenleaf.com | libpass1 |
-| Library Owner 2 | lib2@ardenleaf.com | libpass2 |
-| Bookstore Owner 1 | store1@ardenleaf.com | storepass1 |
-| Bookstore Owner 2 | store2@ardenleaf.com | storepass2 |
-| Member | Register a new account | — |
-
-**Admin** can manage the global book catalog, add locations, and monitor all active loans across the platform.
-
-**Library Owner** gets a scoped portal showing only their location's inventory, borrow history, and copy management.
-
-**Member** can search books, check availability, borrow from libraries, bookmark titles, and track loans and fines from a personal dashboard.
+| **Admin** | admin@ardenleaf.com | admin123 |
+| **Library Owner 1** | lib1@ardenleaf.com | libpass1 |
+| **Library Owner 2** | lib2@ardenleaf.com | libpass2 |
+| **Bookstore Owner 1** | store1@ardenleaf.com | storepass1 |
+| **Bookstore Owner 2** | store2@ardenleaf.com | storepass2 |
+| **Member** | *Register a new account* | — |
 
 ---
 
 ## Key Features
 
-- ✅ Full-text book search with Google Books API integration — cover images, descriptions, ratings, and page counts fetched automatically with disk-based caching to stay within API rate limits
-- ✅ Real-time availability across all partner libraries and bookstores, with per-copy status tracking (Available / Borrowed / Sold)
-- ✅ Borrow and return flow with 14-day loan periods and automatic overdue fine calculation (₹2/day)
-- ✅ Bookmark system with genre filtering, availability filtering, and live search
-- ✅ Member dashboard with active loan cards, borrowing history modal, and fines overview
-- ✅ Per-location owner portal scoped by session — owners only see their own data
-- ✅ Super-admin panel with clickable stat cards that expand into live data tables
-- ✅ Saved locations system for users to follow their preferred libraries and bookstores
-- ✅ CSRF protection on all forms and AJAX requests via Flask-WTF
+- ✅ **Smart Search:** Full-text search integrated with Google Books API, including cover art and metadata caching.
+- ✅ **Availability Checking:** Real-time stock tracking across all partner locations (Available / Borrowed / Sold).
+- ✅ **Loan Management:** Automated 14-day loan cycles with dynamic fine calculation (₹2/day).
+- ✅ **Personalization:** Bookmarking system with genre-based filtering and live search.
+- ✅ **Admin Controls:** Global catalog management and platform-wide loan monitoring.
+- ✅ **Owner Portals:** Location-specific inventory management scoped by user session.
 
 ---
 
 ## Database Design
 
-15 tables with a specialization pattern for user types (Member, Admin, LibraryAdmin, StoreAdmin). Key design decisions:
+The system utilizes a 15-table relational schema optimized for multi-location inventory.
 
-- `BookCopy` separates physical inventory from the book catalog — one ISBN can have many copies across many locations
-- `LoanFines` is a MySQL VIEW that derives fine amounts from due dates rather than storing them, keeping the data model clean
-- `LocationAdmin` links owner accounts to exactly one library or bookstore, enforced at the application layer
-- All queries use parameterized statements — no raw string interpolation
+*   **Specialization Pattern:** Handles distinct user attributes for Members vs. Admins vs. Owners.
+*   **Physical Tracking:** `BookCopy` decouples ISBN catalog data from local inventory, allowing one book to exist in multiple states and locations.
+*   **Clean Data Model:** `LoanFines` is implemented as a MySQL VIEW to derive late fees in real-time without bloating tables.
+*   **Security First:** All interactions use parameterized SQL to prevent injection attacks.
 
 ---
 
 ## Architecture
 
-The app follows a Blueprint-based modular structure with a clear separation between routes, models, and utilities.
-
 ```
 ArdenLeaf/
-├── app.py               # App factory, blueprint registration
-├── config.py            # Environment-based configuration
-├── routes/              # Flask blueprints (auth, books, loans, admin, owner, profile)
-├── models/              # Database access layer (parameterized queries only)
-├── utils/               # Google Books API client, disk cache
-├── templates/           # Jinja2 templates (standalone pages + admin/owner subdirs)
-├── database/            # Schema and seed SQL files
-└── static/              # CSS
+├── app.py               # App factory & blueprint registration
+├── config.py            # Environment-based secure config
+├── routes/              # Modular blueprints (auth, books, loans, admin, etc.)
+├── models/              # Database access layer (DAO pattern)
+├── utils/               # External clients (Google Books) & disk caching
+├── templates/           # Jinja2 views (Admin, Owner, Member portals)
+├── database/            # Schema definitions & seed scripts
+└── static/              # Asset management
 ```
 
 ---
 
-## Security
+## Security Implementation
 
-- CSRF protection on all forms and AJAX requests via Flask-WTF
-- Passwords hashed with Werkzeug's PBKDF2-SHA256 — never stored in plaintext
-- Session cookies configured with HttpOnly, SameSite=Lax, and Secure flags
-- All database queries use parameterized statements — no raw string interpolation
-- Role-based access control enforced at the blueprint level via before_request guards
-
----
-
-## Local Setup
-
-```bash
-git clone https://github.com/sanbidcantcode/ArdenLeaf.git
-cd ArdenLeaf
-pip install -r requirements.txt
-```
-
-Create a `.env` file:
-```
-MYSQL_HOST=
-MYSQL_USER=
-MYSQL_PASSWORD=
-MYSQL_DB=
-MYSQL_PORT=
-SECRET_KEY=
-```
-
-Run the schema and seed files against your MySQL instance, then:
-
-```bash
-python app.py
-```
+- **CSRF Protection:** Enforced across all forms and AJAX requests via Flask-WTF.
+- **Credential Safety:** Passwords hashed using PBKDF2-SHA256 — never stored in plaintext.
+- **Session Security:** Cookies configured with `HttpOnly`, `SameSite=Lax`, and `Secure` flags.
+- **SQL Integrity:** Strict use of parameterized statements throughout the data layer.
+- **Access Control:** Role-based logic enforced at the blueprint level via `before_request` guards.
 
 ---
 
-## Known Limitations & Next Steps
+## Ready for Local Launch?
 
-- Bookstore purchase flow is UI-only — no payment integration
-- No rate limiting on auth endpoints (Flask-Limiter planned)
-- Google Books API coverage varies by ISBN; title/author fallback search is used when needed
-- Database indexes on high-query columns (Loan.MemberID, Bookmark.UserID) would be added before scaling
+1.  **Clone & Install:**
+    ```bash
+    git clone https://github.com/sanbidcantcode/ArdenLeaf.git
+    cd ArdenLeaf
+    pip install -r requirements.txt
+    ```
+
+2.  **Configure Environment:**
+    Create a `.env` file with `MYSQL_HOST`, `MYSQL_USER`, `MYSQL_PASSWORD`, `MYSQL_DB`, `MYSQL_PORT`, and `SECRET_KEY`.
+
+3.  **Boot Up:**
+    Run the SQL scripts in `database/` against your MySQL instance, then:
+    ```bash
+    python app.py
+    ```
 
 ---
 
-Built by [Sanbid](https://github.com/sanbidcantcode) · [Live Demo](https://ardenleaf-production.up.railway.app) · [GitHub](https://github.com/sanbidcantcode/ArdenLeaf)
+## Roadmap & Potential Improvements
+
+- [ ] Implementation of `Flask-Limiter` for auth endpoint rate limiting.
+- [ ] Integration of a real payment gateway for bookstore sales.
+- [ ] Addition of database indexes on high-frequency query columns for scaling.
+
+---
+
+Built by [Sanbid](https://github.com/sanbidcantcode) · [Live Demo](https://ardenleaf-production.up.railway.app) · [GitHub Repo](https://github.com/sanbidcantcode/ArdenLeaf)
