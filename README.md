@@ -27,17 +27,17 @@ ArdenLeaf bridges the gap between India's heritage libraries and local bookstore
 ## Screenshots
 
 <p align="center">
-  <img src="screenshots/landing-page.png" width="48%">
-  <img src="screenshots/search-results.png" width="48%">
+  <img src="screenshots/landing-page.png" alt="ArdenLeaf landing page" width="48%">
+  <img src="screenshots/search-results.png" alt="Search results page displaying books" width="48%">
 </p>
 
 <p align="center">
-  <img src="screenshots/member-dashboard.png" width="48%">
-  <img src="screenshots/admin-panel.png" width="48%">
+  <img src="screenshots/member-dashboard.png" alt="Member dashboard with active loans and bookmarks" width="48%">
+  <img src="screenshots/admin-panel.png" alt="Admin panel for catalog and loan management" width="48%">
 </p>
 
 <p align="center">
-  <img src="screenshots/owner-portal.png" width="70%">
+  <img src="screenshots/owner-portal.png" alt="Library/bookstore owner portal for inventory management" width="70%">
 </p>
 
 ---
