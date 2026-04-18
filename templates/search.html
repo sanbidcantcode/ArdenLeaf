@@ -394,12 +394,16 @@
                             <h3 class="font-headline font-bold text-lg leading-tight text-primary">{{ book.Title }}</h3>
                             {% if session.get('user_id') %}
                             <button
-                                class="bookmark-btn flex-shrink-0 p-1 rounded-full hover:bg-[#113819]/8 transition-colors"
+                                class="bookmark-btn flex-shrink-0 p-1 rounded-full hover:bg-[#113819]/8 hover:scale-110 transition-colors"
                                 data-isbn="{{ book.ISBN }}"
                                 data-url="{{ url_for('books.bookmark', isbn=book.ISBN) }}"
                                 title="Toggle bookmark"
                                 onclick="event.stopPropagation()">
+                                {% if book.ISBN in bookmarked_isbns %}
+                                <span class="material-symbols-outlined text-[22px] transition-colors" style="color: #113819; font-variation-settings: 'FILL' 1;">bookmark</span>
+                                {% else %}
                                 <span class="material-symbols-outlined text-[22px] transition-colors" style="color: #c2c8be;">bookmark</span>
+                                {% endif %}
                             </button>
                             {% else %}
                             <span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">bookmark</span>
@@ -476,34 +480,27 @@
         {% endif %}
     </main>
 
-    <footer style="background:#fcf5c5; border-top:1px solid rgba(17,56,25,0.1); padding:80px 0 40px; margin-top:120px; width:100%; font-family: 'Outfit', sans-serif;">
-        <div style="max-width:1280px; margin:0 auto; padding:0 32px;">
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:64px; align-items:flex-start; margin-bottom:80px;">
-                <div style="max-width:400px;">
-                    <a href="{{ url_for('index') }}" style="text-decoration:none; display:flex; align-items:center; gap:8px; margin-bottom:28px;">
-                        <span class="material-symbols-outlined" style="font-size:32px;color:#113819;font-variation-settings:'FILL' 1;">eco</span>
-                        <span style="font-family:'Outfit',sans-serif;font-weight:900;font-size:1.8rem;color:#113819;letter-spacing:-0.05em;">ArdenLeaf</span>
-                    </a>
-                    <p style="font-family:'Lora',serif; color:#4b5563; font-size:1.15rem; line-height:1.7; font-style:italic; opacity:0.85;">
-                        "Explore our partner libraries and independent bookstores across India — each one a gateway to ArdenLeaf."
-                    </p>
-                </div>
-                <div style="display:flex; justify-content: flex-end;">
-                    <div style="min-width: 180px;">
-                        <h4 style="font-weight:900; color:#113819; text-transform:uppercase; letter-spacing:0.15em; font-size:0.75rem; margin-bottom:32px;">Discover</h4>
-                        <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:20px;">
-                            <li><a href="{{ url_for('books.search') }}" style="text-decoration:none; color:#113819; font-size:1.15rem; font-family:'Lora',serif; font-style:italic; font-weight:700; border-bottom:1.5px solid #113819; padding-bottom:2px;">Search Books</a></li>
-                            <li><a href="{{ url_for('books.locations') }}" style="text-decoration:none; color:#6b7280; font-size:1.15rem; font-family:'Lora',serif; font-style:italic; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Locations</a></li>
-                            <li><a href="{{ url_for('books.bookmarks_page') }}" style="text-decoration:none; color:#6b7280; font-size:1.15rem; font-family:'Lora',serif; font-style:italic; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Bookmarks</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div style="padding-top:40px; border-top:1px solid rgba(17,56,25,0.08); display:flex; justify-content:space-between; align-items:center;">
-                <p style="font-family:'Lora',serif; font-style:italic; font-size:0.95rem; color:#6b7280; opacity:0.7;">
-                    © 2024 ArdenLeaf. Made with 🍃 for India's readers.
+    <footer style="background:#fcf5c5; border-top:1px solid rgba(17,56,25,0.1); padding:40px 0 20px; margin-top:60px; width:100%; font-family: 'Outfit', sans-serif;">
+        <div style="max-width:1280px; margin:0 auto; padding:0 32px; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:24px;">
+            <div style="display:flex; align-items:center; gap:16px;">
+                <a href="{{ url_for('index') }}" style="text-decoration:none; display:flex; align-items:center; gap:8px;">
+                    <span class="material-symbols-outlined" style="font-size:24px;color:#113819;font-variation-settings:'FILL' 1;">eco</span>
+                    <span style="font-family:'Outfit',sans-serif;font-weight:900;font-size:1.4rem;color:#113819;letter-spacing:-0.05em;">ArdenLeaf</span>
+                </a>
+                <p style="font-family:'Lora',serif; color:#4b5563; font-size:0.95rem; font-style:italic; border-left:1px solid rgba(17,56,25,0.2); padding-left:16px; margin:0;">
+                    Gateway to India's independent libraries.
                 </p>
             </div>
+            <div style="display:flex; gap:24px; align-items:center;">
+                <a href="{{ url_for('books.search') }}" style="text-decoration:none; color:#6b7280; font-size:0.95rem; font-weight:600; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Search</a>
+                <a href="{{ url_for('books.locations') }}" style="text-decoration:none; color:#6b7280; font-size:0.95rem; font-weight:600; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Locations</a>
+                <a href="{{ url_for('books.bookmarks_page') }}" style="text-decoration:none; color:#6b7280; font-size:0.95rem; font-weight:600; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Bookmarks</a>
+            </div>
+        </div>
+        <div style="max-width:1280px; margin:24px auto 0; padding:24px 32px 0; border-top:1px solid rgba(17,56,25,0.08); text-align:center;">
+            <p style="font-family:'Lora',serif; font-style:italic; font-size:0.85rem; color:#6b7280; opacity:0.8; margin:0;">
+                Built with Indian readers in mind. © 2026 ArdenLeaf.
+            </p>
         </div>
     </footer>
 
@@ -572,8 +569,15 @@
                 setTimeout(() => { if (el.isConnected) el.remove(); }, 400);
             }
 
-            function showToast(message, type) {
+            function showToast(message, url, type) {
                 _ensureContainer();
+                
+                // Handle legacy 2-argument calls (message, type)
+                if (arguments.length === 2 && TOAST_COLORS[url]) {
+                    type = url;
+                    url = null;
+                }
+                
                 type = TOAST_COLORS[type] ? type : 'info';
 
                 // Evict oldest if at cap
@@ -582,6 +586,8 @@
                 const c  = TOAST_COLORS[type];
                 const el = document.createElement('div');
                 el.setAttribute('role', 'alert');
+                
+                // Base styles
                 Object.assign(el.style, {
                     display: 'flex', alignItems: 'center', gap: '10px',
                     minWidth: '260px', maxWidth: '360px',
@@ -591,13 +597,23 @@
                     padding: '12px 14px', pointerEvents: 'auto',
                     position: 'relative', overflow: 'hidden',
                     transform: 'translateX(calc(100% + 40px))', opacity: '0',
-                    transition: 'transform 0.35s cubic-bezier(0.34,1.4,0.64,1), opacity 0.28s',
+                    transition: 'transform 0.35s cubic-bezier(0.34,1.4,0.64,1), opacity 0.28s, filter 0.15s',
                     fontFamily: "'Outfit', sans-serif"
                 });
+
+                if (url) {
+                    el.style.cursor = 'pointer';
+                    el.addEventListener('mouseenter', () => el.style.filter = 'brightness(0.97)');
+                    el.addEventListener('mouseleave', () => el.style.filter = 'none');
+                    el.addEventListener('click', (e) => {
+                        if (!e.target.closest('button')) window.location.href = url;
+                    });
+                }
+
                 el.innerHTML =
                     '<div style="width:20px;height:20px;border-radius:50%;background:' + c.icon + ';display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:800;color:#fff;flex-shrink:0">' + c.symbol + '</div>' +
                     '<span style="flex:1;font-size:0.84rem;color:#1f1c01;font-weight:600;line-height:1.4">' + message.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</span>' +
-                    '<button style="background:transparent;border:none;font-size:1.1rem;color:#727970;cursor:pointer;padding:0 0 0 4px;line-height:1" aria-label="Dismiss">&times;</button>' +
+                    '<button style="background:transparent;border:none;font-size:1.1rem;color:#727970;cursor:pointer;padding:0 4px;line-height:1;margin-left:4px" aria-label="Dismiss">&times;</button>' +
                     '<div style="position:absolute;bottom:0;left:0;height:3px;width:100%;background:' + c.bar + ';opacity:0.4;animation:toastBar 4s linear forwards"></div>';
 
                 if (!document.getElementById('toast-keyframes')) {
@@ -607,7 +623,11 @@
                     document.head.appendChild(s);
                 }
 
-                el.querySelector('button').addEventListener('click', () => _dismissToast(el));
+                el.querySelector('button').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    _dismissToast(el);
+                });
+
                 _toastContainer.insertBefore(el, _toastContainer.firstChild);
                 _toastQueue.push(el);
 
@@ -616,7 +636,7 @@
                     el.style.opacity   = '1';
                 }));
 
-                el._timer = setTimeout(() => _dismissToast(el), 4000);
+                el._timer = setTimeout(() => _dismissToast(el), 5000);
             }
 
             // ── Inline bookmark toggle ────────────────────────────────────────
@@ -638,18 +658,18 @@
                                 if (data.bookmarked) {
                                     icon.style.color = '#113819';
                                     icon.style.fontVariationSettings = "'FILL' 1";
-                                    showToast('Bookmarked!', 'success');
+                                    showToast(data.message || 'Bookmarked!', '/bookmarks', data.type || 'success');
                                 } else {
                                     icon.style.color = '#c2c8be';
                                     icon.style.fontVariationSettings = "'FILL' 0";
-                                    showToast('Bookmark removed.', 'info');
+                                    showToast(data.message || 'Bookmark removed.', null, data.type || 'info');
                                 }
                             } else {
-                                showToast(data.message || 'Please log in to bookmark.', 'error');
+                                showToast(data.message || 'Please log in to bookmark.', null, 'error');
                             }
                         })
                         .catch(function () {
-                            showToast('Something went wrong.', 'error');
+                            showToast('Something went wrong.', null, 'error');
                         });
                     });
                 });

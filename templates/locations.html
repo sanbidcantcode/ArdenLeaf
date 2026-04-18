@@ -312,7 +312,7 @@
         <!-- Locations Grid -->
         <div id="locations-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {% for loc in locations %}
-            <a href="{{ url_for('books.location_detail', location_id=loc.ID) }}" class="block no-underline" style="text-decoration:none;">
+            <a href="{{ url_for('books.location_detail', loc_type=loc.Type, location_id=loc.ID) }}" class="block no-underline" style="text-decoration:none;">
                 <div class="location-card bg-surface-container-lowest rounded-2xl p-4 border border-surface-container-highest transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(17,56,25,0.08)] group" data-type="{{ loc.Type }}">
                     <div class="mb-4 flex justify-between items-start">
                         {% if loc.Type == 'Library' %}
@@ -330,7 +330,7 @@
                     <div class="space-y-3">
                         <div class="flex justify-between items-center bg-stone-50/50 px-3 py-2 rounded-xl">
                             <span class="text-xs font-headline font-bold text-stone-500 uppercase tracking-widest text-[9px]">ID</span>
-                            <span class="text-xs font-headline font-black text-primary-container">{{ loc.ID }}</span>
+                            <span class="text-xs font-headline font-black text-primary-container">{{ 'L' if loc.Type == 'Library' else 'B' }}{{ loc.ID }}</span>
                         </div>
                         <div class="flex justify-between items-center px-4">
                             <span class="text-[9px] font-headline font-bold text-stone-500 uppercase tracking-widest">Status</span>
@@ -356,34 +356,27 @@
     </main>
 
     <!-- Footer -->
-    <footer style="background:#fcf5c5; border-top:1px solid rgba(17,56,25,0.1); padding:80px 0 40px; margin-top:120px; width:100%; font-family: 'Outfit', sans-serif;">
-        <div style="max-width:1280px; margin:0 auto; padding:0 32px;">
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:64px; align-items:flex-start; margin-bottom:80px;">
-                <div style="max-width:400px;">
-                    <a href="{{ url_for('index') }}" style="text-decoration:none; display:flex; align-items:center; gap:8px; margin-bottom:28px;">
-                        <span class="material-symbols-outlined" style="font-size:32px;color:#113819;font-variation-settings:'FILL' 1;">eco</span>
-                        <span style="font-family:'Outfit',sans-serif;font-weight:900;font-size:1.8rem;color:#113819;letter-spacing:-0.05em;">ArdenLeaf</span>
-                    </a>
-                    <p style="font-family:'Lora',serif; color:#4b5563; font-size:1.15rem; line-height:1.7; font-style:italic; opacity:0.85;">
-                        "Explore our partner libraries and independent bookstores across India — each one a gateway to ArdenLeaf."
-                    </p>
-                </div>
-                <div style="display:flex; justify-content: flex-end;">
-                    <div style="min-width: 180px;">
-                        <h4 style="font-weight:900; color:#113819; text-transform:uppercase; letter-spacing:0.15em; font-size:0.75rem; margin-bottom:32px;">Discover</h4>
-                        <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:20px;">
-                            <li><a href="{{ url_for('books.search') }}" style="text-decoration:none; color:#6b7280; font-size:1.15rem; font-family:'Lora',serif; font-style:italic; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Search Books</a></li>
-                            <li><a href="{{ url_for('books.locations') }}" style="text-decoration:none; color:#113819; font-size:1.15rem; font-family:'Lora',serif; font-style:italic; font-weight:700; border-bottom:1.5px solid #113819; padding-bottom:2px;">Locations</a></li>
-                            <li><a href="{{ url_for('books.bookmarks_page') }}" style="text-decoration:none; color:#6b7280; font-size:1.15rem; font-family:'Lora',serif; font-style:italic; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Bookmarks</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div style="padding-top:40px; border-top:1px solid rgba(17,56,25,0.08); display:flex; justify-content:space-between; align-items:center;">
-                <p style="font-family:'Lora',serif; font-style:italic; font-size:0.95rem; color:#6b7280; opacity:0.7;">
-                    © 2024 ArdenLeaf. Made with 🍃 for India's readers.
+    <footer style="background:#fcf5c5; border-top:1px solid rgba(17,56,25,0.1); padding:40px 0 20px; margin-top:60px; width:100%; font-family: 'Outfit', sans-serif;">
+        <div style="max-width:1280px; margin:0 auto; padding:0 32px; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:24px;">
+            <div style="display:flex; align-items:center; gap:16px;">
+                <a href="{{ url_for('index') }}" style="text-decoration:none; display:flex; align-items:center; gap:8px;">
+                    <span class="material-symbols-outlined" style="font-size:24px;color:#113819;font-variation-settings:'FILL' 1;">eco</span>
+                    <span style="font-family:'Outfit',sans-serif;font-weight:900;font-size:1.4rem;color:#113819;letter-spacing:-0.05em;">ArdenLeaf</span>
+                </a>
+                <p style="font-family:'Lora',serif; color:#4b5563; font-size:0.95rem; font-style:italic; border-left:1px solid rgba(17,56,25,0.2); padding-left:16px; margin:0;">
+                    Gateway to India's independent libraries.
                 </p>
             </div>
+            <div style="display:flex; gap:24px; align-items:center;">
+                <a href="{{ url_for('books.search') }}" style="text-decoration:none; color:#6b7280; font-size:0.95rem; font-weight:600; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Search</a>
+                <a href="{{ url_for('books.locations') }}" style="text-decoration:none; color:#6b7280; font-size:0.95rem; font-weight:600; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Locations</a>
+                <a href="{{ url_for('books.bookmarks_page') }}" style="text-decoration:none; color:#6b7280; font-size:0.95rem; font-weight:600; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Bookmarks</a>
+            </div>
+        </div>
+        <div style="max-width:1280px; margin:24px auto 0; padding:24px 32px 0; border-top:1px solid rgba(17,56,25,0.08); text-align:center;">
+            <p style="font-family:'Lora',serif; font-style:italic; font-size:0.85rem; color:#6b7280; opacity:0.8; margin:0;">
+                Built with Indian readers in mind. © 2026 ArdenLeaf.
+            </p>
         </div>
     </footer>
 

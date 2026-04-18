@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,53 +8,114 @@
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=Lora:ital,wght@0,400;0,600;1,400&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=Lora:ital,wght@0,400;0,600;1,400&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet">
+
     <style>
         /* ── Global Font Consistency ── */
-        h1, h2, h3, h4, .font-headline { font-family: 'Outfit', sans-serif !important; }
-        body, p, .font-body { font-family: 'Lora', serif !important; }
-        .font-label, label, .small-caps { font-family: 'Outfit', sans-serif !important; }
+        h1,
+        h2,
+        h3,
+        h4,
+        .font-headline {
+            font-family: 'Outfit', sans-serif !important;
+        }
+
+        body,
+        p,
+        .font-body {
+            font-family: 'Lora', serif !important;
+        }
+
+        .font-label,
+        label,
+        .small-caps {
+            font-family: 'Outfit', sans-serif !important;
+        }
 
         /* ── Stat Card Hover ── */
-        .stat-card { transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease; }
-        .stat-card:hover { 
-            box-shadow: 0 8px 30px rgba(0,0,0,0.08); 
-            border-color: #000000 !important; 
+        .stat-card {
+            transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            border-color: #000000 !important;
             transform: translateY(-2px);
-            background: #ffffff !important; 
+            background: #ffffff !important;
         }
 
         /* ── Modal ── */
         .modal-overlay {
             display: none;
-            position: fixed; inset: 0; z-index: 200;
-            background: rgba(0,0,0,0.45);
-            align-items: center; justify-content: center;
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: rgba(0, 0, 0, 0.45);
+            align-items: center;
+            justify-content: center;
             padding: 24px;
         }
-        .modal-overlay.active { display: flex; }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
         .modal-box {
             background: #ffffff;
             border: 1.5px solid #e8dfa0;
             border-radius: 16px;
-            width: 100%; max-width: 680px;
+            width: 100%;
+            max-width: 680px;
             max-height: 80vh;
             overflow-y: auto;
             padding: 32px;
             position: relative;
         }
-        .modal-box thead tr { background: #f5eebf; }
-        .modal-box thead th { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #113819; padding: 10px 14px; text-align: left; }
-        .modal-box tbody td { font-family: 'Lora', serif; font-size: 0.875rem; padding: 12px 14px; border-bottom: 1px solid #f5eebf; color: #374151; }
+
+        .modal-box thead tr {
+            background: #f5eebf;
+        }
+
+        .modal-box thead th {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #113819;
+            padding: 10px 14px;
+            text-align: left;
+        }
+
+        .modal-box tbody td {
+            font-family: 'Lora', serif;
+            font-size: 0.875rem;
+            padding: 12px 14px;
+            border-bottom: 1px solid #f5eebf;
+            color: #374151;
+        }
+
         .modal-close-btn {
-            position: absolute; top: 16px; right: 16px;
-            background: none; border: none; cursor: pointer;
-            color: #9ca3af; font-size: 1.4rem; line-height: 1;
-            display: flex; align-items: center; justify-content: center;
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #9ca3af;
+            font-size: 1.4rem;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: color 0.15s;
         }
-        .modal-close-btn:hover { color: #113819; }
+
+        .modal-close-btn:hover {
+            color: #113819;
+        }
 
         /* ── Navbar ── */
         .nav-link-standard {
@@ -65,6 +127,7 @@
             text-decoration: none;
             padding: 4px 0;
         }
+
         .nav-link-standard::after {
             content: '';
             position: absolute;
@@ -76,6 +139,7 @@
             transform: translateX(-50%);
             transition: width 0.3s ease;
         }
+
         .nav-link-standard:hover::after {
             width: 100%;
         }
@@ -88,11 +152,16 @@
             text-decoration: none;
             transition: all 0.2s ease;
         }
-        .nav-bookmark-icon:hover { color: #113819; }
+
+        .nav-bookmark-icon:hover {
+            color: #113819;
+        }
+
         .nav-bookmark-icon .material-symbols-outlined {
             font-size: 1.4rem;
             font-variation-settings: 'FILL' 0, 'wght' 400;
         }
+
         .nav-bookmark-icon:hover .material-symbols-outlined {
             font-variation-settings: 'FILL' 1, 'wght' 400;
         }
@@ -100,44 +169,85 @@
         /* ══════════════════════════════════════════════
            PROFILE DROPDOWN
         ══════════════════════════════════════════════ */
-        .profile-menu-wrap { position: relative; }
+        .profile-menu-wrap {
+            position: relative;
+        }
 
         .profile-trigger {
-            display: flex; align-items: center; gap: 8px;
-            cursor: pointer; padding: 5px 10px 5px 5px;
-            border-radius: 999px; border: 1.5px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 5px 10px 5px 5px;
+            border-radius: 999px;
+            border: 1.5px solid transparent;
             transition: background 0.15s, border-color 0.15s;
             user-select: none;
         }
-        .profile-trigger:hover { background: rgba(17, 56, 25, 0.05); }
+
+        .profile-trigger:hover {
+            background: rgba(17, 56, 25, 0.05);
+        }
 
         .profile-avatar {
-            width: 34px; height: 34px; border-radius: 50%;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
             background: #113819;
-            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
-        .profile-avatar svg { width: 18px; height: 18px; fill: #f5eebf; }
+
+        .profile-avatar svg {
+            width: 18px;
+            height: 18px;
+            fill: #f5eebf;
+        }
 
         .profile-name {
-            font-size: 0.875rem; font-weight: 600; color: #1f2937;
-            max-width: 120px; white-space: nowrap;
-            overflow: hidden; text-overflow: ellipsis;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #1f2937;
+            max-width: 120px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        .profile-chevron { width: 14px; height: 14px; color: #9ca3af; transition: transform 0.2s; }
-        .profile-menu-wrap.open .profile-chevron { transform: rotate(180deg); }
+
+        .profile-chevron {
+            width: 14px;
+            height: 14px;
+            color: #9ca3af;
+            transition: transform 0.2s;
+        }
+
+        .profile-menu-wrap.open .profile-chevron {
+            transform: rotate(180deg);
+        }
 
         .profile-dropdown {
-            position: absolute; top: calc(100% + 10px); right: 0;
-            min-width: 220px; background: #fff;
-            border: 1px solid #e5e7eb; border-radius: 14px;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
-            padding: 6px; z-index: 1000;
-            opacity: 0; transform: translateY(-6px) scale(0.98);
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            min-width: 220px;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+            padding: 6px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-6px) scale(0.98);
             pointer-events: none;
             transition: opacity 0.18s ease, transform 0.18s ease;
         }
+
         .profile-menu-wrap.open .profile-dropdown {
-            opacity: 1; transform: translateY(0) scale(1); pointer-events: auto;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
         }
 
         .dropdown-user-info {
@@ -145,38 +255,84 @@
             border-bottom: 1px solid #f1f5f9;
             margin-bottom: 4px;
         }
-        .dropdown-user-info .dui-name { font-weight: 700; font-size: 0.875rem; color: #111827; }
-        .dropdown-user-info .dui-type { font-size: 0.72rem; color: #9ca3af; margin-top: 1px; }
+
+        .dropdown-user-info .dui-name {
+            font-weight: 700;
+            font-size: 0.875rem;
+            color: #111827;
+        }
+
+        .dropdown-user-info .dui-type {
+            font-size: 0.72rem;
+            color: #9ca3af;
+            margin-top: 1px;
+        }
 
         .dropdown-item {
-            display: flex; align-items: center; gap: 10px;
-            padding: 9px 12px; border-radius: 9px;
-            font-size: 0.85rem; color: #374151; font-weight: 500;
-            text-decoration: none; cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 12px;
+            border-radius: 9px;
+            font-size: 0.85rem;
+            color: #374151;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
             transition: background 0.12s;
         }
-        .dropdown-item:hover { background: #f8fafc; color: #111827; }
-        .dropdown-item svg { width: 16px; height: 16px; opacity: 0.55; flex-shrink: 0; }
-        .dropdown-separator { height: 1px; background: #f1f5f9; margin: 4px 0; }
-        .dropdown-item.logout { color: #dc2626; }
-        .dropdown-item.logout:hover { background: #fff5f5; color: #b91c1c; }
-        .dropdown-item.logout svg { opacity: 0.7; }
+
+        .dropdown-item:hover {
+            background: #f8fafc;
+            color: #111827;
+        }
+
+        .dropdown-item svg {
+            width: 16px;
+            height: 16px;
+            opacity: 0.55;
+            flex-shrink: 0;
+        }
+
+        .dropdown-separator {
+            height: 1px;
+            background: #f1f5f9;
+            margin: 4px 0;
+        }
+
+        .dropdown-item.logout {
+            color: #dc2626;
+        }
+
+        .dropdown-item.logout:hover {
+            background: #fff5f5;
+            color: #b91c1c;
+        }
+
+        .dropdown-item.logout svg {
+            opacity: 0.7;
+        }
     </style>
 </head>
+
 <body class="bg-[#fff9e4] font-body text-on-surface">
 
-    <header style="background:#f5eebf; position:sticky; top:0; z-index:50; border-bottom:1px solid rgba(17,56,25,0.1); font-family: 'Outfit', sans-serif;">
-        <div style="max-width:1280px; margin:0 auto; padding:12px 32px; display:flex; justify-content:space-between; align-items:center;">
+    <header
+        style="background:#f5eebf; position:sticky; top:0; z-index:50; border-bottom:1px solid rgba(17,56,25,0.1); font-family: 'Outfit', sans-serif;">
+        <div
+            style="max-width:1280px; margin:0 auto; padding:12px 32px; display:flex; justify-content:space-between; align-items:center;">
             <a href="{{ url_for('index') }}" style="display:flex;align-items:center;gap:8px;text-decoration:none;">
-                <span class="material-symbols-outlined" style="font-size:28px;color:#113819;font-variation-settings:'FILL' 1;">eco</span>
-                <span style="font-family:'Outfit',sans-serif;font-weight:900;font-size:1.4rem;color:#113819;">ArdenLeaf</span>
+                <span class="material-symbols-outlined"
+                    style="font-size:28px;color:#113819;font-variation-settings:'FILL' 1;">eco</span>
+                <span
+                    style="font-family:'Outfit',sans-serif;font-weight:900;font-size:1.4rem;color:#113819;">ArdenLeaf</span>
             </a>
-            
+
             <nav style="display:flex; gap:32px; align-items:center;">
                 <a href="{{ url_for('books.search') }}" class="nav-link-standard">Search Books</a>
                 <a href="{{ url_for('books.locations') }}" class="nav-link-standard">Locations</a>
             </nav>
-            
+
             <div style="display:flex; align-items:center; gap:24px;">
                 <a href="{{ url_for('books.bookmarks_page') }}" class="nav-bookmark-icon" title="Bookmarks">
                     <span class="material-symbols-outlined">bookmark</span>
@@ -184,15 +340,18 @@
 
                 {% if session.get('user_id') %}
                 <div class="profile-menu-wrap" id="profileMenuWrap">
-                    <div class="profile-trigger" id="profileTrigger" role="button" aria-haspopup="true" aria-expanded="false">
+                    <div class="profile-trigger" id="profileTrigger" role="button" aria-haspopup="true"
+                        aria-expanded="false">
                         <div class="profile-avatar">
                             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                                <path
+                                    d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
                             </svg>
                         </div>
                         <span class="profile-name">{{ session.get('user_name', 'Account') }}</span>
-                        <svg class="profile-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="6 9 12 15 18 9"/>
+                        <svg class="profile-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9" />
                         </svg>
                     </div>
 
@@ -204,45 +363,74 @@
 
                         {% if session.get('user_type') in ('LibraryAdmin', 'StoreAdmin') %}
                         <a href="{{ url_for('owner.dashboard') }}" class="dropdown-item" role="menuitem">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                                <polyline points="9 22 9 12 15 12 15 22" />
+                            </svg>
                             Owner Portal
                         </a>
                         {% endif %}
 
                         {% if session.get('user_type') == 'Admin' %}
                         <a href="{{ url_for('admin.dashboard') }}" class="dropdown-item" role="menuitem">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>
                             Admin Panel
                         </a>
                         {% endif %}
 
                         {% if session.get('user_type') == 'Member' %}
                         <a href="{{ url_for('loans.dashboard') }}" class="dropdown-item" role="menuitem">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="7" height="7" />
+                                <rect x="14" y="3" width="7" height="7" />
+                                <rect x="14" y="14" width="7" height="7" />
+                                <rect x="3" y="14" width="7" height="7" />
+                            </svg>
                             Dashboard
                         </a>
                         {% endif %}
 
                         <a href="/profile" class="dropdown-item" role="menuitem">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
+                            </svg>
                             Account Details
                         </a>
 
                         <a href="/libraries" class="dropdown-item" role="menuitem">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                <circle cx="12" cy="10" r="3" />
+                            </svg>
                             Saved Locations
                         </a>
 
                         <div class="dropdown-separator"></div>
 
                         <a href="{{ url_for('auth.logout') }}" class="dropdown-item logout" role="menuitem">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                <polyline points="16 17 21 12 16 7" />
+                                <line x1="21" y1="12" x2="9" y2="12" />
+                            </svg>
                             Logout
                         </a>
                     </div>
                 </div>
                 {% else %}
-                <a href="{{ url_for('auth.auth_page') }}" style="background:#113819; color:#f5eebf; padding:10px 24px; border-radius:8px; text-decoration:none; font-family:'Outfit',sans-serif; font-weight:700; font-size:0.9rem; transition:transform 0.15s;" onmouseover="this.style.transform='scale(0.98)'" onmouseout="this.style.transform='scale(1)'">Login</a>
+                <a href="{{ url_for('auth.auth_page') }}"
+                    style="background:#113819; color:#f5eebf; padding:10px 24px; border-radius:8px; text-decoration:none; font-family:'Outfit',sans-serif; font-weight:700; font-size:0.9rem; transition:transform 0.15s;"
+                    onmouseover="this.style.transform='scale(0.98)'"
+                    onmouseout="this.style.transform='scale(1)'">Login</a>
                 {% endif %}
             </div>
         </div>
@@ -251,60 +439,74 @@
     <main class="max-w-7xl mx-auto px-6 py-12 pb-32">
         <!-- Header Section -->
         <div class="mb-12 px-2">
-            <h1 class="font-headline text-5xl font-extrabold text-primary-container tracking-tighter mb-2">My Dashboard</h1>
-            <p class="font-body text-xl italic text-on-surface-variant">Welcome back, {{ session.get('user_name', 'Reader') }}. Your library awaits.</p>
+            <h1 class="font-headline text-5xl font-extrabold text-primary-container tracking-tighter mb-2">My Dashboard
+            </h1>
+            <p class="font-body text-xl italic text-on-surface-variant">Welcome back, {{ session.get('user_name',
+                'Reader') }}. Your library awaits.</p>
         </div>
 
         <!-- Stats Grid -->
         <div class="grid grid-cols-4 gap-6 mb-16 px-2">
             <!-- Active Loans -->
-            <div class="stat-card relative bg-white border border-[#e8dfa0] p-4 rounded-xl flex flex-col justify-between">
+            <div onclick="document.getElementById('active-loans-section').scrollIntoView({behavior:'smooth'})"
+                class="stat-card relative bg-white border border-[#e8dfa0] p-4 rounded-xl flex flex-col justify-between cursor-pointer">
                 <div class="flex justify-between items-start mb-4">
                     <span class="material-symbols-outlined text-primary-container text-xl">menu_book</span>
-                    <span class="text-[10px] font-headline font-bold uppercase tracking-widest text-[#113819]/40">Live</span>
+                    <span
+                        class="text-[10px] font-headline font-bold uppercase tracking-widest text-[#113819]/40">Live</span>
                 </div>
                 <div>
-                    <div class="text-2xl font-headline font-extrabold text-primary-container mb-1">{{ active_loans_count or 0 }}</div>
+                    <div class="text-2xl font-headline font-extrabold text-primary-container mb-1">{{ active_loans_count
+                        or 0 }}</div>
                     <div class="font-body italic text-on-surface-variant">Active Loans</div>
                 </div>
                 {% if overdue_count and overdue_count > 0 %}
-                <span style="position:absolute;bottom:8px;right:8px;background:#dc2626;color:#fff;border-radius:9999px;font-size:0.7rem;padding:2px 8px;font-family:'Outfit',sans-serif;font-weight:700;">{{ overdue_count }} overdue</span>
+                <span
+                    style="position:absolute;bottom:8px;right:8px;background:#dc2626;color:#fff;border-radius:9999px;font-size:0.7rem;padding:2px 8px;font-family:'Outfit',sans-serif;font-weight:700;">{{
+                    overdue_count }} overdue</span>
                 {% endif %}
             </div>
             <!-- Total Borrowed -->
-            <div onclick="openModal('totalBorrowedModal');" class="stat-card cursor-pointer bg-white border border-[#e8dfa0] p-4 rounded-xl flex flex-col justify-between">
+            <div onclick="openModal('totalBorrowedModal');"
+                class="stat-card cursor-pointer bg-white border border-[#e8dfa0] p-4 rounded-xl flex flex-col justify-between">
                 <div class="flex justify-between items-start mb-4">
                     <span class="material-symbols-outlined text-primary-container text-xl">history_edu</span>
                 </div>
                 <div>
-                    <div class="text-2xl font-headline font-extrabold text-primary-container mb-1">{{ total_loans or 0 }}</div>
+                    <div class="text-2xl font-headline font-extrabold text-primary-container mb-1">{{ total_loans or 0
+                        }}</div>
                     <div class="font-body italic text-on-surface-variant">Total Borrowed</div>
                 </div>
             </div>
             <!-- Bookmarks -->
-            <div onclick="window.location.href='{{ url_for('books.bookmarks_page') }}';" class="stat-card cursor-pointer bg-white border border-[#e8dfa0] p-4 rounded-xl flex flex-col justify-between">
+            <div onclick="window.location.href='{{ url_for('books.bookmarks_page') }}';"
+                class="stat-card cursor-pointer bg-white border border-[#e8dfa0] p-4 rounded-xl flex flex-col justify-between">
                 <div class="flex justify-between items-start mb-4">
                     <span class="material-symbols-outlined text-primary-container text-xl">bookmark</span>
                 </div>
                 <div>
-                    <div class="text-2xl font-headline font-extrabold text-primary-container mb-1">{{ bookmarks_count or 0 }}</div>
+                    <div class="text-2xl font-headline font-extrabold text-primary-container mb-1">{{ bookmarks_count or
+                        0 }}</div>
                     <div class="font-body italic text-on-surface-variant">Bookmarks</div>
                 </div>
             </div>
             <!-- Fines Due -->
-            <div onclick="openModal('finesDueModal')" class="stat-card cursor-pointer bg-white border border-[#e8dfa0] p-4 rounded-xl flex flex-col justify-between">
+            <div onclick="openModal('finesDueModal')"
+                class="stat-card cursor-pointer bg-white border border-[#e8dfa0] p-4 rounded-xl flex flex-col justify-between">
                 <div class="flex justify-between items-start mb-4">
-                    <span class="material-symbols-outlined {{ 'text-red-700' if fines_due > 0 else 'text-primary-container' }} text-xl">payments</span>
+                    <span
+                        class="material-symbols-outlined {{ 'text-red-700' if fines_due > 0 else 'text-primary-container' }} text-xl">payments</span>
                 </div>
                 <div>
-                    <div class="text-2xl font-headline font-extrabold text-primary-container mb-1">₹ {{ '%.2f' | format(fines_due or 0) }}</div>
+                    <div class="text-2xl font-headline font-extrabold text-primary-container mb-1">₹ {{ '%.2f' |
+                        format(fines_due or 0) }}</div>
                     <div class="font-body italic text-on-surface-variant">Fines Due</div>
                 </div>
             </div>
         </div>
 
         <!-- Active Loans Section -->
-        <section class="px-2">
+        <section class="px-2" id="active-loans-section">
             <div class="flex justify-between items-center mb-8 border-b border-[#113819]/5 pb-4">
                 <h2 class="font-headline text-xl font-bold text-primary-container tracking-tight">Active Loans</h2>
                 <div id="loan-count-text" class="text-sm font-headline font-semibold text-primary-container/60 italic">
@@ -317,8 +519,10 @@
                 {% for loan in loans %}
                 <!-- Loan Card -->
                 <div class="loan-page-item" style="display: none;">
-                    <div onclick="window.location.href='{{ url_for('books.book_detail', isbn=loan.ISBN) }}';" class="stat-card cursor-pointer bg-white border border-[#e8dfa0] rounded-xl p-4 flex gap-4 h-full">
-                        <div class="w-16 h-24 flex-shrink-0 bg-surface-variant shadow-sm rounded overflow-hidden border border-[#113819]/10">
+                    <div onclick="window.location.href='{{ url_for('books.book_detail', isbn=loan.ISBN) }}';"
+                        class="stat-card cursor-pointer bg-white border border-[#e8dfa0] rounded-xl p-4 flex gap-4 h-full">
+                        <div
+                            class="w-16 h-24 flex-shrink-0 bg-surface-variant shadow-sm rounded overflow-hidden border border-[#113819]/10">
                             {% if loan.cover_image %}
                             <img src="{{ loan.cover_image }}" alt="{{ loan.Title }}" class="w-full h-full object-cover">
                             {% else %}
@@ -330,30 +534,44 @@
                         <div class="flex-grow flex flex-col justify-between py-1 w-full text-left">
                             <div>
                                 <div class="flex flex-wrap items-center justify-start gap-2 mb-1">
-                                    <h3 class="font-headline text-sm font-bold text-primary-container leading-tight line-clamp-2">{{ loan.Title }}</h3>
+                                    <h3
+                                        class="font-headline text-sm font-bold text-primary-container leading-tight line-clamp-2">
+                                        {{ loan.Title }}</h3>
                                     {% if loan.IsOverdue %}
-                                    <span class="px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-[9px] font-headline font-bold uppercase tracking-widest inline-block">Overdue</span>
+                                    <span
+                                        class="px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-[9px] font-headline font-bold uppercase tracking-widest inline-block">Overdue</span>
                                     {% else %}
-                                    <span class="px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded-full text-[9px] font-headline font-bold uppercase tracking-widest inline-block">Active</span>
+                                    <span
+                                        class="px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded-full text-[9px] font-headline font-bold uppercase tracking-widest inline-block">Active</span>
                                     {% endif %}
                                 </div>
-                                <p class="font-body text-xs italic text-on-surface-variant mb-2 line-clamp-1">{{ loan.Authors or 'Unknown Author' }}</p>
+                                <p class="font-body text-xs italic text-on-surface-variant mb-2 line-clamp-1">{{
+                                    loan.Authors or 'Unknown Author' }}</p>
                                 <div class="grid grid-cols-2 gap-2">
                                     <div>
-                                        <p class="text-[9px] font-headline font-bold uppercase tracking-widest text-[#113819]/40 mb-0.5">Borrowed</p>
-                                        <p class="font-body text-xs font-medium">{{ loan.IssueDate.strftime('%b %d') if loan.IssueDate else '—' }}</p>
+                                        <p
+                                            class="text-[9px] font-headline font-bold uppercase tracking-widest text-[#113819]/40 mb-0.5">
+                                            Borrowed</p>
+                                        <p class="font-body text-xs font-medium">{{ loan.IssueDate.strftime('%b %d') if
+                                            loan.IssueDate else '—' }}</p>
                                     </div>
                                     <div>
-                                        <p class="text-[9px] font-headline font-bold uppercase tracking-widest text-[#113819]/40 mb-0.5">Due</p>
-                                        <p class="font-body text-xs font-medium {{ 'text-red-700 font-bold' if loan.IsOverdue else '' }}">{{ loan.DueDate.strftime('%b %d') if loan.DueDate else '—' }}</p>
+                                        <p
+                                            class="text-[9px] font-headline font-bold uppercase tracking-widest text-[#113819]/40 mb-0.5">
+                                            Due</p>
+                                        <p
+                                            class="font-body text-xs font-medium {{ 'text-red-700 font-bold' if loan.IsOverdue else '' }}">
+                                            {{ loan.DueDate.strftime('%b %d') if loan.DueDate else '—' }}</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="mt-3 flex justify-start gap-2" onclick="event.stopPropagation();">
                                 <form action="{{ url_for('loans.return_book', loan_id=loan.LoanID) }}" method="POST">
-                                    <button type="submit" class="text-[#dc2626] font-headline text-xs font-bold tracking-tight px-2 py-1 rounded hover:bg-red-50 transition-colors">Return</button>
+                                    <button type="submit"
+                                        class="text-[#dc2626] font-headline text-xs font-bold tracking-tight px-2 py-1 rounded hover:bg-red-50 transition-colors">Return</button>
                                 </form>
-                                <button class="bg-[#16a34a] text-[#ffffff] px-3 py-1.5 rounded font-headline text-xs font-bold tracking-tight hover:opacity-90 transition-opacity">Renew</button>
+                                <button
+                                    class="bg-[#16a34a] text-[#ffffff] px-3 py-1.5 rounded font-headline text-xs font-bold tracking-tight hover:opacity-90 transition-opacity">Renew</button>
                             </div>
                         </div>
                     </div>
@@ -364,14 +582,17 @@
             <!-- Pagination Controls -->
             {% if total_loans > 6 or loans|length > 6 %}
             <div class="mt-12 flex justify-center">
-                <div class="bg-white border border-[#e8dfa0] rounded-full px-6 py-3 flex items-center gap-6 shadow-md transition-all hover:shadow-lg">
-                    <button id="prevBtn" onclick="changePage(-1)" class="text-black disabled:opacity-20 hover:scale-110 transition-transform">
+                <div
+                    class="bg-white border border-[#e8dfa0] rounded-full px-6 py-3 flex items-center gap-6 shadow-md transition-all hover:shadow-lg">
+                    <button id="prevBtn" onclick="changePage(-1)"
+                        class="text-black disabled:opacity-20 hover:scale-110 transition-transform">
                         <span class="material-symbols-outlined font-bold">chevron_left</span>
                     </button>
                     <div id="pageDots" class="flex items-center gap-3">
                         <!-- Dots animated by JS -->
                     </div>
-                    <button id="nextBtn" onclick="changePage(1)" class="text-black disabled:opacity-20 hover:scale-110 transition-transform">
+                    <button id="nextBtn" onclick="changePage(1)"
+                        class="text-black disabled:opacity-20 hover:scale-110 transition-transform">
                         <span class="material-symbols-outlined font-bold">chevron_right</span>
                     </button>
                 </div>
@@ -380,11 +601,14 @@
 
             {% else %}
             <!-- Empty state -->
-            <div class="text-center py-24 bg-surface-container-lowest rounded-[16px] border border-dashed border-[#e8dfa0]">
+            <div
+                class="text-center py-24 bg-surface-container-lowest rounded-[16px] border border-dashed border-[#e8dfa0]">
                 <span class="material-symbols-outlined text-7xl text-[#113819]/10 mb-6">menu_book</span>
                 <h3 class="font-headline text-2xl font-bold text-primary-container/40 mb-2">No active journeys</h3>
-                <p class="font-body italic text-on-surface-variant mb-8 max-w-sm mx-auto">Your shelf is waiting for its next occupant. Browse our collection to begin.</p>
-                <a href="{{ url_for('books.search') }}" class="inline-flex items-center gap-2 bg-primary-container text-[#f5eebf] px-10 py-3 rounded-full font-headline font-bold hover:scale-[1.02] active:scale-95 transition-all text-sm no-underline">
+                <p class="font-body italic text-on-surface-variant mb-8 max-w-sm mx-auto">Your shelf is waiting for its
+                    next occupant. Browse our collection to begin.</p>
+                <a href="{{ url_for('books.search') }}"
+                    class="inline-flex items-center gap-2 bg-primary-container text-[#f5eebf] px-10 py-3 rounded-full font-headline font-bold hover:scale-[1.02] active:scale-95 transition-all text-sm no-underline">
                     Explore Archives
                 </a>
             </div>
@@ -393,7 +617,8 @@
     </main>
 
     <!-- Modals -->
-    <div id="totalBorrowedModal" class="modal-overlay" onclick="if(event.target===this) closeModal('totalBorrowedModal')">
+    <div id="totalBorrowedModal" class="modal-overlay"
+        onclick="if(event.target===this) closeModal('totalBorrowedModal')">
         <div class="modal-box">
             <button class="modal-close-btn" onclick="closeModal('totalBorrowedModal')" aria-label="Close">
                 <span class="material-symbols-outlined" style="font-size:20px;">close</span>
@@ -411,22 +636,28 @@
                     </thead>
                     <tbody id="historyTableBody">
                         {% if all_loans %}
-                            {% for record in all_loans %}
-                            <tr>
-                                <td>{{ record.Title }}</td>
-                                <td>{{ record.SourceName or 'Library' }}</td>
-                                <td>{{ record.IssueDate.strftime('%d %b %Y') if record.IssueDate else '—' }}</td>
-                                <td>
-                                    {% if record.ReturnDate %}
-                                        <span class="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-[10px] font-bold uppercase tracking-wider">Returned</span>
-                                    {% else %}
-                                        <span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full text-[10px] font-bold uppercase tracking-wider">Active</span>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% endfor %}
+                        {% for record in all_loans %}
+                        <tr>
+                            <td>{{ record.Title }}</td>
+                            <td>{{ record.SourceName or 'Library' }}</td>
+                            <td>{{ record.IssueDate.strftime('%d %b %Y') if record.IssueDate else '—' }}</td>
+                            <td>
+                                {% if record.ReturnDate %}
+                                <span
+                                    class="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-[10px] font-bold uppercase tracking-wider">Returned</span>
+                                {% else %}
+                                <span
+                                    class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full text-[10px] font-bold uppercase tracking-wider">Active</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
                         {% else %}
-                            <tr><td colspan="4" style="padding:48px 0;text-align:center;font-family:'Lora',serif;font-style:italic;color:#9ca3af;">No records found</td></tr>
+                        <tr>
+                            <td colspan="4"
+                                style="padding:48px 0;text-align:center;font-family:'Lora',serif;font-style:italic;color:#9ca3af;">
+                                No records found</td>
+                        </tr>
                         {% endif %}
                     </tbody>
                 </table>
@@ -452,23 +683,30 @@
                     </thead>
                     <tbody id="finesTableBody">
                         {% if fines %}
-                            {% for fine in fines %}
-                            <tr>
-                                <td>{{ fine.Title }}</td>
-                                <td>₹ {{ "%.2f"|format(fine.FineAmount) }}</td>
-                                <td>{{ fine.IssueDate.strftime('%d %b %Y') if fine.IssueDate else '—' }}</td>
-                                <td>
-                                    {% if fine.ReturnDate %}
-                                        <span class="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-[10px] font-bold uppercase tracking-wider">Cleared</span>
-                                    {% else %}
-                                        {% set today = now %} {# Assumes now is passed or use a simple logic #}
-                                        <span class="px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-[10px] font-bold uppercase tracking-wider">Past Due</span>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% endfor %}
+                        {% for fine in fines %}
+                        <tr>
+                            <td>{{ fine.Title }}</td>
+                            <td>₹ {{ "%.2f"|format(fine.FineAmount) }}</td>
+                            <td>{{ fine.IssueDate.strftime('%d %b %Y') if fine.IssueDate else '—' }}</td>
+                            <td>
+                                {% if fine.ReturnDate %}
+                                <span
+                                    class="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-[10px] font-bold uppercase tracking-wider">Cleared</span>
+                                {% else %}
+                                {% set today = now %} {# Assumes now is passed or use a simple logic #}
+                                <span
+                                    class="px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-[10px] font-bold uppercase tracking-wider">Past
+                                    Due</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
                         {% else %}
-                            <tr><td colspan="4" style="padding:48px 0;text-align:center;font-family:'Lora',serif;font-style:italic;color:#9ca3af;">No records found</td></tr>
+                        <tr>
+                            <td colspan="4"
+                                style="padding:48px 0;text-align:center;font-family:'Lora',serif;font-style:italic;color:#9ca3af;">
+                                No records found</td>
+                        </tr>
                         {% endif %}
                     </tbody>
                 </table>
@@ -477,34 +715,41 @@
     </div>
 
     <!-- Footer -->
-    <footer style="background:#fcf5c5; border-top:1px solid rgba(17,56,25,0.1); padding:80px 0 40px; margin-top:120px; width:100%; font-family: 'Outfit', sans-serif;">
-        <div style="max-width:1280px; margin:0 auto; padding:0 32px;">
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:64px; align-items:flex-start; margin-bottom:80px;">
-                <div style="max-width:400px;">
-                    <a href="{{ url_for('index') }}" style="text-decoration:none; display:flex; align-items:center; gap:8px; margin-bottom:28px;">
-                        <span class="material-symbols-outlined" style="font-size:32px;color:#113819;font-variation-settings:'FILL' 1;">eco</span>
-                        <span style="font-family:'Outfit',sans-serif;font-weight:900;font-size:1.8rem;color:#113819;letter-spacing:-0.05em;">ArdenLeaf</span>
-                    </a>
-                    <p style="font-family:'Lora',serif; color:#4b5563; font-size:1.15rem; line-height:1.7; font-style:italic; opacity:0.85;">
-                        "Explore our partner libraries and independent bookstores across India — each one a gateway to ArdenLeaf."
-                    </p>
-                </div>
-                <div style="display:flex; justify-content: flex-end;">
-                    <div style="min-width: 180px;">
-                        <h4 style="font-weight:900; color:#113819; text-transform:uppercase; letter-spacing:0.15em; font-size:0.75rem; margin-bottom:32px;">Discover</h4>
-                        <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:20px;">
-                            <li><a href="{{ url_for('books.search') }}" style="text-decoration:none; color:#6b7280; font-size:1.15rem; font-family:'Lora',serif; font-style:italic; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Search Books</a></li>
-                            <li><a href="{{ url_for('books.locations') }}" style="text-decoration:none; color:#6b7280; font-size:1.15rem; font-family:'Lora',serif; font-style:italic; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Locations</a></li>
-                            <li><a href="{{ url_for('books.bookmarks_page') }}" style="text-decoration:none; color:#6b7280; font-size:1.15rem; font-family:'Lora',serif; font-style:italic; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Bookmarks</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div style="padding-top:40px; border-top:1px solid rgba(17,56,25,0.08); display:flex; justify-content:space-between; align-items:center;">
-                <p style="font-family:'Lora',serif; font-style:italic; font-size:0.95rem; color:#6b7280; opacity:0.7;">
-                    © 2024 ArdenLeaf. Made with 🍃 for India's readers.
+    <footer
+        style="background:#fcf5c5; border-top:1px solid rgba(17,56,25,0.1); padding:40px 0 20px; margin-top:60px; width:100%; font-family: 'Outfit', sans-serif;">
+        <div
+            style="max-width:1280px; margin:0 auto; padding:0 32px; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:24px;">
+            <div style="display:flex; align-items:center; gap:16px;">
+                <a href="{{ url_for('index') }}"
+                    style="text-decoration:none; display:flex; align-items:center; gap:8px;">
+                    <span class="material-symbols-outlined"
+                        style="font-size:24px;color:#113819;font-variation-settings:'FILL' 1;">eco</span>
+                    <span
+                        style="font-family:'Outfit',sans-serif;font-weight:900;font-size:1.4rem;color:#113819;letter-spacing:-0.05em;">ArdenLeaf</span>
+                </a>
+                <p
+                    style="font-family:'Lora',serif; color:#4b5563; font-size:0.95rem; font-style:italic; border-left:1px solid rgba(17,56,25,0.2); padding-left:16px; margin:0;">
+                    Gateway to India's independent libraries.
                 </p>
             </div>
+            <div style="display:flex; gap:24px; align-items:center;">
+                <a href="{{ url_for('books.search') }}"
+                    style="text-decoration:none; color:#6b7280; font-size:0.95rem; font-weight:600; transition:color 0.2s;"
+                    onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Search</a>
+                <a href="{{ url_for('books.locations') }}"
+                    style="text-decoration:none; color:#6b7280; font-size:0.95rem; font-weight:600; transition:color 0.2s;"
+                    onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Locations</a>
+                <a href="{{ url_for('books.bookmarks_page') }}"
+                    style="text-decoration:none; color:#6b7280; font-size:0.95rem; font-weight:600; transition:color 0.2s;"
+                    onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Bookmarks</a>
+            </div>
+        </div>
+        <div
+            style="max-width:1280px; margin:24px auto 0; padding:24px 32px 0; border-top:1px solid rgba(17,56,25,0.08); text-align:center;">
+            <p
+                style="font-family:'Lora',serif; font-style:italic; font-size:0.85rem; color:#6b7280; opacity:0.8; margin:0;">
+                Built with Indian readers in mind. © 2026 ArdenLeaf.
+            </p>
         </div>
     </footer>
 
@@ -512,7 +757,7 @@
     <script>
         // Profile dropdown toggle
         // ── Profile dropdown ──────────────────────────────────────────────
-        const wrap    = document.getElementById('profileMenuWrap');
+        const wrap = document.getElementById('profileMenuWrap');
         const trigger = document.getElementById('profileTrigger');
         if (wrap && trigger) {
             const toggle = () => {
@@ -544,7 +789,7 @@
         function showPage(page) {
             const start = (page - 1) * itemsPerPage;
             const end = start + itemsPerPage;
-            
+
             loanItems.forEach((item, index) => {
                 if (index >= start && index < end) {
                     item.style.display = 'block';
@@ -626,8 +871,8 @@
         (function () {
             const TOAST_COLORS = {
                 success: { bg: '#c1eec0', border: '#113819', icon: '#113819', symbol: '\u2713', bar: '#113819' },
-                error:   { bg: '#ffdad6', border: '#ba1a1a', icon: '#93000a', symbol: '\u2715', bar: '#ba1a1a' },
-                info:    { bg: '#f6efc0', border: '#526351', icon: '#526351', symbol: 'i', bar: '#526351' },
+                error: { bg: '#ffdad6', border: '#ba1a1a', icon: '#93000a', symbol: '\u2715', bar: '#ba1a1a' },
+                info: { bg: '#f6efc0', border: '#526351', icon: '#526351', symbol: 'i', bar: '#526351' },
                 warning: { bg: '#f0e9bb', border: '#727970', icon: '#424941', symbol: '!', bar: '#727970' },
             };
             class ToastManager {
@@ -666,4 +911,5 @@
     <!-- Flash data -->
     <script id="flash-data" type="application/json">{{ get_flashed_messages(with_categories=true) | tojson }}</script>
 </body>
+
 </html>

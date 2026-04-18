@@ -344,23 +344,23 @@
     <section class="bg-surface-container-low py-12">
         <div class="max-w-7xl mx-auto px-8 grid grid-cols-1 md:grid-cols-3 gap-16">
             <div class="flex flex-col items-center md:items-start">
-                <span class="text-4xl font-headline font-black text-primary-container mb-1">4.2M+</span>
+                <span class="text-4xl font-headline font-black text-primary-container mb-1">20</span>
                 <span
                     class="text-[11px] font-headline font-bold uppercase tracking-[0.2em] text-on-primary-container/70">Books
-                    Cataloged</span>
+                    in Catalog</span>
             </div>
             <div
                 class="flex flex-col items-center md:items-start border-y md:border-y-0 md:border-x border-outline-variant/20 py-6 md:py-0 md:px-16">
-                <span class="text-4xl font-headline font-black text-primary-container mb-1">1,200</span>
+                <span class="text-4xl font-headline font-black text-primary-container mb-1">9</span>
                 <span
                     class="text-[11px] font-headline font-bold uppercase tracking-[0.2em] text-on-primary-container/70">Partner
-                    Libraries</span>
+                    Locations</span>
             </div>
             <div class="flex flex-col items-center md:items-start">
-                <span class="text-4xl font-headline font-black text-primary-container mb-1">28</span>
+                <span class="text-4xl font-headline font-black text-primary-container mb-1">5</span>
                 <span
-                    class="text-[11px] font-headline font-bold uppercase tracking-[0.2em] text-on-primary-container/70">Indian
-                    Cities</span>
+                    class="text-[11px] font-headline font-bold uppercase tracking-[0.2em] text-on-primary-container/70">Cities
+                    Covered</span>
             </div>
         </div>
     </section>
@@ -442,7 +442,7 @@
                     </div>
                 </a>
                 <a class="group flex items-center gap-6 p-8 bg-surface-container-lowest rounded-2xl border border-outline-variant/10 editorial-shadow hover:bg-primary-container transition-all duration-500 cursor-pointer"
-                    href="{{ url_for('books.search') }}">
+                    href="{{ url_for('books.locations') }}">
                     <div
                         class="w-16 h-16 shrink-0 bg-surface-container-low rounded-xl flex items-center justify-center group-hover:bg-[#ffffff] transition-all duration-500">
                         <span
@@ -458,7 +458,7 @@
                     </div>
                 </a>
                 <a class="group flex items-center gap-6 p-8 bg-surface-container-lowest rounded-2xl border border-outline-variant/10 editorial-shadow hover:bg-primary-container transition-all duration-500 cursor-pointer"
-                    href="{{ url_for('books.search') }}">
+                    href="{{ url_for('books.bookmarks_page') }}">
                     <div
                         class="w-16 h-16 shrink-0 bg-surface-container-low rounded-xl flex items-center justify-center group-hover:bg-[#ffffff] transition-all duration-500">
                         <span
@@ -484,22 +484,21 @@
                 <!-- Large Card -->
                 <div
                     class="md:col-span-8 bg-surface-container-lowest rounded-2xl overflow-hidden editorial-shadow flex flex-col md:flex-row group border border-outline-variant/10">
-                    <div class="md:w-1/2 overflow-hidden">
-                        <img alt="Featured Book"
+                    <div class="md:w-2/5 max-w-[220px] overflow-hidden flex-shrink-0">
+                        <img alt="Charlie and the Chocolate Factory"
                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMdCtZloWrfM0z7GA5CXYCE7y61n0tQXogqSDeqe_b-MUnAPgWA8BMn7nw6x8afKxRFirB1nUwY9bJHk0YOt5XNRYDSKWL-KE4aCkI9MrbpkHVZ0kZOSJ-JMJabkKZ_S1uTe7IjKyBAdjvXTsIg8R5j49f_lu8E--2X5BL5uscPHQUAh_9ki09auF3LlYwfEo0sqf-rFcAvJAVNxHJHgYe8pF_1ee6RfuPIx5G2IUM8yT-XmbHQnEQZvN7EpVQvZrxw_gRkZsnDD1y" />
+                            src="https://books.google.com/books/content?id=ODWNDQAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api" />
                     </div>
                     <div class="md:w-1/2 p-10 flex flex-col justify-center">
                         <span
                             class="text-[10px] font-headline font-bold tracking-[0.2em] text-on-primary-container uppercase mb-5">Staff
                             Pick</span>
-                        <h3 class="text-3xl font-headline font-bold text-primary-container mb-4">The Midnight Library
+                        <h3 class="text-3xl font-headline font-bold text-primary-container mb-4">Charlie and the Chocolate Factory
                         </h3>
-                        <p class="text-on-surface-variant font-body italic mb-8 leading-relaxed text-base">"Between life
-                            and death there is a library, and within that library, the shelves go on forever."</p>
+                        <p class="text-on-surface-variant font-body italic mb-8 leading-relaxed text-base">"We are the music makers, and we are the dreamers of dreams."</p>
                         <a class="text-primary-container font-headline font-bold flex items-center gap-2 group/link text-sm"
-                            href="#">
-                            Reserve Now
+                            href="{{ url_for('books.book_detail', isbn='9780142410318') }}">
+                            Borrow
                             <span
                                 class="material-symbols-outlined group-hover/link:translate-x-2 transition-transform text-lg">arrow_forward</span>
                         </a>
@@ -521,52 +520,15 @@
                             <span class="material-symbols-outlined text-[#113819] text-xl"
                                 style="font-variation-settings: 'FILL' 1;">star</span>
                         </div>
-                        <p class="text-lg font-body text-[#113819] leading-relaxed mb-8">"Finally, a way to find rare
-                            regional literature in Bengaluru. The discovery engine is unmatched."</p>
+                        <p class="text-lg font-body text-[#113819] leading-relaxed mb-8">"Roald Dahl's imagination knows no bounds. Charlie and the Chocolate Factory is pure magic — a timeless classic that reminds you why books exist."</p>
                     </div>
                     <div class="flex items-center gap-4">
                         <div
                             class="w-12 h-12 rounded-full bg-[#113819] flex items-center justify-center text-[#F9F5D2] font-headline font-bold text-lg">
-                            A</div>
+                            R</div>
                         <div>
-                            <p class="text-base font-headline font-bold text-[#113819]">Ananya Sharma</p>
-                            <p class="text-xs text-[#113819]/60">Verified Reader</p>
-                        </div>
-                    </div>
-                </div>
-                <!-- Small Card 2 -->
-                <div
-                    class="md:col-span-4 bg-primary-container p-10 rounded-2xl text-on-primary flex flex-col justify-center relative overflow-hidden">
-                    <div class="relative z-10">
-                        <h3 class="text-2xl font-headline font-bold mb-4">Join the Club</h3>
-                        <p class="font-body text-sm opacity-80 mb-8 leading-relaxed">Get early access to literary
-                            festivals and private book launches across India.</p>
-                        <button
-                            class="w-full py-3 bg-surface text-primary-container font-headline font-bold rounded-lg hover:bg-secondary-fixed transition-colors text-xs">
-                            Sign Up Free
-                        </button>
-                    </div>
-                    <span
-                        class="material-symbols-outlined absolute -bottom-8 -right-8 text-[140px] opacity-10 pointer-events-none">local_library</span>
-                </div>
-                <!-- Location Section (Styling from IMAGE_16/18) -->
-                <div
-                    class="md:col-span-8 bg-[#E6E2B3] rounded-[2rem] overflow-hidden p-12 flex items-center gap-12 border border-black/5 editorial-shadow">
-                    <div class="hidden lg:block w-24 shrink-0 text-center">
-                        <span class="material-symbols-outlined text-7xl text-[#113819]/20"
-                            style="font-variation-settings: 'FILL' 1;">location_on</span>
-                    </div>
-                    <div>
-                        <h3 class="text-3xl font-headline font-black text-[#113819] mb-4">Find a Library Near You</h3>
-                        <p class="text-[#113819]/80 text-base font-body mb-8 max-w-xl">Discover over 1,200 partnered
-                            spaces from the historical Asiatic Library to modern community hubs.</p>
-                        <div class="flex gap-4">
-                            <a href="{{ url_for('books.search', q='Mumbai') }}"
-                                class="px-5 py-2 bg-white rounded-lg text-sm font-headline font-bold text-[#113819] shadow-sm hover:bg-surface-container-lowest transition-colors">Mumbai</a>
-                            <a href="{{ url_for('books.search', q='Delhi') }}"
-                                class="px-5 py-2 bg-white rounded-lg text-sm font-headline font-bold text-[#113819] shadow-sm hover:bg-surface-container-lowest transition-colors">Delhi</a>
-                            <a href="{{ url_for('books.search', q='Kolkata') }}"
-                                class="px-5 py-2 bg-white rounded-lg text-sm font-headline font-bold text-[#113819] shadow-sm hover:bg-surface-container-lowest transition-colors">Kolkata</a>
+                            <p class="text-base font-headline font-bold text-[#113819]">Roald Dahl</p>
+                            <p class="text-xs text-[#113819]/60">Author</p>
                         </div>
                     </div>
                 </div>
@@ -574,34 +536,27 @@
         </div>
     </section>
     <!-- Footer -->
-    <footer style="background:#fcf5c5; border-top:1px solid rgba(17,56,25,0.1); padding:80px 0 40px; margin-top:120px; width:100%; font-family: 'Outfit', sans-serif;">
-        <div style="max-width:1280px; margin:0 auto; padding:0 32px;">
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:64px; align-items:flex-start; margin-bottom:80px;">
-                <div style="max-width:400px;">
-                    <a href="{{ url_for('index') }}" style="text-decoration:none; display:flex; align-items:center; gap:8px; margin-bottom:28px;">
-                        <span class="material-symbols-outlined" style="font-size:32px;color:#113819;font-variation-settings:'FILL' 1;">eco</span>
-                        <span style="font-family:'Outfit',sans-serif;font-weight:900;font-size:1.8rem;color:#113819;letter-spacing:-0.05em;">ArdenLeaf</span>
-                    </a>
-                    <p style="font-family:'Lora',serif; color:#4b5563; font-size:1.15rem; line-height:1.7; font-style:italic; opacity:0.85;">
-                        "Explore our partner libraries and independent bookstores across India — each one a gateway to ArdenLeaf."
-                    </p>
-                </div>
-                <div style="display:flex; justify-content: flex-end;">
-                    <div style="min-width: 180px;">
-                        <h4 style="font-weight:900; color:#113819; text-transform:uppercase; letter-spacing:0.15em; font-size:0.75rem; margin-bottom:32px;">Discover</h4>
-                        <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:20px;">
-                            <li><a href="{{ url_for('books.search') }}" style="text-decoration:none; color:#6b7280; font-size:1.15rem; font-family:'Lora',serif; font-style:italic; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Search Books</a></li>
-                            <li><a href="{{ url_for('books.locations') }}" style="text-decoration:none; color:#6b7280; font-size:1.15rem; font-family:'Lora',serif; font-style:italic; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Locations</a></li>
-                            <li><a href="{{ url_for('books.bookmarks_page') }}" style="text-decoration:none; color:#6b7280; font-size:1.15rem; font-family:'Lora',serif; font-style:italic; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Bookmarks</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div style="padding-top:40px; border-top:1px solid rgba(17,56,25,0.08); display:flex; justify-content:space-between; align-items:center;">
-                <p style="font-family:'Lora',serif; font-style:italic; font-size:0.95rem; color:#6b7280; opacity:0.7;">
-                    © 2024 ArdenLeaf. Made with 🍃 for India's readers.
+    <footer style="background:#fcf5c5; border-top:1px solid rgba(17,56,25,0.1); padding:40px 0 20px; margin-top:60px; width:100%; font-family: 'Outfit', sans-serif;">
+        <div style="max-width:1280px; margin:0 auto; padding:0 32px; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:24px;">
+            <div style="display:flex; align-items:center; gap:16px;">
+                <a href="{{ url_for('index') }}" style="text-decoration:none; display:flex; align-items:center; gap:8px;">
+                    <span class="material-symbols-outlined" style="font-size:24px;color:#113819;font-variation-settings:'FILL' 1;">eco</span>
+                    <span style="font-family:'Outfit',sans-serif;font-weight:900;font-size:1.4rem;color:#113819;letter-spacing:-0.05em;">ArdenLeaf</span>
+                </a>
+                <p style="font-family:'Lora',serif; color:#4b5563; font-size:0.95rem; font-style:italic; border-left:1px solid rgba(17,56,25,0.2); padding-left:16px; margin:0;">
+                    Gateway to India's independent libraries.
                 </p>
             </div>
+            <div style="display:flex; gap:24px; align-items:center;">
+                <a href="{{ url_for('books.search') }}" style="text-decoration:none; color:#6b7280; font-size:0.95rem; font-weight:600; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Search</a>
+                <a href="{{ url_for('books.locations') }}" style="text-decoration:none; color:#6b7280; font-size:0.95rem; font-weight:600; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Locations</a>
+                <a href="{{ url_for('books.bookmarks_page') }}" style="text-decoration:none; color:#6b7280; font-size:0.95rem; font-weight:600; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Bookmarks</a>
+            </div>
+        </div>
+        <div style="max-width:1280px; margin:24px auto 0; padding:24px 32px 0; border-top:1px solid rgba(17,56,25,0.08); text-align:center;">
+            <p style="font-family:'Lora',serif; font-style:italic; font-size:0.85rem; color:#6b7280; opacity:0.8; margin:0;">
+                Built with Indian readers in mind. © 2026 ArdenLeaf.
+            </p>
         </div>
     </footer>
 

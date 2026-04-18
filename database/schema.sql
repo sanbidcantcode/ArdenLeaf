@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS User (
     Name VARCHAR(100) NOT NULL,
     Email VARCHAR(100) UNIQUE NOT NULL,
     PasswordHash VARCHAR(255) NOT NULL,
-    UserType ENUM('Member', 'Customer', 'Admin', 'LibraryAdmin', 'StoreAdmin') NOT NULL,
+    UserType ENUM('Member', 'Admin', 'LibraryAdmin', 'StoreAdmin') NOT NULL,
     CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -26,13 +26,6 @@ CREATE TABLE IF NOT EXISTS Member (
     UserID INT PRIMARY KEY,
     MembershipDate DATE NOT NULL,
     MaxBooks INT DEFAULT 5,
-    FOREIGN KEY (UserID) REFERENCES User(UserID) ON DELETE CASCADE
-);
-
--- 4. Specialization: Customer
-CREATE TABLE IF NOT EXISTS Customer (
-    UserID INT PRIMARY KEY,
-    LoyaltyPoints INT DEFAULT 0,
     FOREIGN KEY (UserID) REFERENCES User(UserID) ON DELETE CASCADE
 );
 
@@ -153,4 +146,14 @@ CREATE TABLE IF NOT EXISTS LocationAdmin (
     FOREIGN KEY (UserID) REFERENCES User(UserID) ON DELETE CASCADE,
     FOREIGN KEY (LibraryID) REFERENCES Library(LibraryID) ON DELETE SET NULL,
     FOREIGN KEY (StoreID) REFERENCES Bookstore(StoreID) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS SavedLocation (
+    SavedID INT AUTO_INCREMENT PRIMARY KEY,
+    UserID INT NOT NULL,
+    LocationID INT NOT NULL,
+    LocationType ENUM('Library', 'Bookstore') NOT NULL,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (UserID) REFERENCES User(UserID) ON DELETE CASCADE,
+    UNIQUE KEY uq_user_location (UserID, LocationID, LocationType)
 );

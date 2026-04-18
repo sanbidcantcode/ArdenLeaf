@@ -55,10 +55,8 @@ def auth_page():
                             session['location_type'] = 'Bookstore'
                             session['location_name'] = loc_row['Name'] if loc_row else 'Your Store'
                     return redirect(url_for('owner.dashboard'))
-                # Members go to their dashboard; Customers go home
-                if user['UserType'] == 'Member':
-                    return redirect(url_for('loans.dashboard'))
-                return redirect(url_for('index'))
+                # All regular users go to their dashboard
+                return redirect(url_for('loans.dashboard'))
             else:
                 flash('Invalid email or password.', 'error')
                 return render_template('auth.html', show_signup=False,
@@ -128,10 +126,8 @@ def save_location():
     if location or (lat and lng):
         session['user_location'] = location or f"{lat},{lng}"
         flash('Location saved!', 'success')
-    # Send members to dashboard, customers to home
-    if session.get('user_type') == 'Member':
-        return redirect(url_for('loans.dashboard'))
-    return redirect(url_for('index'))
+    # All users go to dashboard
+    return redirect(url_for('loans.dashboard'))
 
 
 # ── Logout ───────────────────────────────────────────────────────────────────

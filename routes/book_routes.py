@@ -34,6 +34,13 @@ def search():
         data = get_book_details(isbn, title=book.get('Title'), author=book.get('Authors'))
         covers[isbn] = data.get('cover_image')
 
+    user_id = session.get('user_id')
+    bookmarked_isbns = set()
+    if user_id:
+        for book in books:
+            if Bookmark.is_bookmarked(user_id, book['ISBN']):
+                bookmarked_isbns.add(book['ISBN'])
+
     return render_template(
         'search.html',
         books=books,
@@ -42,6 +49,7 @@ def search():
         page=page,
         total_pages=total_pages,
         total=total,
+        bookmarked_isbns=bookmarked_isbns,
     )
 
 
@@ -180,23 +188,23 @@ def locations():
     
     return render_template('locations.html', locations=combined)
     
-@book_bp.route('/locations/<int:location_id>')
-def location_detail(location_id):
-    libs = Library.get_all()
-    stores = Bookstore.get_all()
+@book_bp.route('/locations/<loc_type>/<int:location_id>')
+def location_detail(loc_type, location_id):
     location = None
 
-    for l in libs:
-        if l['LibraryID'] == location_id:
-            location = {
-                'ID': l['LibraryID'],
-                'Name': l['Name'],
-                'Location': l['Location'],
-                'Type': 'Library'
-            }
-            break
-
-    if not location:
+    if loc_type == 'Library':
+        libs = Library.get_all()
+        for l in libs:
+            if l['LibraryID'] == location_id:
+                location = {
+                    'ID': l['LibraryID'],
+                    'Name': l['Name'],
+                    'Location': l['Location'],
+                    'Type': 'Library'
+                }
+                break
+    elif loc_type == 'Bookstore':
+        stores = Bookstore.get_all()
         for s in stores:
             if s['StoreID'] == location_id:
                 location = {
@@ -267,4 +275,4 @@ def save_location(location_id):
         })
 
     flash(message, toast_type)
-    return redirect(url_for('books.location_detail', location_id=location_id))
+    return redirect(url_for('books.location_detail', loc_type=location_type, location_id=location_id))

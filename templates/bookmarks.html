@@ -291,7 +291,8 @@
         <!-- Bookmarks Grid -->
         <div id="bookmarksGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 px-2">
             {% for bm in bookmarks %}
-            <div class="bookmark-card group bg-white border border-[#e8dfa0] rounded-2xl p-6 relative flex gap-6 hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all" 
+            <div class="bookmark-card group bg-white border border-[#e8dfa0] rounded-2xl p-6 relative flex gap-6 hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all cursor-pointer" 
+                 onclick="if(!event.target.closest('button'))window.location.href='{{ url_for('books.book_detail', isbn=bm.ISBN) }}'"
                  data-available="{{ 'true' if bm.is_available else 'false' }}" 
                  data-genres="{{ bm.Genres or '' }}"
                  data-title="{{ bm.Title|lower }}"
@@ -363,52 +364,150 @@
     </main>
 
     <!-- Footer -->
-    <footer style="background:#fcf5c5; border-top:1px solid rgba(17,56,25,0.1); padding:80px 0 40px; margin-top:120px; width:100%; font-family: 'Outfit', sans-serif;">
-        <div style="max-width:1280px; margin:0 auto; padding:0 32px;">
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:64px; align-items:flex-start; margin-bottom:80px;">
-                <div style="max-width:400px;">
-                    <a href="{{ url_for('index') }}" style="text-decoration:none; display:flex; align-items:center; gap:8px; margin-bottom:28px;">
-                        <span class="material-symbols-outlined" style="font-size:32px;color:#113819;font-variation-settings:'FILL' 1;">eco</span>
-                        <span style="font-family:'Outfit',sans-serif;font-weight:900;font-size:1.8rem;color:#113819;letter-spacing:-0.05em;">ArdenLeaf</span>
-                    </a>
-                    <p style="font-family:'Lora',serif; color:#4b5563; font-size:1.15rem; line-height:1.7; font-style:italic; opacity:0.85;">
-                        "Explore our partner libraries and independent bookstores across India — each one a gateway to ArdenLeaf."
-                    </p>
-                </div>
-                <div style="display:flex; justify-content: flex-end;">
-                    <div style="min-width: 180px;">
-                        <h4 style="font-weight:900; color:#113819; text-transform:uppercase; letter-spacing:0.15em; font-size:0.75rem; margin-bottom:32px;">Discover</h4>
-                        <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:20px;">
-                            <li><a href="{{ url_for('books.search') }}" style="text-decoration:none; color:#6b7280; font-size:1.15rem; font-family:'Lora',serif; font-style:italic; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Search Books</a></li>
-                            <li><a href="{{ url_for('books.locations') }}" style="text-decoration:none; color:#6b7280; font-size:1.15rem; font-family:'Lora',serif; font-style:italic; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Locations</a></li>
-                            <li><a href="{{ url_for('books.bookmarks_page') }}" style="text-decoration:none; color:#113819; font-size:1.15rem; font-family:'Lora',serif; font-style:italic; font-weight:700; border-bottom:1.5px solid #113819; padding-bottom:2px;">Bookmarks</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div style="padding-top:40px; border-top:1px solid rgba(17,56,25,0.08); display:flex; justify-content:space-between; align-items:center;">
-                <p style="font-family:'Lora',serif; font-style:italic; font-size:0.95rem; color:#6b7280; opacity:0.7;">
-                    © 2024 ArdenLeaf. Made with 🍃 for India's readers.
+    <footer style="background:#fcf5c5; border-top:1px solid rgba(17,56,25,0.1); padding:40px 0 20px; margin-top:60px; width:100%; font-family: 'Outfit', sans-serif;">
+        <div style="max-width:1280px; margin:0 auto; padding:0 32px; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:24px;">
+            <div style="display:flex; align-items:center; gap:16px;">
+                <a href="{{ url_for('index') }}" style="text-decoration:none; display:flex; align-items:center; gap:8px;">
+                    <span class="material-symbols-outlined" style="font-size:24px;color:#113819;font-variation-settings:'FILL' 1;">eco</span>
+                    <span style="font-family:'Outfit',sans-serif;font-weight:900;font-size:1.4rem;color:#113819;letter-spacing:-0.05em;">ArdenLeaf</span>
+                </a>
+                <p style="font-family:'Lora',serif; color:#4b5563; font-size:0.95rem; font-style:italic; border-left:1px solid rgba(17,56,25,0.2); padding-left:16px; margin:0;">
+                    Gateway to India's independent libraries.
                 </p>
             </div>
+            <div style="display:flex; gap:24px; align-items:center;">
+                <a href="{{ url_for('books.search') }}" style="text-decoration:none; color:#6b7280; font-size:0.95rem; font-weight:600; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Search</a>
+                <a href="{{ url_for('books.locations') }}" style="text-decoration:none; color:#6b7280; font-size:0.95rem; font-weight:600; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Locations</a>
+                <a href="{{ url_for('books.bookmarks_page') }}" style="text-decoration:none; color:#6b7280; font-size:0.95rem; font-weight:600; transition:color 0.2s;" onmouseover="this.style.color='#113819'" onmouseout="this.style.color='#6b7280'">Bookmarks</a>
+            </div>
+        </div>
+        <div style="max-width:1280px; margin:24px auto 0; padding:24px 32px 0; border-top:1px solid rgba(17,56,25,0.08); text-align:center;">
+            <p style="font-family:'Lora',serif; font-style:italic; font-size:0.85rem; color:#6b7280; opacity:0.8; margin:0;">
+                Built with Indian readers in mind. © 2026 ArdenLeaf.
+            </p>
         </div>
     </footer>
 
     <script>
-        // Custom Dropdown Logic
+        // 1. Declare all variables
+        const cards = document.querySelectorAll('.bookmark-card');
+        const searchInput = document.getElementById('bookmarkSearch');
+        const noResults = document.getElementById('noResults');
         const genreTrigger = document.getElementById('genreTrigger');
         const genreMenu = document.getElementById('genreMenu');
         const genreChevron = document.getElementById('genreChevron');
         const genreSelectedText = document.getElementById('genreSelectedText');
-        
         const availTrigger = document.getElementById('availTrigger');
         const availMenu = document.getElementById('availMenu');
         const availChevron = document.getElementById('availChevron');
         const availSelectedText = document.getElementById('availSelectedText');
 
+        let currentPage = 1;
+        const itemsPerPage = 6;
+        let totalPages = Math.ceil(cards.length / itemsPerPage);
         let currentGenre = 'all';
         let currentAvail = 'all';
 
+        // 2. Define functions
+        function filter() {
+            let matchesCount = 0;
+            const searchTerm = searchInput.value.toLowerCase();
+            const availVal = currentAvail;
+            const genreVal = currentGenre;
+
+            cards.forEach(card => {
+                const title = card.getAttribute('data-title');
+                const author = card.getAttribute('data-author');
+                const genresArr = card.getAttribute('data-genres').split(',').map(g => g.trim());
+                const isAvail = card.getAttribute('data-available') === 'true';
+
+                let match = true;
+                if (searchTerm && !title.includes(searchTerm) && !author.includes(searchTerm)) match = false;
+                if (availVal === 'available' && !isAvail) match = false;
+                if (genreVal !== 'all' && !genresArr.includes(genreVal)) match = false;
+
+                if (match) {
+                    card.setAttribute('data-filtered', 'true');
+                    matchesCount++;
+                } else {
+                    card.setAttribute('data-filtered', 'false');
+                }
+            });
+
+            noResults.classList.toggle('hidden', matchesCount > 0 || cards.length === 0);
+            totalPages = Math.ceil(matchesCount / itemsPerPage);
+            currentPage = 1;
+            showPage(1);
+        }
+
+        function showPage(page) {
+            const filteredCards = Array.from(cards).filter(c => c.getAttribute('data-filtered') !== 'false');
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            
+            Array.from(cards).forEach(card => {
+                const idx = filteredCards.indexOf(card);
+                card.style.display = (idx >= start && idx < end) ? 'flex' : 'none';
+            });
+
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const pagContainer = document.getElementById('pagination-container');
+
+            if (prevBtn) prevBtn.disabled = page === 1;
+            if (nextBtn) nextBtn.disabled = page === totalPages || totalPages === 0;
+            if (pagContainer) pagContainer.classList.toggle('hidden', totalPages <= 1);
+
+            updateDots(page);
+        }
+
+        function updateDots(activePage) {
+            const dotsContainer = document.getElementById('pageDots');
+            if (!dotsContainer) return;
+            dotsContainer.innerHTML = '';
+            for (let i = 1; i <= totalPages; i++) {
+                const dot = document.createElement('div');
+                dot.className = `w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === activePage ? 'bg-black w-4' : 'bg-black/20'}`;
+                dotsContainer.appendChild(dot);
+            }
+        }
+
+        window.changePage = function(delta) {
+            const newPage = currentPage + delta;
+            if (newPage >= 1 && newPage <= totalPages) {
+                currentPage = newPage;
+                showPage(currentPage);
+            }
+        }
+
+        async function removeBookmark(isbn, btn) {
+            const card = btn.closest('.bookmark-card');
+            card.style.opacity = '0.5';
+            card.style.pointerEvents = 'none';
+
+            try {
+                const res = await fetch(`/api/bookmarks/toggle/${isbn}`, {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json' }
+                });
+                const data = await res.json();
+                
+                if (!data.bookmarked) {
+                    card.classList.add('hidden');
+                    setTimeout(() => {
+                        card.remove();
+                        filter(); // Re-filter and re-paginate after removal
+                    }, 300);
+                    window.showToast("Bookmark removed", null, "success");
+                }
+            } catch (err) {
+                card.style.opacity = '1';
+                card.style.pointerEvents = 'auto';
+                window.showToast("Failed to remove bookmark", null, "error");
+            }
+        }
+
+        // 3. Attach dropdown trigger events
         genreTrigger.onclick = (e) => {
             e.stopPropagation();
             const isOpen = !genreMenu.classList.contains('hidden');
@@ -460,114 +559,7 @@
             availChevron.style.transform = 'rotate(0deg)';
         });
 
-        function filter() {
-            let matchesCount = 0;
-            const searchTerm = searchInput.value.toLowerCase();
-            const availVal = currentAvail;
-            const genreVal = currentGenre;
-
-            cards.forEach(card => {
-                const title = card.getAttribute('data-title');
-                const author = card.getAttribute('data-author');
-                const genresArr = card.getAttribute('data-genres').split(',').map(g => g.trim());
-                const isAvail = card.getAttribute('data-available') === 'true';
-
-                let match = true;
-
-                if (searchTerm && !title.includes(searchTerm) && !author.includes(searchTerm)) match = false;
-                if (availVal === 'available' && !isAvail) match = false;
-                if (genreVal !== 'all' && !genresArr.includes(genreVal)) match = false;
-
-                if (match) {
-                    card.setAttribute('data-filtered', 'true');
-                    matchesCount++;
-                } else {
-                    card.setAttribute('data-filtered', 'false');
-                    card.style.display = 'none';
-                }
-            });
-
-            noResults.classList.toggle('hidden', matchesCount > 0 || cards.length === 0);
-            
-            totalPages = Math.ceil(matchesCount / itemsPerPage);
-            currentPage = 1;
-            showPage(1);
-        }
-
-        function showPage(page) {
-            const filteredCards = Array.from(cards).filter(c => c.getAttribute('data-filtered') !== 'false');
-            const start = (page - 1) * itemsPerPage;
-            const end = start + itemsPerPage;
-
-            filteredCards.forEach((card, index) => {
-                card.style.display = (index >= start && index < end) ? 'flex' : 'none';
-            });
-
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            const pagContainer = document.getElementById('pagination-container');
-
-            if (prevBtn) prevBtn.disabled = page === 1;
-            if (nextBtn) nextBtn.disabled = page === totalPages || totalPages === 0;
-            if (pagContainer) pagContainer.classList.toggle('hidden', totalPages <= 1);
-
-            updateDots(page);
-        }
-
-        function updateDots(activePage) {
-            const dotsContainer = document.getElementById('pageDots');
-            if (!dotsContainer) return;
-            dotsContainer.innerHTML = '';
-            for (let i = 1; i <= totalPages; i++) {
-                const dot = document.createElement('div');
-                dot.className = `w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === activePage ? 'bg-black w-4' : 'bg-black/20'}`;
-                dotsContainer.appendChild(dot);
-            }
-        }
-
-        window.changePage = function(delta) {
-            const newPage = currentPage + delta;
-            if (newPage >= 1 && newPage <= totalPages) {
-                currentPage = newPage;
-                showPage(currentPage);
-            }
-        }
-
-        // Initialize view
-        cards.forEach(c => c.setAttribute('data-filtered', 'true'));
-        showPage(1);
-
-        searchInput.oninput = filter;
-
-        // Bookmark Removal
-        async function removeBookmark(isbn, btn) {
-            const card = btn.closest('.bookmark-card');
-            card.style.opacity = '0.5';
-            card.style.pointerEvents = 'none';
-
-            try {
-                const res = await fetch(`/api/bookmarks/toggle/${isbn}`, {
-                    method: 'POST',
-                    headers: { 'Accept': 'application/json' }
-                });
-                const data = await res.json();
-                
-                if (!data.bookmarked) {
-                    card.classList.add('hidden');
-                    setTimeout(() => card.remove(), 300);
-                    window.showToast("Bookmark removed", null, "success");
-                    if (document.querySelectorAll('.bookmark-card:not(.hidden)').length === 0) {
-                        location.reload();
-                    }
-                }
-            } catch (err) {
-                card.style.opacity = '1';
-                card.style.pointerEvents = 'auto';
-                window.showToast("Failed to remove bookmark", null, "error");
-            }
-        }
-
-        // ── Profile dropdown toggle (Canonical logic) ──
+        // 4. Profile dropdown single IIFE
         (function() {
             const wrap    = document.getElementById('profileMenuWrap');
             const trigger = document.getElementById('profileTrigger');
@@ -592,21 +584,7 @@
             }
         })();
 
-        // Pagination Logic
-        let currentPage = 1;
-        const itemsPerPage = 6;
-        const cards = document.querySelectorAll('.bookmark-card');
-        let totalPages = Math.ceil(Array.from(cards).filter(c => c.style.display !== 'none').length / itemsPerPage);
-
-        function showPage(page) {
-            const filteredCards = Array.from(cards).filter(c => c.style.display !== 'none' || c.getAttribute('data-paging') === 'true');
-            // This is tricky because bookmarks have their own filtering.
-            // I'll update the filter function to call showPage.
-        }
-
-        // I'll rewrite the existing filter function to handle pagination.
-
-        // Toast Manager
+        // 5. Toast Manager IIFE
         (function () {
             const TOAST_COLORS = {
                 success: { bg: '#c1eec0', border: '#113819', icon: '#113819', symbol: '\u2713', bar: '#113819' },
@@ -624,7 +602,7 @@
                     el.style.backgroundColor = TOAST_COLORS[type].bg;
                     el.style.border = `1px solid ${TOAST_COLORS[type].border}`;
                     if (url) el.onclick = () => window.location.href = url;
-                    el.innerHTML = `<div class="toast-icon" style="background:${TOAST_COLORS[type].icon}">${TOAST_COLORS[type].symbol}</div><div class="toast-message">${message}</div><button class="toast-close">&times;</button><div class="toast-progress" style="background:${TOAST_COLORS[type].bar}"></div>`;
+                    el.innerHTML = `<div class="toast-icon" style="background:${TOAST_COLORS[type].icon}">${TOAST_COLORS[type].symbol}</div><div class="toast-message">${message}</div><button class="toast-close">&times;</button>`;
                     el.querySelector('.toast-close').onclick = (e) => { e.stopPropagation(); this._dismiss(el); };
                     this.container.appendChild(el); this.queue.push(el);
                     requestAnimationFrame(() => el.classList.add('toast-show'));
@@ -641,10 +619,14 @@
             }
             const _mgr = new ToastManager();
             window.showToast = (msg, url, type) => _mgr.show(msg, url, type);
-            // Flash messages
             const flashes = JSON.parse(document.getElementById('flash-data').textContent || '[]');
             flashes.forEach(f => showToast(f[1], null, f[0] === 'error' ? 'error' : f[0] === 'success' ? 'success' : 'info'));
         })();
+
+        // 6. Initialize
+        cards.forEach(c => c.setAttribute('data-filtered', 'true'));
+        showPage(1);
+        searchInput.oninput = filter;
     </script>
 
     <!-- Flash data -->

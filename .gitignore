@@ -42,3 +42,4 @@ Thumbs.db
 
 # Antigravity
 _agent/
+.book_cache.json

@@ -22,7 +22,7 @@
 <!-- Stat Cards Bento Grid -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
     <!-- Total Books -->
-    <div class="bg-surface-container-lowest p-8 rounded-2xl border border-surface-container-high hover:bg-surface-container-low transition-all duration-300 group">
+    <div id="card-books" onclick="showPanel('books')" class="bg-surface-container-lowest p-8 rounded-2xl border border-surface-container-high hover:bg-surface-container-low transition-all duration-300 group cursor-pointer">
         <div class="flex justify-between items-start mb-6">
             <div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center group-hover:scale-110 transition-transform">
                 <span class="material-symbols-outlined text-primary-container">menu_book</span>
@@ -33,7 +33,7 @@
         <p class="font-body text-sm text-on-surface-variant font-medium">Total Books</p>
     </div>
     <!-- Active Loans -->
-    <div class="bg-surface-container-lowest p-8 rounded-2xl border border-surface-container-high hover:bg-surface-container-low transition-all duration-300 group">
+    <div id="card-loans" onclick="showPanel('loans')" class="bg-surface-container-lowest p-8 rounded-2xl border border-surface-container-high hover:bg-surface-container-low transition-all duration-300 group cursor-pointer">
         <div class="flex justify-between items-start mb-6">
             <div class="w-12 h-12 rounded-xl bg-[#fdf2f4] flex items-center justify-center group-hover:scale-110 transition-transform">
                 <span class="material-symbols-outlined text-tertiary">import_contacts</span>
@@ -44,7 +44,7 @@
         <p class="font-body text-sm text-on-surface-variant font-medium">Active Loans</p>
     </div>
     <!-- Registered Members -->
-    <div class="bg-surface-container-lowest p-8 rounded-2xl border border-surface-container-high hover:bg-surface-container-low transition-all duration-300 group">
+    <div id="card-members" onclick="showPanel('members')" class="bg-surface-container-lowest p-8 rounded-2xl border border-surface-container-high hover:bg-surface-container-low transition-all duration-300 group cursor-pointer">
         <div class="flex justify-between items-start mb-6">
             <div class="w-12 h-12 rounded-xl bg-[#e8f5e9] flex items-center justify-center group-hover:scale-110 transition-transform">
                 <span class="material-symbols-outlined text-[#2e7d32]">group</span>
@@ -55,7 +55,7 @@
         <p class="font-body text-sm text-on-surface-variant font-medium">Registered Members</p>
     </div>
     <!-- Partner Locations -->
-    <div class="bg-surface-container-lowest p-8 rounded-2xl border border-surface-container-high hover:bg-surface-container-low transition-all duration-300 group">
+    <div id="card-locations" onclick="showPanel('locations')" class="bg-surface-container-lowest p-8 rounded-2xl border border-surface-container-high hover:bg-surface-container-low transition-all duration-300 group cursor-pointer">
         <div class="flex justify-between items-start mb-6">
             <div class="w-12 h-12 rounded-xl bg-[#fffde7] flex items-center justify-center group-hover:scale-110 transition-transform">
                 <span class="material-symbols-outlined text-[#fbc02d]">location_on</span>
@@ -67,9 +67,144 @@
     </div>
 </div>
 
-<!-- Secondary Analytics (Placeholder) -->
-<div class="bg-surface-container-lowest rounded-3xl p-20 border border-dashed border-surface-container-high flex flex-col items-center justify-center text-on-surface-variant/40">
-    <span class="material-symbols-outlined text-6xl mb-4 italic opacity-20">analytics</span>
-    <p class="font-body italic text-lg leading-relaxed">More analytics and activity logs coming soon.</p>
+<!-- Detail Panels Container -->
+<div id="detail-panel" class="mt-4">
+    <!-- Books Panel -->
+    <div id="panel-books" class="panel hidden bg-surface-container-lowest rounded-3xl border border-surface-container-high overflow-hidden">
+        <div class="px-8 py-5 border-b border-surface-container-high flex items-center justify-between">
+            <h3 class="font-headline text-lg font-bold text-primary-container">All Books</h3>
+            <button onclick="closePanel()" class="text-on-surface-variant hover:text-primary-container transition-colors">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="overflow-x-auto max-h-96 overflow-y-auto">
+            <table class="w-full">
+                <thead class="sticky top-0 bg-surface-container">
+                    <tr>
+                        <th class="px-6 py-3 text-left font-headline text-xs text-primary-container/60 uppercase tracking-widest">ISBN</th>
+                        <th class="px-6 py-3 text-left font-headline text-xs text-primary-container/60 uppercase tracking-widest">Title</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in books_list %}
+                    <tr class="border-b border-surface-container hover:bg-surface-container-low transition-colors">
+                        <td class="px-6 py-3 font-body text-xs text-on-surface-variant">{{ book.ISBN }}</td>
+                        <td class="px-6 py-3 font-body text-sm text-on-surface">{{ book.Title }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Active Loans Panel -->
+    <div id="panel-loans" class="panel hidden bg-surface-container-lowest rounded-3xl border border-surface-container-high overflow-hidden">
+        <div class="px-8 py-5 border-b border-surface-container-high flex items-center justify-between">
+            <h3 class="font-headline text-lg font-bold text-primary-container">Active Loans</h3>
+            <button onclick="closePanel()" class="text-on-surface-variant hover:text-primary-container transition-colors">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="overflow-x-auto max-h-96 overflow-y-auto">
+            <table class="w-full">
+                <thead class="sticky top-0 bg-surface-container">
+                    <tr>
+                        <th class="px-6 py-3 text-left font-headline text-xs text-primary-container/60 uppercase tracking-widest">Member</th>
+                        <th class="px-6 py-3 text-left font-headline text-xs text-primary-container/60 uppercase tracking-widest">Book</th>
+                        <th class="px-6 py-3 text-left font-headline text-xs text-primary-container/60 uppercase tracking-widest">Library</th>
+                        <th class="px-6 py-3 text-left font-headline text-xs text-primary-container/60 uppercase tracking-widest">Due</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for loan in active_loans_list %}
+                    <tr class="border-b border-surface-container hover:bg-surface-container-low transition-colors">
+                        <td class="px-6 py-3 font-body text-sm text-on-surface">{{ loan.MemberName }}</td>
+                        <td class="px-6 py-3 font-body text-sm text-on-surface">{{ loan.BookTitle }}</td>
+                        <td class="px-6 py-3 font-body text-xs text-on-surface-variant">{{ loan.LibraryName }}</td>
+                        <td class="px-6 py-3 font-body text-xs text-on-surface-variant">{{ loan.DueDate.strftime('%d %b %Y') if loan.DueDate else '—' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Members Panel -->
+    <div id="panel-members" class="panel hidden bg-surface-container-lowest rounded-3xl border border-surface-container-high overflow-hidden">
+        <div class="px-8 py-5 border-b border-surface-container-high flex items-center justify-between">
+            <h3 class="font-headline text-lg font-bold text-primary-container">Registered Members</h3>
+            <button onclick="closePanel()" class="text-on-surface-variant hover:text-primary-container transition-colors">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="overflow-x-auto max-h-96 overflow-y-auto">
+            <table class="w-full">
+                <thead class="sticky top-0 bg-surface-container">
+                    <tr>
+                        <th class="px-6 py-3 text-left font-headline text-xs text-primary-container/60 uppercase tracking-widest">Name</th>
+                        <th class="px-6 py-3 text-left font-headline text-xs text-primary-container/60 uppercase tracking-widest">Email</th>
+                        <th class="px-6 py-3 text-left font-headline text-xs text-primary-container/60 uppercase tracking-widest">Since</th>
+                        <th class="px-6 py-3 text-left font-headline text-xs text-primary-container/60 uppercase tracking-widest">Max Books</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for m in members_list %}
+                    <tr class="border-b border-surface-container hover:bg-surface-container-low transition-colors">
+                        <td class="px-6 py-3 font-body text-sm text-on-surface">{{ m.Name }}</td>
+                        <td class="px-6 py-3 font-body text-xs text-on-surface-variant">{{ m.Email }}</td>
+                        <td class="px-6 py-3 font-body text-xs text-on-surface-variant">{{ m.MembershipDate.strftime('%d %b %Y') if m.MembershipDate else '—' }}</td>
+                        <td class="px-6 py-3 font-body text-xs text-on-surface-variant">{{ m.MaxBooks }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Locations Panel -->
+    <div id="panel-locations" class="panel hidden bg-surface-container-lowest rounded-3xl border border-surface-container-high overflow-hidden">
+        <div class="px-8 py-5 border-b border-surface-container-high flex items-center justify-between">
+            <h3 class="font-headline text-lg font-bold text-primary-container">Partner Locations</h3>
+            <button onclick="closePanel()" class="text-on-surface-variant hover:text-primary-container transition-colors">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="overflow-x-auto max-h-96 overflow-y-auto">
+            <table class="w-full">
+                <thead class="sticky top-0 bg-surface-container">
+                    <tr>
+                        <th class="px-6 py-3 text-left font-headline text-xs text-primary-container/60 uppercase tracking-widest">Name</th>
+                        <th class="px-6 py-3 text-left font-headline text-xs text-primary-container/60 uppercase tracking-widest">Type</th>
+                        <th class="px-6 py-3 text-left font-headline text-xs text-primary-container/60 uppercase tracking-widest">Location</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for loc in locations_list %}
+                    <tr class="border-b border-surface-container hover:bg-surface-container-low transition-colors">
+                        <td class="px-6 py-3 font-body text-sm text-on-surface">{{ loc.Name }}</td>
+                        <td class="px-6 py-3">
+                            <span class="px-2 py-0.5 rounded-full font-headline text-[10px] font-bold uppercase tracking-widest {{ 'bg-primary-fixed text-on-primary-fixed' if loc.Type == 'Library' else 'bg-secondary-container text-on-secondary-container' }}">{{ loc.Type }}</span>
+                        </td>
+                        <td class="px-6 py-3 font-body text-xs text-on-surface-variant">{{ loc.Location }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
+
+<script>
+function showPanel(name) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.add('hidden'));
+    const panel = document.getElementById('panel-' + name);
+    if (panel) {
+        panel.classList.remove('hidden');
+        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+}
+function closePanel() {
+    document.querySelectorAll('.panel').forEach(p => p.classList.add('hidden'));
+}
+</script>
 {% endblock %}

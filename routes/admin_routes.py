@@ -29,15 +29,56 @@ def dashboard():
     # Partner Locations
     cursor.execute("SELECT (SELECT COUNT(*) FROM Library) + (SELECT COUNT(*) FROM Bookstore)")
     total_locations = cursor.fetchone()[0]
+
+    # Detailed Data for Panels
+    db_cursor = conn.cursor(dictionary=True) # Use dictionary cursor for detail lists
     
+    # Books list
+    db_cursor.execute("SELECT ISBN, Title FROM Book ORDER BY Title")
+    books_list = db_cursor.fetchall()
+
+    # Active loans list
+    db_cursor.execute("""
+        SELECT u.Name AS MemberName, b.Title AS BookTitle, 
+               lib.Name AS LibraryName, l.IssueDate, l.DueDate
+        FROM Loan l
+        JOIN User u ON l.MemberID = u.UserID
+        JOIN BookCopy bc ON l.CopyID = bc.CopyID
+        JOIN Book b ON bc.ISBN = b.ISBN
+        LEFT JOIN Library lib ON bc.LibraryID = lib.LibraryID
+        WHERE l.ReturnDate IS NULL
+        ORDER BY l.DueDate ASC
+    """)
+    active_loans_list = db_cursor.fetchall()
+
+    # Members list
+    db_cursor.execute("""
+        SELECT u.Name, u.Email, m.MembershipDate, m.MaxBooks
+        FROM User u JOIN Member m ON u.UserID = m.UserID
+        ORDER BY u.Name
+    """)
+    members_list = db_cursor.fetchall()
+
+    # Locations list
+    db_cursor.execute("SELECT LibraryID AS ID, Name, Location, 'Library' AS Type FROM Library")
+    libs = db_cursor.fetchall()
+    db_cursor.execute("SELECT StoreID AS ID, Name, Location, 'Bookstore' AS Type FROM Bookstore")
+    stores = db_cursor.fetchall()
+    locations_list = libs + stores
+
+    db_cursor.close()
     cursor.close()
     conn.close()
     
     return render_template('admin/dashboard.html', 
-                           total_books=total_books, 
-                           active_loans=active_loans, 
-                           total_members=total_members, 
-                           total_locations=total_locations)
+                            total_books=total_books, 
+                            active_loans=active_loans, 
+                            total_members=total_members, 
+                            total_locations=total_locations,
+                            books_list=books_list,
+                            active_loans_list=active_loans_list,
+                            members_list=members_list,
+                            locations_list=locations_list)
 
 @admin_bp.route('/books/add', methods=['GET', 'POST'])
 def add_book():

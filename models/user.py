@@ -46,11 +46,6 @@ class User:
                     "INSERT INTO Member (UserID, MembershipDate, MaxBooks) VALUES (%s, CURDATE(), 5)",
                     (user_id,)
                 )
-            elif user_type == 'Customer':
-                cursor.execute(
-                    "INSERT INTO Customer (UserID, LoyaltyPoints) VALUES (%s, 0)",
-                    (user_id,)
-                )
 
             # Optionally store phone number
             if phone:
@@ -82,9 +77,6 @@ class User:
             if user:
                 if user['UserType'] == 'Member':
                     cursor.execute("SELECT * FROM Member WHERE UserID = %s", (user_id,))
-                    user.update(cursor.fetchone() or {})
-                elif user['UserType'] == 'Customer':
-                    cursor.execute("SELECT * FROM Customer WHERE UserID = %s", (user_id,))
                     user.update(cursor.fetchone() or {})
 
                 cursor.execute("SELECT Phone FROM User_Phone WHERE UserID = %s", (user_id,))
