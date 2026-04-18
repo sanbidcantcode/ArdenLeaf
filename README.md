@@ -190,6 +190,68 @@ Open **http://127.0.0.1:5000** in your browser.
 
 ---
 
+## Deploying To Railway
+
+This project is Railway-ready and already includes [railway.toml](D:/Projects%20of%20Coding/Database%20Project/ArdenLeaf/railway.toml) with this start command:
+
+```toml
+[deploy]
+startCommand = "gunicorn --bind 0.0.0.0:$PORT \"app:create_app()\""
+```
+
+### 1. Create the Railway project
+
+1. Push this repository to GitHub.
+2. In Railway, create a new project.
+3. Add two services:
+   - a GitHub-backed service for this Flask app
+   - a MySQL service
+
+### 2. Set application variables
+
+In the Flask service, set:
+
+```env
+SECRET_KEY=generate-a-long-random-secret
+```
+
+You do not need to manually rename Railway's MySQL variables. Railway provides `MYSQLHOST`, `MYSQLUSER`, `MYSQLPASSWORD`, `MYSQLDATABASE`, and `MYSQLPORT`, and the app now supports those names directly.
+
+### 3. Initialize the database
+
+After the MySQL service is created, run the SQL files against that Railway database:
+
+```sql
+source database/schema.sql
+source database/seed_expanded.sql
+```
+
+You can do this from:
+- a local MySQL client connected to Railway's MySQL public TCP proxy, or
+- Railway's MySQL service shell if you prefer a project-local workflow
+
+### 4. Generate a public domain
+
+In the Flask service:
+1. Open `Settings`
+2. Open `Networking`
+3. Click `Generate Domain`
+
+### 5. Redeploy and verify
+
+Once variables and schema are in place, redeploy the Flask service and confirm:
+- home page loads
+- `/auth` works
+- book search loads data
+- login works for a seeded account
+
+### Notes
+
+- The app uses MySQL, so deployment is not complete until the schema is loaded.
+- The Google Books integration calls an external API at runtime; if that API is slow or rate-limits, the app still runs but some enrichment fields may be empty.
+
+---
+
 ## Test Accounts
 
 All passwords are stored as `scrypt` hashes in the database. The seed provides accounts for every role:
