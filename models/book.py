@@ -84,8 +84,8 @@ class Book:
                     l.Name AS LibraryName,
                     s.Name AS StoreName
                 FROM BookCopy bc
-                LEFT JOIN Library l ON bc.LibraryID = l.LibraryID
-                LEFT JOIN Bookstore s ON bc.StoreID = s.StoreID
+                LEFT JOIN Libraries l ON bc.LibraryID = l.LibraryID
+                LEFT JOIN Bookstores s ON bc.StoreID = s.StoreID
                 WHERE bc.ISBN = %s
             """
             cursor.execute(sql, (isbn,))

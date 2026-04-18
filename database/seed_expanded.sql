@@ -7,8 +7,8 @@ SET FOREIGN_KEY_CHECKS = 0;
 DELETE FROM `Bookmark`;
 DELETE FROM `Loan`;
 DELETE FROM `BookCopy`;
-DELETE FROM `Bookstore`;
-DELETE FROM `Library`;
+DELETE FROM `Bookstores`;
+DELETE FROM `Libraries`;
 DELETE FROM `Book_Genre`;
 DELETE FROM `Book_Author`;
 DELETE FROM `Book`;
@@ -22,8 +22,8 @@ DELETE FROM `User`;
 ALTER TABLE `User` AUTO_INCREMENT = 1;
 ALTER TABLE `Publisher` AUTO_INCREMENT = 1;
 ALTER TABLE `Author` AUTO_INCREMENT = 1;
-ALTER TABLE `Library` AUTO_INCREMENT = 1;
-ALTER TABLE `Bookstore` AUTO_INCREMENT = 1;
+ALTER TABLE `Libraries` AUTO_INCREMENT = 1;
+ALTER TABLE `Bookstores` AUTO_INCREMENT = 1;
 ALTER TABLE `BookCopy` AUTO_INCREMENT = 1;
 ALTER TABLE `Loan` AUTO_INCREMENT = 1;
 SET FOREIGN_KEY_CHECKS = 1;
@@ -161,14 +161,14 @@ INSERT INTO `Book_Genre` (ISBN, Genre) VALUES
 -- ─────────────────────────────────────────────────────────────────────────────
 -- 7. LIBRARIES & BOOKSTORES
 -- ─────────────────────────────────────────────────────────────────────────────
-INSERT INTO `Library` (Name, Location) VALUES
+INSERT INTO `Libraries` (Name, Location) VALUES
 ('Connaught Place Public Library', 'Connaught Place, New Delhi 110001'), -- 1
 ('Bandra Reading House',          'Linking Road, Bandra West, Mumbai 400050'), -- 2
 ('Indiranagar Branch Library',     '100 Feet Road, Indiranagar, Bangalore 560038'), -- 3
 ('Park Street Literary Centre',    'Park Street, Kolkata 700016'), -- 4
 ('Anna Centenary Library Annex',   'Gandhi Irwin Road, Egmore, Chennai 600008'); -- 5
 
-INSERT INTO `Bookstore` (Name, Location) VALUES
+INSERT INTO `Bookstores` (Name, Location) VALUES
 ('Footnotes Bookstore', 'Commercial Street, Bangalore 560001'), -- 1
 ('The Margin Bookshop', 'Hauz Khas Village, New Delhi 110016'), -- 2
 ('Bylanes Books',       'Fort Area, Mumbai 400001'), -- 3

@@ -78,8 +78,8 @@ class SavedLocation:
                     COALESCE(l.Name, s.Name) AS Name,
                     COALESCE(l.Location, s.Location) AS Location
                 FROM SavedLocation sl
-                LEFT JOIN Library l ON sl.LocationType = 'Library' AND sl.LocationID = l.LibraryID
-                LEFT JOIN Bookstore s ON sl.LocationType = 'Bookstore' AND sl.LocationID = s.StoreID
+                LEFT JOIN Libraries l ON sl.LocationType = 'Library' AND sl.LocationID = l.LibraryID
+                LEFT JOIN Bookstores s ON sl.LocationType = 'Bookstore' AND sl.LocationID = s.StoreID
                 WHERE sl.UserID = %s
                 ORDER BY sl.CreatedAt DESC
             """

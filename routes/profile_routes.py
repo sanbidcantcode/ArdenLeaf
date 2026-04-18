@@ -97,8 +97,8 @@ def profile():
             FROM Loan l
             JOIN BookCopy bc ON l.CopyID = bc.CopyID
             JOIN Book b ON bc.ISBN = b.ISBN
-            LEFT JOIN Library lib ON bc.LibraryID = lib.LibraryID
-            LEFT JOIN Bookstore s ON bc.StoreID = s.StoreID
+            LEFT JOIN Libraries lib ON bc.LibraryID = lib.LibraryID
+            LEFT JOIN Bookstores s ON bc.StoreID = s.StoreID
             WHERE l.MemberID = %s
             ORDER BY l.IssueDate DESC
         """, (user_id,))

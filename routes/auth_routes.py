@@ -37,7 +37,7 @@ def auth_page():
                         if loc['LibraryID']:
                             conn3 = get_db_connection()
                             cur3 = conn3.cursor(dictionary=True)
-                            cur3.execute("SELECT Name FROM Library WHERE LibraryID = %s", (loc['LibraryID'],))
+                            cur3.execute("SELECT Name FROM Libraries WHERE LibraryID = %s", (loc['LibraryID'],))
                             loc_row = cur3.fetchone()
                             cur3.close()
                             conn3.close()
@@ -47,7 +47,7 @@ def auth_page():
                         else:
                             conn3 = get_db_connection()
                             cur3 = conn3.cursor(dictionary=True)
-                            cur3.execute("SELECT Name FROM Bookstore WHERE StoreID = %s", (loc['StoreID'],))
+                            cur3.execute("SELECT Name FROM Bookstores WHERE StoreID = %s", (loc['StoreID'],))
                             loc_row = cur3.fetchone()
                             cur3.close()
                             conn3.close()

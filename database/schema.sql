@@ -1,7 +1,5 @@
 -- ArdenLeaf Database Schema
 
-CREATE DATABASE IF NOT EXISTS ardenleaf;
-USE ardenleaf;
 
 -- 1. Base User Table
 CREATE TABLE IF NOT EXISTS `User` (
@@ -68,15 +66,15 @@ CREATE TABLE IF NOT EXISTS `Book_Genre` (
     FOREIGN KEY (ISBN) REFERENCES `Book`(ISBN) ON DELETE CASCADE
 );
 
--- 10. Library
-CREATE TABLE IF NOT EXISTS `Library` (
+-- 10. Libraries
+CREATE TABLE IF NOT EXISTS `Libraries` (
     LibraryID INT AUTO_INCREMENT PRIMARY KEY,
     Name VARCHAR(150) NOT NULL,
     Location TEXT NOT NULL
 );
 
--- 11. Bookstore
-CREATE TABLE IF NOT EXISTS `Bookstore` (
+-- 11. Bookstores
+CREATE TABLE IF NOT EXISTS `Bookstores` (
     StoreID INT AUTO_INCREMENT PRIMARY KEY,
     Name VARCHAR(150) NOT NULL,
     Location TEXT NOT NULL
@@ -92,8 +90,8 @@ CREATE TABLE IF NOT EXISTS `BookCopy` (
     Price DECIMAL(10,2) NULL,    -- Only set for bookstore copies; NULL for library copies
     DiscountPercent INT NULL,    -- Optional discount %; NULL if no discount or library copy
     FOREIGN KEY (ISBN) REFERENCES `Book`(ISBN) ON DELETE CASCADE,
-    FOREIGN KEY (LibraryID) REFERENCES `Library`(LibraryID) ON DELETE SET NULL,
-    FOREIGN KEY (StoreID) REFERENCES `Bookstore`(StoreID) ON DELETE SET NULL
+    FOREIGN KEY (LibraryID) REFERENCES `Libraries`(LibraryID) ON DELETE SET NULL,
+    FOREIGN KEY (StoreID) REFERENCES `Bookstores`(StoreID) ON DELETE SET NULL
     -- Note: Library-or-Bookstore constraint enforced at application level
 );
 
@@ -144,8 +142,8 @@ CREATE TABLE IF NOT EXISTS `LocationAdmin` (
     LibraryID INT DEFAULT NULL,
     StoreID INT DEFAULT NULL,
     FOREIGN KEY (UserID) REFERENCES `User`(UserID) ON DELETE CASCADE,
-    FOREIGN KEY (LibraryID) REFERENCES `Library`(LibraryID) ON DELETE SET NULL,
-    FOREIGN KEY (StoreID) REFERENCES `Bookstore`(StoreID) ON DELETE SET NULL
+    FOREIGN KEY (LibraryID) REFERENCES `Libraries`(LibraryID) ON DELETE SET NULL,
+    FOREIGN KEY (StoreID) REFERENCES `Bookstores`(StoreID) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS `SavedLocation` (

@@ -5,7 +5,7 @@ class Library:
     def get_all():
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM Library")
+        cursor.execute("SELECT * FROM Libraries")
         libraries = cursor.fetchall()
         cursor.close()
         conn.close()
@@ -32,7 +32,7 @@ class Bookstore:
     def get_all():
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM Bookstore")
+        cursor.execute("SELECT * FROM Bookstores")
         stores = cursor.fetchall()
         cursor.close()
         conn.close()

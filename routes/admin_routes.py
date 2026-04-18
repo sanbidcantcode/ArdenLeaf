@@ -27,7 +27,7 @@ def dashboard():
     total_members = cursor.fetchone()[0]
     
     # Partner Locations
-    cursor.execute("SELECT (SELECT COUNT(*) FROM Library) + (SELECT COUNT(*) FROM Bookstore)")
+    cursor.execute("SELECT (SELECT COUNT(*) FROM Libraries) + (SELECT COUNT(*) FROM Bookstores)")
     total_locations = cursor.fetchone()[0]
 
     # Detailed Data for Panels
@@ -45,7 +45,7 @@ def dashboard():
         JOIN User u ON l.MemberID = u.UserID
         JOIN BookCopy bc ON l.CopyID = bc.CopyID
         JOIN Book b ON bc.ISBN = b.ISBN
-        LEFT JOIN Library lib ON bc.LibraryID = lib.LibraryID
+        LEFT JOIN Libraries lib ON bc.LibraryID = lib.LibraryID
         WHERE l.ReturnDate IS NULL
         ORDER BY l.DueDate ASC
     """)
@@ -60,9 +60,9 @@ def dashboard():
     members_list = db_cursor.fetchall()
 
     # Locations list
-    db_cursor.execute("SELECT LibraryID AS ID, Name, Location, 'Library' AS Type FROM Library")
+    db_cursor.execute("SELECT LibraryID AS ID, Name, Location, 'Library' AS Type FROM Libraries")
     libs = db_cursor.fetchall()
-    db_cursor.execute("SELECT StoreID AS ID, Name, Location, 'Bookstore' AS Type FROM Bookstore")
+    db_cursor.execute("SELECT StoreID AS ID, Name, Location, 'Bookstore' AS Type FROM Bookstores")
     stores = db_cursor.fetchall()
     locations_list = libs + stores
 
@@ -135,9 +135,9 @@ def add_copy():
         return redirect(url_for('admin.add_copy'))
 
     # GET request needs lists of locs
-    cursor.execute("SELECT * FROM Library")
+    cursor.execute("SELECT * FROM Libraries")
     libraries = cursor.fetchall()
-    cursor.execute("SELECT * FROM Bookstore")
+    cursor.execute("SELECT * FROM Bookstores")
     bookstores = cursor.fetchall()
     
     cursor.close()
@@ -160,9 +160,9 @@ def add_location():
         cursor = conn.cursor()
         try:
             if loc_type == 'Library':
-                cursor.execute("INSERT INTO Library (Name, Location) VALUES (%s, %s)", (name, address))
+                cursor.execute("INSERT INTO Libraries (Name, Location) VALUES (%s, %s)", (name, address))
             else:
-                cursor.execute("INSERT INTO Bookstore (Name, Location) VALUES (%s, %s)", (name, address))
+                cursor.execute("INSERT INTO Bookstores (Name, Location) VALUES (%s, %s)", (name, address))
             conn.commit()
             flash('Location added successfully!', 'success')
         except Exception as e:
@@ -193,7 +193,7 @@ def loans():
             JOIN User u ON l.MemberID = u.UserID
             JOIN BookCopy bc ON l.CopyID = bc.CopyID
             JOIN Book b ON bc.ISBN = b.ISBN
-            JOIN Library lib ON bc.LibraryID = lib.LibraryID
+            JOIN Libraries lib ON bc.LibraryID = lib.LibraryID
             WHERE l.ReturnDate IS NULL
             ORDER BY l.DueDate ASC
         """
