@@ -567,6 +567,7 @@
                             </div>
                             <div class="mt-3 flex justify-start gap-2" onclick="event.stopPropagation();">
                                 <form action="{{ url_for('loans.return_book', loan_id=loan.LoanID) }}" method="POST">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                     <button type="submit"
                                         class="text-[#dc2626] font-headline text-xs font-bold tracking-tight px-2 py-1 rounded hover:bg-red-50 transition-colors">Return</button>
                                 </form>

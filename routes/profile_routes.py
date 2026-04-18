@@ -125,13 +125,9 @@ def profile():
             ORDER BY l.IssueDate DESC
         """, (user_id,))
         for row in cursor.fetchall():
-            # Status badge logic
-            # Cleared = returned and fine paid? or just returned? There's no FinePaid field in schema.
-            # I will assume: if ReturnDate is not null, it's Cleared (or past due if not returned yet).
-            # Wait, the prompt says: "Cleared (returned), Due (not returned, > due_date), Past Due (same)".
-            # Actually prompt says: `Cleared = green, Due = yellow, Past Due = red`.
+            # Status: 'Cleared' if the loan was returned, 'Past Due' if still outstanding.
+            # Schema has no FinePaid field; return date is used as the cleared indicator.
             is_returned = row['ReturnDate'] is not None
-            # If not returned, past due is red, due is yellow. But all fine amount > 0 implies it's past due.
             status = 'Cleared' if is_returned else 'Past Due'
             
             fines.append({

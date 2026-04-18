@@ -54,6 +54,7 @@
                 <td style="padding: 1rem 1.5rem; text-align: right;">
                     {% if not loan.ReturnDate %}
                     <form action="{{ url_for('loans.return_book', loan_id=loan.LoanID) }}" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <button type="submit" class="btn btn-outline"
                             style="padding: 0.4rem 1rem; font-size: 0.85rem;">Return Book</button>
                     </form>

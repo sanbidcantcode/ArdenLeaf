@@ -31,6 +31,7 @@
         <!-- Form Fields -->
         <div class="md:w-2/3 p-12 bg-white">
             <form class="space-y-8" action="{{ url_for('owner.add_book') }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <!-- Title -->
                     <div class="flex flex-col space-y-2">

@@ -515,7 +515,7 @@
             try {
                 const res = await fetch(`/book/${isbn}/bookmark`, {
                     method: 'POST',
-                    headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+                    headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest', 'X-CSRFToken': document.cookie.match(/csrf_token=([^;]+)/)?.[1] || '' }
                 });
                 const data = await res.json();
                 

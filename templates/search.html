@@ -650,7 +650,7 @@
 
                         fetch(url, {
                             method: 'POST',
-                            headers: { 'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/json' }
+                            headers: { 'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/json', 'X-CSRFToken': document.cookie.match(/csrf_token=([^;]+)/)?.[1] || '' }
                         })
                         .then(r => r.json())
                         .then(function (data) {

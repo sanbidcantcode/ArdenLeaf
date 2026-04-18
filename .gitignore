@@ -43,3 +43,22 @@ Thumbs.db
 # Antigravity
 _agent/
 .book_cache.json
+utils/.book_cache.json
+
+# Virtual environments
+.venv/
+
+# Logs
+*.log
+server.log
+
+# Database files
+*.sqlite3
+
+# Testing & coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Flask instance folder
+instance/

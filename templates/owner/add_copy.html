@@ -15,6 +15,7 @@
         </p>
 
         <form class="space-y-8" action="{{ url_for('owner.add_copy') }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
             <!-- ISBN -->
             <div class="flex flex-col space-y-2">

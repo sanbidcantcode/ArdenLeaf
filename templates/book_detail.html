@@ -457,6 +457,7 @@
                     {% endif %}
 
                     <form id="bookmark-form" method="POST" action="{{ url_for('books.bookmark', isbn=book.ISBN) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <button id="bookmark-btn" type="submit"
                             class="border-2 border-outline-variant text-primary px-8 py-4 rounded-lg font-headline font-bold flex items-center gap-3 hover:bg-surface-container-low transition-all {{ 'bookmark-active' if bookmarked else '' }}">
                             <span class="material-symbols-outlined"
@@ -538,6 +539,7 @@
                             {% if copy.LibraryName and copy.Status == 'Available' %}
                             {% if session.get('user_id') and session.get('user_type') == 'Member' %}
                             <form action="{{ url_for('loans.borrow_book') }}" method="POST" class="borrow-form">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                 <input type="hidden" name="copy_id" value="{{ copy.CopyID }}">
                                 <button type="submit"
                                     class="w-full py-2 bg-primary-container text-white rounded-lg font-headline font-bold text-sm hover:scale-[0.98] transition-transform">Borrow
@@ -657,7 +659,7 @@
                     fBtn.disabled = true;
                     fetch(fForm.action, {
                         method: 'POST',
-                        headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                        headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest', 'X-CSRFToken': document.cookie.match(/csrf_token=([^;]+)/)?.[1] || '' },
                         body: new FormData(fForm),
                     })
                         .then(res => res.json())
@@ -683,7 +685,7 @@
                     bBtn.disabled = true;
                     fetch(bForm.action, {
                         method: 'POST',
-                        headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                        headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest', 'X-CSRFToken': document.cookie.match(/csrf_token=([^;]+)/)?.[1] || '' },
                         body: new FormData(bForm),
                     })
                         .then(res => res.json())

@@ -280,6 +280,7 @@
                 </div>
 
                 <form id="profileForm" class="space-y-6">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="flex flex-col gap-2">
                         <label class="font-headline text-[11px] font-bold uppercase tracking-widest text-[#113819] ml-1">Full Name</label>
                         <div class="form-input-wrapper px-4 py-1.5">
@@ -475,7 +476,7 @@
             try {
                 const res = await fetch("{{ url_for('profile.profile') }}", {
                     method: 'POST',
-                    headers: { 'Accept': 'application/json' },
+                    headers: { 'Accept': 'application/json', 'X-CSRFToken': document.cookie.match(/csrf_token=([^;]+)/)?.[1] || '' },
                     body: formData
                 });
                 const data = await res.json();

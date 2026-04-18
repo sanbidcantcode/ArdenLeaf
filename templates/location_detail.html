@@ -390,7 +390,7 @@
 
                 const res = await fetch(`/locations/${locationId}/save`, {
                     method: 'POST',
-                    headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                    headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest', 'X-CSRFToken': document.cookie.match(/csrf_token=([^;]+)/)?.[1] || '' },
                     body: formData,
                 });
                 const data = await res.json();

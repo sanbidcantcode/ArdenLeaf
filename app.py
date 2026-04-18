@@ -3,6 +3,15 @@ from flask import Flask, render_template
 def create_app():
     app = Flask(__name__)
     app.config.from_object('config.Config')
+    app.config['SESSION_COOKIE_SECURE'] = True
+
+    from flask_wtf.csrf import CSRFProtect, generate_csrf
+    csrf = CSRFProtect(app)
+
+    @app.after_request
+    def set_csrf_cookie(response):
+        response.set_cookie('csrf_token', generate_csrf(), secure=False, httponly=False, samesite='Lax')
+        return response
 
     # Register blueprints
     from routes.auth_routes import auth_bp
