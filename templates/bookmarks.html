@@ -302,11 +302,16 @@
             </div>
 
             <!-- Search Area -->
-            <div class="relative w-full md:w-80">
-                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-black/40">search</span>
-                <input id="bookmarkSearch" type="text" placeholder="Search title or author..." 
-                       class="w-full pl-12 pr-6 py-3 bg-stone-100 border border-stone-200 rounded-xl focus:ring-2 focus:ring-primary-container/20 font-body italic text-sm text-black placeholder-black/50 transition-all">
-            </div>
+            <form id="searchForm" onsubmit="event.preventDefault(); filter();" class="relative w-full md:w-80">
+                <button type="submit" class="absolute left-4 top-1/2 -translate-y-1/2 bg-transparent border-0 p-0 cursor-pointer flex items-center" title="Search">
+                    <span class="material-symbols-outlined text-black/40 hover:text-black/70 transition-colors">search</span>
+                </button>
+                <input id="bookmarkSearch" type="text" placeholder="Search title or author..."
+                       class="w-full pl-12 pr-12 py-3 bg-stone-100 border border-stone-200 rounded-xl focus:ring-2 focus:ring-primary-container/20 font-body italic text-sm text-black placeholder-black/50 transition-all">
+                <button type="submit" class="absolute right-4 top-1/2 -translate-y-1/2 bg-transparent border-0 p-0 cursor-pointer flex items-center" title="Apply search">
+                    <span class="material-symbols-outlined text-black/30 hover:text-black/60 transition-colors" style="font-size:18px;">keyboard_return</span>
+                </button>
+            </form>
         </div>
 
         <!-- Bookmarks Grid -->
@@ -650,13 +655,6 @@
         showPage(1);
         if (searchInput) {
             searchInput.addEventListener('input', filter);
-            searchInput.addEventListener('keyup', filter);
-            searchInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    filter();
-                }
-            });
         }
     </script>
 
