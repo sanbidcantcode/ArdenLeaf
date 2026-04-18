@@ -1,46 +1,46 @@
-USE ardenleaf;
+-- ArdeLeaf Seed Data
 
 -- ─────────────────────────────────────────────────────────────────────────────
 -- 1. CLEAN EXISTING DATA
 -- ─────────────────────────────────────────────────────────────────────────────
 SET FOREIGN_KEY_CHECKS = 0;
-DELETE FROM Bookmark;
-DELETE FROM Loan;
-DELETE FROM BookCopy;
-DELETE FROM Bookstore;
-DELETE FROM Library;
-DELETE FROM Book_Genre;
-DELETE FROM Book_Author;
-DELETE FROM Book;
-DELETE FROM Author;
-DELETE FROM Publisher;
-DELETE FROM Customer;
-DELETE FROM Member;
-DELETE FROM User_Phone;
-DELETE FROM User;
+DELETE FROM `Bookmark`;
+DELETE FROM `Loan`;
+DELETE FROM `BookCopy`;
+DELETE FROM `Bookstore`;
+DELETE FROM `Library`;
+DELETE FROM `Book_Genre`;
+DELETE FROM `Book_Author`;
+DELETE FROM `Book`;
+DELETE FROM `Author`;
+DELETE FROM `Publisher`;
 
-ALTER TABLE User AUTO_INCREMENT = 1;
-ALTER TABLE Publisher AUTO_INCREMENT = 1;
-ALTER TABLE Author AUTO_INCREMENT = 1;
-ALTER TABLE Library AUTO_INCREMENT = 1;
-ALTER TABLE Bookstore AUTO_INCREMENT = 1;
-ALTER TABLE BookCopy AUTO_INCREMENT = 1;
-ALTER TABLE Loan AUTO_INCREMENT = 1;
+DELETE FROM `Member`;
+DELETE FROM `User_Phone`;
+DELETE FROM `User`;
+
+ALTER TABLE `User` AUTO_INCREMENT = 1;
+ALTER TABLE `Publisher` AUTO_INCREMENT = 1;
+ALTER TABLE `Author` AUTO_INCREMENT = 1;
+ALTER TABLE `Library` AUTO_INCREMENT = 1;
+ALTER TABLE `Bookstore` AUTO_INCREMENT = 1;
+ALTER TABLE `BookCopy` AUTO_INCREMENT = 1;
+ALTER TABLE `Loan` AUTO_INCREMENT = 1;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- ─────────────────────────────────────────────────────────────────────────────
 -- 2. USERS & PROFILES
 -- ─────────────────────────────────────────────────────────────────────────────
 -- Reset UserIDs to 1, 2, 3, 4
-INSERT INTO User (Name, Email, PasswordHash, UserType) VALUES
+INSERT INTO `User` (Name, Email, PasswordHash, UserType) VALUES
 ('Alice Smith',   'alice@example.com',   'scrypt:32768:8:1$K4GpO1WgtGzyL9Zd$958520cae2825b7a141314e47237e540488fffaed28369e44a8c1ec6eaa710b5d71d8ce91a310224ed3162de5d8482102901f495cb41323df8cde654abf69e65', 'Member'),
 ('Bob Johnson',   'bob@example.com',     'scrypt:32768:8:1$BSpYehIKl5SIvP4v$90d6454a24d0606ad0cd7648155ca53dfa60b64363613abe19cc38d4c9d86ad63b35801e920fca4cda4e2d7126870b08de7992a0c7d1eb0b5d5e4084e26d2d53', 'Member'),
-('Charlie Brown', 'charlie@example.com', 'scrypt:32768:8:1$N01LACki46kFQ4Eh$95bb2d7e3e590cf852438811ee128953b14067d7d8730957a3d554f21f31583b5f2afa12c426b3adf807a312f24930a694a5ddca726da571b3e060a0ddaa7105', 'Customer'),
-('Diana Prince', 'diana@example.com',   'scrypt:32768:8:1$LCOIHIJhRmHyY0qv$32c6fb093c8751b1761ffb63b27159124a55ca70a2c068760c1b17c7562e3aea29f82c7eb7dd019338a32f445f47d12f3ad5e896ce59cdbbecbe85113c06cbd9', 'Customer');
+('Charlie Brown', 'charlie@example.com', 'scrypt:32768:8:1$N01LACki46kFQ4Eh$95bb2d7e3e590cf852438811ee128953b14067d7d8730957a3d554f21f31583b5f2afa12c426b3adf807a312f24930a694a5ddca726da571b3e060a0ddaa7105', 'Member'),
+('Diana Prince', 'diana@example.com',   'scrypt:32768:8:1$LCOIHIJhRmHyY0qv$32c6fb093c8751b1761ffb63b27159124a55ca70a2c068760c1b17c7562e3aea29f82c7eb7dd019338a32f445f47d12f3ad5e896ce59cdbbecbe85113c06cbd9', 'Member');
 
 -- Staff accounts (Admin, LibraryAdmins, StoreAdmins)
 -- Passwords: admin123, libpass1, libpass2, storepass1, storepass2
-INSERT INTO User (Name, Email, PasswordHash, UserType) VALUES
+INSERT INTO `User` (Name, Email, PasswordHash, UserType) VALUES
 ('System Admin',     'admin@ardenleaf.com',   'scrypt:32768:8:1$5xclqzYH2CvJiHdj$dc12f5ea77b036c1032503f3025d41cae682dc1ed2acc9f97662cc7c7926e779c840ee07f828b43a9bfdaf011f65bb14d0bde20b44e9aad28ee8d33735e94d99', 'Admin'),
 ('Priya Sharma',     'lib1@ardenleaf.com',    'scrypt:32768:8:1$VufG7yqJxVTxGV57$0301b772240cb8b413aac5d1777a49809e327273fd40e727a772c444d4be1bd17f0c7ea870f1f89c9a06773aa02a775fb3241e1a393605c52efb89ea9757bae0', 'LibraryAdmin'),
 ('Rajan Mehta',      'lib2@ardenleaf.com',    'scrypt:32768:8:1$CXf9ScBICCL6aAEy$d06ac9dd381c23a8e0a14dd50cd5c1ef310628439c30e7bd0c7d5f9a4306e2f973d1b087351288bef5473946895fcc9f104745a2c1b7550c6e32005af3a37a63', 'LibraryAdmin'),
@@ -49,17 +49,15 @@ INSERT INTO User (Name, Email, PasswordHash, UserType) VALUES
 
 -- UserIDs after insert: 1=Alice, 2=Bob, 3=Charlie, 4=Diana, 5=Admin, 6=LibAdmin1, 7=LibAdmin2, 8=StoreAdmin1, 9=StoreAdmin2
 
-INSERT INTO Member (UserID, MembershipDate, MaxBooks) VALUES
+INSERT INTO `Member` (UserID, MembershipDate, MaxBooks) VALUES
 (1, '2023-01-15', 5),
 (2, '2023-06-20', 5);
 
-INSERT INTO Customer (UserID, LoyaltyPoints) VALUES
-(3, 120),
-(4, 300);
+
 
 -- LocationAdmin rows are inserted after Libraries and Bookstores below
 
-INSERT INTO User_Phone (Phone, UserID) VALUES
+INSERT INTO `User_Phone` (Phone, UserID) VALUES
 ('555-0101', 1),
 ('555-0102', 1),
 ('555-0201', 2),
@@ -68,7 +66,7 @@ INSERT INTO User_Phone (Phone, UserID) VALUES
 -- ─────────────────────────────────────────────────────────────────────────────
 -- 3. PUBLISHERS & AUTHORS
 -- ─────────────────────────────────────────────────────────────────────────────
-INSERT INTO Publisher (Name, Address) VALUES
+INSERT INTO `Publisher` (Name, Address) VALUES
 ('Penguin Random House', 'New York & Mumbai'), -- ID 1
 ('HarperCollins',        'London & Noida'),      -- ID 2
 ('Scholastic',           'New York & Gurgaon'),  -- ID 3
@@ -76,7 +74,7 @@ INSERT INTO Publisher (Name, Address) VALUES
 ('Bloomsbury',           'London & New Delhi'),  -- ID 5
 ('Pan Macmillan',        'London & Mumbai');     -- ID 6
 
-INSERT INTO Author (Name) VALUES
+INSERT INTO `Author` (Name) VALUES
 ('J.K. Rowling'),             -- 1
 ('George R.R. Martin'),       -- 2
 ('Isaac Asimov'),             -- 3
@@ -101,7 +99,7 @@ INSERT INTO Author (Name) VALUES
 -- ─────────────────────────────────────────────────────────────────────────────
 -- 4. BOOKS (20 Total)
 -- ─────────────────────────────────────────────────────────────────────────────
-INSERT INTO Book (ISBN, Title, PublisherID, PublicationYear) VALUES
+INSERT INTO `Book` (ISBN, Title, PublisherID, PublicationYear) VALUES
 -- Existing 9
 ('978-0439708180', 'Harry Potter and the Sorcerer\'s Stone', 1, 1997),
 ('978-0553103540', 'A Game of Thrones', 2, 1996),
@@ -128,7 +126,7 @@ INSERT INTO Book (ISBN, Title, PublisherID, PublicationYear) VALUES
 -- ─────────────────────────────────────────────────────────────────────────────
 -- 5. BOOK_AUTHOR MAPPINGS
 -- ─────────────────────────────────────────────────────────────────────────────
-INSERT INTO Book_Author (ISBN, AuthorID) VALUES
+INSERT INTO `Book_Author` (ISBN, AuthorID) VALUES
 ('978-0439708180', 1), ('978-0553103540', 2), ('978-0553293357', 3), 
 ('978-0062073488', 4), ('9780439023481', 5), ('9780062315007', 6), 
 ('9780735211292', 7), ('9780743273565', 8), ('9780062316110', 9),
@@ -140,7 +138,7 @@ INSERT INTO Book_Author (ISBN, AuthorID) VALUES
 -- ─────────────────────────────────────────────────────────────────────────────
 -- 6. BOOK_GENRE MAPPINGS
 -- ─────────────────────────────────────────────────────────────────────────────
-INSERT INTO Book_Genre (ISBN, Genre) VALUES
+INSERT INTO `Book_Genre` (ISBN, Genre) VALUES
 ('978-0439708180', 'Fantasy'), ('978-0439708180', 'Young Adult'),
 ('978-0553103540', 'Fantasy'), ('978-0553293357', 'Science Fiction'),
 ('978-0062073488', 'Mystery'), ('978-0062073488', 'Thriller'),
@@ -163,14 +161,14 @@ INSERT INTO Book_Genre (ISBN, Genre) VALUES
 -- ─────────────────────────────────────────────────────────────────────────────
 -- 7. LIBRARIES & BOOKSTORES
 -- ─────────────────────────────────────────────────────────────────────────────
-INSERT INTO Library (Name, Location) VALUES
+INSERT INTO `Library` (Name, Location) VALUES
 ('Connaught Place Public Library', 'Connaught Place, New Delhi 110001'), -- 1
 ('Bandra Reading House',          'Linking Road, Bandra West, Mumbai 400050'), -- 2
 ('Indiranagar Branch Library',     '100 Feet Road, Indiranagar, Bangalore 560038'), -- 3
 ('Park Street Literary Centre',    'Park Street, Kolkata 700016'), -- 4
 ('Anna Centenary Library Annex',   'Gandhi Irwin Road, Egmore, Chennai 600008'); -- 5
 
-INSERT INTO Bookstore (Name, Location) VALUES
+INSERT INTO `Bookstore` (Name, Location) VALUES
 ('Footnotes Bookstore', 'Commercial Street, Bangalore 560001'), -- 1
 ('The Margin Bookshop', 'Hauz Khas Village, New Delhi 110016'), -- 2
 ('Bylanes Books',       'Fort Area, Mumbai 400001'), -- 3
@@ -178,7 +176,7 @@ INSERT INTO Bookstore (Name, Location) VALUES
 
 -- Link owners to their locations
 -- LibraryIDs: 1=Connaught Place, 2=Bandra | StoreIDs: 1=Footnotes, 2=The Margin
-INSERT INTO LocationAdmin (UserID, LibraryID, StoreID) VALUES
+INSERT INTO `LocationAdmin` (UserID, LibraryID, StoreID) VALUES
 (6, 1, NULL),   -- Priya → Connaught Place Public Library
 (7, 2, NULL),   -- Rajan → Bandra Reading House
 (8, NULL, 1),   -- Kavya → Footnotes Bookstore
@@ -187,7 +185,7 @@ INSERT INTO LocationAdmin (UserID, LibraryID, StoreID) VALUES
 -- ─────────────────────────────────────────────────────────────────────────────
 -- 8. BOOK COPIES
 -- ─────────────────────────────────────────────────────────────────────────────
-INSERT INTO BookCopy (ISBN, LibraryID, StoreID, Status, Price, DiscountPercent) VALUES
+INSERT INTO `BookCopy` (ISBN, LibraryID, StoreID, Status, Price, DiscountPercent) VALUES
 -- Harry Potter
 ('978-0439708180', 1, NULL, 'Borrowed',  NULL, NULL),
 ('978-0439708180', 3, NULL, 'Borrowed',  NULL, NULL),
@@ -260,7 +258,7 @@ INSERT INTO BookCopy (ISBN, LibraryID, StoreID, Status, Price, DiscountPercent) 
 -- User 1: Alice (MemberID=1)
 -- User 2: Bob   (MemberID=2)
 
-INSERT INTO Loan (CopyID, MemberID, IssueDate, DueDate, ReturnDate) VALUES
+INSERT INTO `Loan` (CopyID, MemberID, IssueDate, DueDate, ReturnDate) VALUES
 -- 1. Active overdue: Harry Potter from Bangalore (CopyID=2, Library 3)
 (2,  1, DATE_SUB(CURDATE(), INTERVAL 20 DAY), DATE_SUB(CURDATE(), INTERVAL 6 DAY),  NULL),
 -- 2. Active overdue: Sapiens from Kolkata (CopyID=18, Library 4)
@@ -275,7 +273,7 @@ INSERT INTO Loan (CopyID, MemberID, IssueDate, DueDate, ReturnDate) VALUES
 -- ─────────────────────────────────────────────────────────────────────────────
 -- 10. BOOKMARKS
 -- ─────────────────────────────────────────────────────────────────────────────
-INSERT INTO Bookmark (UserID, ISBN) VALUES
+INSERT INTO `Bookmark` (UserID, ISBN) VALUES
 (1, '978-0553103540'), -- Alice saves GoT
 (1, '978-0553293357'), -- Alice saves Foundation
 (2, '978-0439708180'), -- Bob saves Harry Potter
