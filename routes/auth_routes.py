@@ -99,35 +99,11 @@ def auth_page():
             session['user_name'] = name
             session['user_type'] = user_type
 
-            flash('Account created! Let us know where you are.', 'success')
-            return redirect(url_for('auth.location_step'))
+            flash('Account created! Welcome to ArdenLeaf.', 'success')
+            return redirect(url_for('loans.dashboard'))
 
     # GET — show the combined page with login visible by default
     return render_template('auth.html', show_signup=False)
-
-
-# ── Location step ────────────────────────────────────────────────────────────
-
-@auth_bp.route('/location', methods=['GET'])
-def location_step():
-    """Post-registration page — ask user to share or enter location."""
-    if not session.get('user_id'):
-        return redirect(url_for('auth.auth_page'))
-    return render_template('location.html')
-
-
-@auth_bp.route('/location/save', methods=['POST'])
-def save_location():
-    """Accept location form submission and redirect home."""
-    location = request.form.get('location', '').strip()
-    lat      = request.form.get('lat', '').strip()
-    lng      = request.form.get('lng', '').strip()
-
-    if location or (lat and lng):
-        session['user_location'] = location or f"{lat},{lng}"
-        flash('Location saved!', 'success')
-    # All users go to dashboard
-    return redirect(url_for('loans.dashboard'))
 
 
 # ── Logout ───────────────────────────────────────────────────────────────────

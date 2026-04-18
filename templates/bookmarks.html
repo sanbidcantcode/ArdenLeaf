@@ -486,13 +486,13 @@
             card.style.pointerEvents = 'none';
 
             try {
-                const res = await fetch(`/api/bookmarks/toggle/${isbn}`, {
+                const res = await fetch(`/book/${isbn}/bookmark`, {
                     method: 'POST',
-                    headers: { 'Accept': 'application/json' }
+                    headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
                 });
                 const data = await res.json();
                 
-                if (!data.bookmarked) {
+                if (data.success && !data.bookmarked) {
                     card.classList.add('hidden');
                     setTimeout(() => {
                         card.remove();
