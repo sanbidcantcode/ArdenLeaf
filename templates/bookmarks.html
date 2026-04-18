@@ -650,6 +650,13 @@
         showPage(1);
         if (searchInput) {
             searchInput.addEventListener('input', filter);
+            searchInput.addEventListener('keyup', filter);
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    filter();
+                }
+            });
         }
     </script>
 
