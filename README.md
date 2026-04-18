@@ -33,7 +33,10 @@ No installation required — the app is deployed and ready to use.
 | Role | Email | Password |
 |---|---|---|
 | Admin | admin@ardenleaf.com | admin123 |
-| Library Owner | lib1@ardenleaf.com | libpass1 |
+| Library Owner 1 | lib1@ardenleaf.com | libpass1 |
+| Library Owner 2 | lib2@ardenleaf.com | libpass2 |
+| Bookstore Owner 1 | store1@ardenleaf.com | storepass1 |
+| Bookstore Owner 2 | store2@ardenleaf.com | storepass2 |
 | Member | Register a new account | — |
 
 **Admin** can manage the global book catalog, add locations, and monitor all active loans across the platform.
